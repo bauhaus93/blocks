@@ -7,12 +7,12 @@
 
 #include "Logger.hpp"
 #include "LogLevel.hpp"
-#include "LoggerException.hpp"
 
 namespace mc::log {
 
 void CreateGlobalLogger(std::ostream& output);
 Logger& GetGlobalLogger();
+bool GlobalLoggerActive();
 void DestroyGlobalLogger();
 
 #define LOG_LEVEL DEBUG

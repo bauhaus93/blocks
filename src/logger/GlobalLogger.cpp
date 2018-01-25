@@ -9,27 +9,25 @@ std::unique_ptr<Logger> g_logger = nullptr;
 void CreateGlobalLogger(std::ostream& output) {
     if (g_logger == nullptr) {
         g_logger = std::make_unique<Logger>(output, LogLevel::LOG_LEVEL);
-    } else {
-        throw LoggerException(
-            __FUNCTION__,
-            "Global logger already existing");
+        INFO("Created global logger");
     }
 }
 
 Logger& GetGlobalLogger() {
     if (g_logger != nullptr) {
-        return *g_logger;
+        CreateGlobalLogger(std::cout);
     }
-    throw LoggerException(__FUNCTION__,
-                          "No global logger existing");
+    return *g_logger;
+}
+
+bool GlobalLoggerActive() {
+    return g_logger != nullptr;
 }
 
 void DestroyGlobalLogger() {
     if (g_logger != nullptr) {
+        INFO("Destroying global logger");
         g_logger = nullptr;
-    } else {
-        throw LoggerException(__FUNCTION__,
-                              "Global logger not existing");
     }
 }
 
