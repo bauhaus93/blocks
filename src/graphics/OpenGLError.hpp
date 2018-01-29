@@ -20,7 +20,9 @@ class OpenGLError: public ApplicationError {
             OpenGLError(const std::string& error,
                         const std::string& function);
 
-
+            OpenGLError(const std::string& error,
+                        const std::string& function,
+                        const std::string& description);
 
 };
 

@@ -22,4 +22,11 @@ OpenGLError::OpenGLError(const std::string& error,
 
 }
 
+OpenGLError::OpenGLError(const std::string& error,
+                         const std::string& function,
+                         const std::string& description):
+    ApplicationError(error, function, description) {
+
+}
+
 }   // namespace mc

@@ -2,13 +2,17 @@
 
 #pragma once
 
+#include <memory>
 
 #include <glad/glad.h>
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/System.hpp>
 
 #include "logger/GlobalLogger.hpp"
-#include "OpenGLError.hpp"
+#include "graphics/OpenGLError.hpp"
+#include "graphics/ShaderProgram.hpp"
+#include "graphics/Mesh.hpp"
 
 namespace mc {
 
@@ -17,7 +21,8 @@ class Application {
 
     bool            active;
     sf::Window      window;
-    GLuint          vao;
+    std::unique_ptr<ShaderProgram> shader;
+    std::unique_ptr<Mesh>   mesh;
 
 
 
