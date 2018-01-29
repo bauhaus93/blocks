@@ -17,8 +17,15 @@ static std::string GetProgramError(GLuint programId) {
 }
 
 
-ShaderProgramError::ShaderProgramError(const std::string& function, GLuint programId):
-    OpenGLError { "ShaderProgramError", __FUNCTION__, GetProgramError(programId) } {
+ShaderProgramError::ShaderProgramError(const std::string& function,
+                                       GLuint programId):
+    OpenGLError { "ShaderProgramError", function, GetProgramError(programId) } {
+}
+
+ShaderProgramError::ShaderProgramError(const std::string& function,
+                                      const std::string& description):
+    OpenGLError { "ShaderProgramError", function, description } {
+
 }
 
 

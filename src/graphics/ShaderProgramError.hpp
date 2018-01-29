@@ -18,9 +18,7 @@ class ShaderProgramError: public OpenGLError {
  public:
 
         ShaderProgramError(const std::string& function, GLuint programId);
-
-
-
+        ShaderProgramError(const std::string& function, const std::string& description);
 };
 
 }   // namespace mc

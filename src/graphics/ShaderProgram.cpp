@@ -49,7 +49,8 @@ static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
 ShaderProgram::ShaderProgram():
     programId { glCreateProgram() },
     vertexShader { 0 },
-    fragmentShader { 0 } {
+    fragmentShader { 0 },
+    mvpHandle { 0 } {
 }
 
 void ShaderProgram::AddVertexShader(const std::string& filePath) {
@@ -75,7 +76,21 @@ void ShaderProgram::Link() {
 
     LinkCleanup();
     INFO("Linked shader program");
+
+    LoadMVPHandle();
 }
+
+void ShaderProgram::LoadMVPHandle() {
+    mvpHandle = glGetUniformLocation(programId, "MVP");
+    if (mvpHandle == -1) {
+        throw ShaderProgramError(__FUNCTION__, "Could not get mvp handle");
+    }
+}
+
+void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) {
+    glUniformMatrix4fv(mvpHandle, 1, GL_FALSE, &mvp[0][0]);
+}
+
 
 void ShaderProgram::Use() {
     glUseProgram(programId);

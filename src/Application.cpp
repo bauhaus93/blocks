@@ -30,6 +30,8 @@ Application::Application(unsigned int winX, unsigned int winY):
     shader->Link();
     shader->Use();
 
+    camera = std::make_unique<Camera>();
+
     mesh = std::make_unique<Mesh>(vertices, 9);
 
 }
@@ -64,7 +66,7 @@ void Application::HandleEvents() {
 
 void Application::DrawScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    mesh->Draw();
+    mesh->Draw(*camera, *shader);
     window.display();
 }
 

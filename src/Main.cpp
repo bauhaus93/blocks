@@ -15,8 +15,6 @@ int main(int argc, char** argv) {
     }
     catch (const mc::ApplicationError& e) {
         ERROR(e.what());
-        mc::log::DestroyGlobalLogger();
-        return 1;
     }
 
     mc::log::DestroyGlobalLogger();

@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include <glad/glad.h>
+#include <glm/mat4x4.hpp>
 
 #include "logger/GlobalLogger.hpp"
 #include "ShaderError.hpp"
@@ -23,14 +24,17 @@ class ShaderProgram {
     void        AddFragmentShader(const std::string& filePath);
     void        Link();
     void        Use();
+    void        SetMVPMatrix(const glm::mat4& mvp);
 
  private:
     GLuint      programId;
     GLuint      vertexShader;
     GLuint      fragmentShader;
+    GLint       mvpHandle;
 
     void        LinkSetup();
     void        LinkCleanup();
+    void        LoadMVPHandle();
 
 };
 

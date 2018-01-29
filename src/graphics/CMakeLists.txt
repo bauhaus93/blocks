@@ -5,4 +5,7 @@ add_sources(
   ShaderProgram.cpp
   ShaderError.cpp
   ShaderProgramError.cpp
+  Camera.cpp
 )
+
+add_subdirectory(shader)
