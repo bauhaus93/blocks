@@ -14,14 +14,15 @@ class Mesh {
 
  public:
 
-                Mesh(const GLfloat* vertices, unsigned int vertexCount);
+                Mesh(const GLfloat* vertices, unsigned int vertexCount_);
                 ~Mesh();
     void        Draw(Camera& camera, ShaderProgram& shader);
 
  private:
-    GLuint      vao;
-    GLuint      vertexBuffer;
-    glm::mat4   model;
+    GLuint       vao;
+    GLuint       vertexBuffer;
+    unsigned int vertexCount;
+    glm::mat4    model;
 
 };
 

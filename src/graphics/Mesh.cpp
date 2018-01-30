@@ -6,9 +6,10 @@
 namespace mc {
 
 
-Mesh::Mesh(const GLfloat* vertices, unsigned int vertexCount):
+Mesh::Mesh(const GLfloat* vertices, unsigned int vertexCount_):
     vao { 0 },
     vertexBuffer { 0 },
+    vertexCount { vertexCount_ },
     model { glm::mat4(1.0f) } {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -23,7 +24,7 @@ Mesh::~Mesh() {
 }
 
 void Mesh::Draw(Camera& camera, ShaderProgram& shader) {
-    
+
     glm::mat4 mvp = camera.CreateMVPMatrix(model);
     shader.SetMVPMatrix(mvp);
 
@@ -38,7 +39,7 @@ void Mesh::Draw(Camera& camera, ShaderProgram& shader) {
         0,
         nullptr
     );
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
     glDisableVertexAttribArray(0);
 }

@@ -21,6 +21,7 @@ class Application {
  private:
 
     bool            active;
+    sf::Time        delta;
     sf::Window      window;
     std::unique_ptr<ShaderProgram>  shader;
     std::unique_ptr<Camera>         camera;
@@ -29,6 +30,7 @@ class Application {
 
 
     void            HandleEvents();
+    void            HandleMouse();
     void            DrawScene();
 
  public:

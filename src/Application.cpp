@@ -20,9 +20,47 @@ Application::Application(unsigned int winX, unsigned int winY):
     window.setVerticalSyncEnabled(true);
     window.setActive(true);
 
-    constexpr GLfloat vertices[] = { -1.0f, -1.0f, 0.0f,
-                            1.0f, -1.0f, 0.0f,
-                            0.0f, 1.0f, 0.0f };
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    const GLfloat vertices[] = {
+        -1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,
+        1.0f,-1.0f,-1.0f,
+        1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f,-1.0f,-1.0f,
+        1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f,-1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f,-1.0f,
+        -1.0f, 1.0f,-1.0f,
+        1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f
+    };
 
     shader = std::make_unique<ShaderProgram>();
     shader->AddVertexShader("shader/VertexShader.glsl");
@@ -32,7 +70,7 @@ Application::Application(unsigned int winX, unsigned int winY):
 
     camera = std::make_unique<Camera>();
 
-    mesh = std::make_unique<Mesh>(vertices, 9);
+    mesh = std::make_unique<Mesh>(vertices, 36);
 
 }
 
@@ -42,12 +80,14 @@ Application::~Application() {
 
 void Application::Loop() {
     INFO("Starting application main loop");
-
+    sf::Clock clock;
 
     while (active) {
+        HandleMouse();
         HandleEvents();
         DrawScene();
         sf::sleep(sf::milliseconds(20));
+        delta = clock.restart();
     }
     INFO("Finishing application main loop");
 }
@@ -62,6 +102,19 @@ void Application::HandleEvents() {
            glViewport(0, 0, event.size.width, event.size.height);
         }
     }
+}
+
+void Application::HandleMouse() {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2u windowSize = window.getSize();
+    sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2));
+
+    float d = delta.asMilliseconds() / 1000.0f;
+    float horizontalAngle = 0.3 * d * float(windowSize.x / 2 - mousePos.x);
+    float verticalAngle = 0.3 * d * float(windowSize.y / 2 - mousePos.y);
+
+    camera->Rotate(glm::vec2(horizontalAngle, verticalAngle));
+
 }
 
 void Application::DrawScene() {
