@@ -23,44 +23,6 @@ Application::Application(unsigned int winX, unsigned int winY):
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    const GLfloat vertices[] = {
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f
-    };
 
     shader = std::make_unique<ShaderProgram>();
     shader->AddVertexShader("shader/VertexShader.glsl");
@@ -70,7 +32,7 @@ Application::Application(unsigned int winX, unsigned int winY):
 
     camera = std::make_unique<Camera>();
 
-    mesh = std::make_unique<Mesh>(vertices, 36);
+    mesh = std::make_unique<Mesh>();
 
 }
 
@@ -83,7 +45,7 @@ void Application::Loop() {
     sf::Clock clock;
 
     while (active) {
-        HandleMouse();
+        //HandleMouse();
         HandleEvents();
         DrawScene();
         sf::sleep(sf::milliseconds(20));
@@ -107,13 +69,19 @@ void Application::HandleEvents() {
 void Application::HandleMouse() {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2u windowSize = window.getSize();
-    sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2));
+    float winX = windowSize.x / 2;
+    float winY = windowSize.y / 2;
+    sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
 
     float d = delta.asMilliseconds() / 1000.0f;
-    float horizontalAngle = 0.3 * d * float(windowSize.x / 2 - mousePos.x);
-    float verticalAngle = 0.3 * d * float(windowSize.y / 2 - mousePos.y);
+    float horizontalAngle = 0.5 * d * float(winX - mousePos.x);
+    float verticalAngle = 0.5 * d * float(winY - mousePos.y);
 
-    camera->Rotate(glm::vec2(horizontalAngle, verticalAngle));
+    if (abs(horizontalAngle) > std::numeric_limits<float>::epsilon() ||
+        abs(verticalAngle) > std::numeric_limits<float>::epsilon()) {
+        camera->Rotate(horizontalAngle, verticalAngle);
+        INFO("(", horizontalAngle, ", ", verticalAngle, ")");
+    }
 
 }
 

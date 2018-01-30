@@ -7,6 +7,7 @@
 
 #include "Camera.hpp"
 #include "ShaderProgram.hpp"
+#include "Texture.hpp"
 
 namespace mc {
 
@@ -14,13 +15,14 @@ class Mesh {
 
  public:
 
-                Mesh(const GLfloat* vertices, unsigned int vertexCount_);
+                Mesh();
                 ~Mesh();
     void        Draw(Camera& camera, ShaderProgram& shader);
 
  private:
     GLuint       vao;
     GLuint       vertexBuffer;
+    GLuint       textureBuffer;
     unsigned int vertexCount;
     glm::mat4    model;
 

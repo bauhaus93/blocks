@@ -22,21 +22,24 @@ glm::mat4 Camera::CreateMVPMatrix(const glm::mat4& model) {
     return projection * view * model;
 }
 
-void Camera::Rotate(const glm::vec2& angle) {
+void Camera::Rotate(float horizontal, float vertical) {
 
     glm::vec3 direction(
-        cos(angle[0]) * sin(angle[0]),
-        sin(angle[1]),
-        cos(angle[1]) * cos(angle[0])
+        cos(vertical) * sin(horizontal),
+        sin(vertical),
+        cos(vertical) * cos(horizontal)
     );
 
     glm::vec3 right(
-        sin(angle[0] - 3.14f / 2.0f),
+        sin(horizontal - 3.14f / 2.0f),
         0,
-        cos(angle[0] - 3.14f / 2.0f)
+        cos(horizontal - 3.14f / 2.0f)
     );
 
     glm::vec3 up = glm::cross(right, direction);
+
+    auto test = position + direction;
+    INFO(test[0], "/", test[1], "/", test[2]);
 
     view = glm::lookAt(
         position,

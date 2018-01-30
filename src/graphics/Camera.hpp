@@ -8,6 +8,8 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "logger/GlobalLogger.hpp"
+
 namespace mc {
 
 class Camera {
@@ -16,7 +18,7 @@ class Camera {
 
                     Camera();
 
-    void            Rotate(const glm::vec2& angle);
+    void            Rotate(float horizontal, float vertical);
     glm::mat4       CreateMVPMatrix(const glm::mat4& model);
 
 
