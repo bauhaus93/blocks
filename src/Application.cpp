@@ -32,7 +32,7 @@ Application::Application(unsigned int winX, unsigned int winY):
 
     camera = std::make_unique<Camera>();
 
-    mesh = std::make_unique<Mesh>();
+    mesh = std::make_unique<Mesh>("cube.obj");
 
 }
 

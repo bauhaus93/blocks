@@ -4,21 +4,6 @@
 
 namespace mc {
 
-static std::string ReadFile(const std::string& filePath) {
-    std::ifstream fs(filePath, std::ios::in);
-    std::stringstream ss;
-    if (fs.is_open()) {
-        ss << fs.rdbuf();
-    }
-    else {
-        throw ApplicationError("Shader not Found",
-        __FUNCTION__,
-        "Could not find shader file \"" + filePath + "\"");
-    }
-
-    return ss.str();
-}
-
 static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
     GLuint id = glCreateShader(shaderType);
 

@@ -5,9 +5,12 @@
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 
+#include "utility/FileRead.hpp"
+
 #include "Camera.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
+#include "MeshLoader.hpp"
 
 namespace mc {
 
@@ -15,7 +18,7 @@ class Mesh {
 
  public:
 
-                Mesh();
+    explicit     Mesh(const std::string& filename);
                 ~Mesh();
     void        Draw(Camera& camera, ShaderProgram& shader);
 

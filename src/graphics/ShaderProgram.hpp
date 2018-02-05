@@ -3,11 +3,11 @@
 #pragma once
 
 #include <string>
-#include <sstream>
-#include <fstream>
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
+
+#include "utility/FileRead.hpp"
 
 #include "logger/GlobalLogger.hpp"
 #include "ShaderError.hpp"
