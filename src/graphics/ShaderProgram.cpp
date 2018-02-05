@@ -38,6 +38,13 @@ ShaderProgram::ShaderProgram():
     mvpHandle { 0 } {
 }
 
+ShaderProgram::~ShaderProgram() {
+    if (programId != 0) {
+        DEBUG("Deleting shader program");
+        glDeleteProgram(programId);
+    }
+}
+
 void ShaderProgram::AddVertexShader(const std::string& filePath) {
     vertexShader = LoadShader(filePath, GL_VERTEX_SHADER);
 }

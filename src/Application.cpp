@@ -38,7 +38,7 @@ Application::Application(unsigned int winX, unsigned int winY):
 }
 
 Application::~Application() {
-    log::DestroyGlobalLogger();
+
 }
 
 void Application::Loop() {
@@ -46,7 +46,7 @@ void Application::Loop() {
     sf::Clock clock;
 
     while (active) {
-        //HandleMouse();
+        HandleMouse();
         HandleEvents();
         DrawScene();
         sf::sleep(sf::milliseconds(20));
@@ -75,8 +75,8 @@ void Application::HandleMouse() {
     sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
 
     float d = delta.asMilliseconds() / 1000.0f;
-    float horizontalAngle = 0.5 * d * float(winX - mousePos.x);
-    float verticalAngle = 0.5 * d * float(winY - mousePos.y);
+    float horizontalAngle = 0.025 * d * float(winX - mousePos.x);
+    float verticalAngle = 0.025 * d * float(winY - mousePos.y);
 
     if (abs(horizontalAngle) > std::numeric_limits<float>::epsilon() ||
         abs(verticalAngle) > std::numeric_limits<float>::epsilon()) {

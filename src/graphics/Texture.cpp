@@ -7,7 +7,12 @@ namespace mc {
 
 Texture::Texture(const std::string& filePath):
     id { ReadBitmap(filePath) } {
+}
 
+Texture::~Texture() {
+    if (id != 0) {
+        glDeleteTextures(1, &id);
+    }
 }
 
 

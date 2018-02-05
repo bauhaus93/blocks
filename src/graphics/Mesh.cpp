@@ -11,6 +11,7 @@ std::vector<GLfloat> GetNormals(const std::string& data);
 Mesh::Mesh(const std::string& filename):
     vao { 0 },
     vertexBuffer { 0 },
+    uvBuffer { 0 },
     vertexCount { 0 },
     model { glm::mat4(1.0f) } {
 
@@ -33,7 +34,15 @@ Mesh::Mesh(const std::string& filename):
 }
 
 Mesh::~Mesh() {
-
+    if (vertexBuffer != 0) {
+        glDeleteBuffers(1, &vertexBuffer);
+    }
+    if (uvBuffer != 0) {
+        glDeleteBuffers(1, &uvBuffer);
+    }
+    if (vao != 0) {
+        glDeleteVertexArrays(1, &vao);
+    }
 }
 
 void Mesh::Draw(Camera& camera, ShaderProgram& shader) {

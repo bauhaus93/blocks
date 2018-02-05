@@ -13,6 +13,7 @@ class Texture {
 
  public:
     explicit    Texture(const std::string& filePath);
+                ~Texture();
     GLuint      GetId() const { return id; }
 
  private:

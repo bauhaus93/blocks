@@ -20,6 +20,7 @@ class ShaderProgram {
  public:
 
                 ShaderProgram();
+                ~ShaderProgram();
     void        AddVertexShader(const std::string& filePath);
     void        AddFragmentShader(const std::string& filePath);
     void        Link();

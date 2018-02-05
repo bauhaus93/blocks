@@ -23,6 +23,8 @@ class Camera {
 
 
  private:
+     float          horizontalAngle;
+     float          verticalAngle;
      glm::vec3      position;
      glm::mat4      view;
      glm::mat4      projection;
