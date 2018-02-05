@@ -15,10 +15,8 @@ class Texture {
     explicit    Texture(const std::string& filePath);
     GLuint      GetId() const { return id; }
 
-
  private:
     GLuint      id;
-
 
 };
 

@@ -26,10 +26,9 @@ Mesh::Mesh(const std::string& filename):
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
 
-    /*Texture t("test.bmp");
-    textureBuffer = t.GetId();
-    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, uvData.size() * sizeof(GLfloat), uvData.data(), GL_STATIC_DRAW);*/
+    glGenBuffers(1, &uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(GLfloat), uvs.data(), GL_STATIC_DRAW);
 
 }
 
@@ -43,8 +42,6 @@ void Mesh::Draw(Camera& camera, ShaderProgram& shader) {
     shader.SetMVPMatrix(mvp);
 
     glEnableVertexAttribArray(0);
-    //glEnableVertexAttribArray(1);
-
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glVertexAttribPointer(
         0,
@@ -55,7 +52,8 @@ void Mesh::Draw(Camera& camera, ShaderProgram& shader) {
         nullptr
     );
 
-    /*glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
     glVertexAttribPointer(
         1,
         2,
@@ -63,13 +61,11 @@ void Mesh::Draw(Camera& camera, ShaderProgram& shader) {
         GL_FALSE,
         0,
         nullptr
-    );*/
+    );
 
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-
-    //glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
-
+    glDisableVertexAttribArray(1);
 }
 
 

@@ -25,7 +25,7 @@ class Mesh {
  private:
     GLuint       vao;
     GLuint       vertexBuffer;
-    GLuint       textureBuffer;
+    GLuint       uvBuffer;
     unsigned int vertexCount;
     glm::mat4    model;
 

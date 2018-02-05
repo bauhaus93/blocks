@@ -26,6 +26,8 @@ class Application {
     std::unique_ptr<ShaderProgram>  shader;
     std::unique_ptr<Camera>         camera;
     std::unique_ptr<Mesh>           mesh;
+    std::unique_ptr<Texture>        texture;
+    GLuint                          sampleTexId;
 
 
 

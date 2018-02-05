@@ -25,6 +25,7 @@ class ShaderProgram {
     void        Link();
     void        Use();
     void        SetMVPMatrix(const glm::mat4& mvp);
+    GLuint      GetId() const { return programId; }
 
  private:
     GLuint      programId;
