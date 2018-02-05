@@ -5,10 +5,8 @@
 
 namespace mc {
 
-Camera::Camera():
-    horizontalAngle { 0.0f },   //TODO: align this with actual view
-    verticalAngle { 0.0f },     // or remove lookat and make by angles
-    position { 4.0f, 4.0f, 4.0f },
+Camera::Camera(glm::vec3 position_, glm::vec2 rotation_):
+    Object(position_, rotation_),
     view { glm::lookAt(
                     position,
                     glm::vec3 { 0, 0, 0 },
@@ -24,21 +22,21 @@ glm::mat4 Camera::CreateMVPMatrix(const glm::mat4& model) {
     return projection * view * model;
 }
 
-void Camera::Rotate(float horizontal, float vertical) {
+//offset[0] -> horizontal
+//offset[1] -> vertical
+void Camera::Rotate(glm::vec2 offset) {
+    Object::Rotate(offset);
 
-    horizontalAngle += horizontal;
-    verticalAngle += vertical;
-
-    glm::vec3 direction(
-        cos(verticalAngle) * sin(horizontalAngle),
-        sin(verticalAngle),
-        cos(verticalAngle) * cos(horizontalAngle)
+    direction = glm::vec3(
+        cos(offset[1]) * sin(offset[0]),
+        sin(offset[1]),
+        cos(offset[1]) * cos(offset[0])
     );
 
-    glm::vec3 right(
-        sin(horizontalAngle - 3.14f / 2.0f),
+    right = glm::vec3(
+        sin(offset[0] - 3.14f / 2.0f),
         0,
-        cos(horizontalAngle - 3.14f / 2.0f)
+        cos(offset[0] - 3.14f / 2.0f)
     );
 
     glm::vec3 up = glm::cross(right, direction);

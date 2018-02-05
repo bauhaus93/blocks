@@ -10,24 +10,24 @@
 
 #include "logger/GlobalLogger.hpp"
 
+#include "Object.hpp"
+
 namespace mc {
 
-class Camera {
+class Camera: public Object {
 
  public:
+                    Camera(glm::vec3 position_, glm::vec2 rotation_);
 
-                    Camera();
-
-    void            Rotate(float horizontal, float vertical);
     glm::mat4       CreateMVPMatrix(const glm::mat4& model);
-
+    void            Rotate(glm::vec2 offset) override;
 
  private:
-     float          horizontalAngle;
-     float          verticalAngle;
-     glm::vec3      position;
      glm::mat4      view;
      glm::mat4      projection;
+
+     glm::vec3      direction;
+     glm::vec3      right;
 
 };
 

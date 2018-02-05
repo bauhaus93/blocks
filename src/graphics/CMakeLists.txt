@@ -6,7 +6,6 @@ add_sources(
   ShaderProgram.cpp
   ShaderError.cpp
   ShaderProgramError.cpp
-  Camera.cpp
   Bitmap.cpp
   Texture.cpp
 )

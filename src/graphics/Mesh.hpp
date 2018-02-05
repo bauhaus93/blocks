@@ -6,8 +6,8 @@
 #include <glm/mat4x4.hpp>
 
 #include "utility/FileRead.hpp"
+#include "world/Camera.hpp"
 
-#include "Camera.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 #include "MeshLoader.hpp"

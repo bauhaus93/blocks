@@ -8,3 +8,4 @@ add_sources(
 add_subdirectory(logger)
 add_subdirectory(utility)
 add_subdirectory(graphics)
+add_subdirectory(world)

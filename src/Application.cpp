@@ -23,14 +23,12 @@ Application::Application(unsigned int winX, unsigned int winY):
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-
     shader = std::make_unique<ShaderProgram>();
     shader->AddVertexShader("shader/VertexShader.glsl");
     shader->AddFragmentShader("shader/FragmentShader.glsl");
     shader->Link();
     shader->Use();
 
-    camera = std::make_unique<Camera>();
     mesh = std::make_unique<Mesh>("cube.obj");
     texture = std::make_unique<Texture>("test.bmp");
     sampleTexId = glGetUniformLocation(shader->GetId(), "myTexture");
@@ -81,7 +79,7 @@ void Application::HandleMouse() {
     if (abs(horizontalAngle) > std::numeric_limits<float>::epsilon() ||
         abs(verticalAngle) > std::numeric_limits<float>::epsilon()) {
         camera->Rotate(horizontalAngle, verticalAngle);
-        INFO("(", horizontalAngle, ", ", verticalAngle, ")");
+        //INFO("(", horizontalAngle, ", ", verticalAngle, ")");
     }
 
 }

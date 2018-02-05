@@ -13,7 +13,6 @@
 #include "graphics/OpenGLError.hpp"
 #include "graphics/ShaderProgram.hpp"
 #include "graphics/Mesh.hpp"
-#include "graphics/Camera.hpp"
 
 namespace mc {
 
@@ -24,7 +23,6 @@ class Application {
     sf::Time        delta;
     sf::Window      window;
     std::unique_ptr<ShaderProgram>  shader;
-    std::unique_ptr<Camera>         camera;
     std::unique_ptr<Mesh>           mesh;
     std::unique_ptr<Texture>        texture;
     GLuint                          sampleTexId;
