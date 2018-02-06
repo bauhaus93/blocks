@@ -25,7 +25,7 @@ class ShaderProgram {
     void        AddFragmentShader(const std::string& filePath);
     void        Link();
     void        Use();
-    void        SetMVPMatrix(const glm::mat4& mvp);
+    void        SetMVPMatrix(const glm::mat4& mvp) const;
     GLuint      GetId() const { return programId; }
 
  private:
@@ -33,10 +33,12 @@ class ShaderProgram {
     GLuint      vertexShader;
     GLuint      fragmentShader;
     GLint       mvpHandle;
+    GLint       uniformTexture;
 
     void        LinkSetup();
     void        LinkCleanup();
     void        LoadMVPHandle();
+    void        LoadUniformTexture();
 
 };
 

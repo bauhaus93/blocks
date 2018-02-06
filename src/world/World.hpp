@@ -5,8 +5,12 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "graphics/Mesh.hpp"
+#include "graphics/Texture.hpp"
+
 #include "Camera.hpp"
-#include "Player.hpp"
+#include "Cube.hpp"
+
 
 namespace mc {
 
@@ -16,10 +20,15 @@ class World {
 
                 World();
 
+    Camera&     GetCamera() { return camera; }
+    void        Draw() const;
+
  private:
 
-     Player     player;
      Camera     camera;
+     Mesh       mesh;
+     Texture    texture;
+     Cube       cube;
 
 
 

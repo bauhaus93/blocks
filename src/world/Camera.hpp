@@ -9,20 +9,22 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "logger/GlobalLogger.hpp"
+#include "graphics/ShaderProgram.hpp"
 
-#include "Object.hpp"
+#include "Entity.hpp"
 
 namespace mc {
 
-class Camera: public Object {
+class Camera: public Entity {
 
  public:
                     Camera(glm::vec3 position_, glm::vec2 rotation_);
 
-    glm::mat4       CreateMVPMatrix(const glm::mat4& model);
+    void            LoadMVPMatrix(const glm::mat4& model) const;
     void            Rotate(glm::vec2 offset) override;
 
  private:
+     ShaderProgram  shader;
      glm::mat4      view;
      glm::mat4      projection;
 

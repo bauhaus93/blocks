@@ -4,18 +4,17 @@
 
 namespace mc {
 
+static bool LoadGlad();
+
 Application::Application(unsigned int winX, unsigned int winY):
     active { true },
     window { sf::VideoMode(winX, winY),
             "MC",
             sf::Style::Default,
             sf::ContextSettings(24, 8, 4, 4, 6) },
-    shader { nullptr },
-    mesh { nullptr } {
+    world { nullptr } {
 
-    if (!gladLoadGL()) {
-        throw OpenGLError("gladLoadGL", __FUNCTION__);
-    }
+    LoadGlad();
 
     window.setVerticalSyncEnabled(true);
     window.setActive(true);
@@ -23,16 +22,7 @@ Application::Application(unsigned int winX, unsigned int winY):
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    shader = std::make_unique<ShaderProgram>();
-    shader->AddVertexShader("shader/VertexShader.glsl");
-    shader->AddFragmentShader("shader/FragmentShader.glsl");
-    shader->Link();
-    shader->Use();
-
-    mesh = std::make_unique<Mesh>("cube.obj");
-    texture = std::make_unique<Texture>("test.bmp");
-    sampleTexId = glGetUniformLocation(shader->GetId(), "myTexture");
-
+    world = std::make_unique<World>();
 }
 
 Application::~Application() {
@@ -73,26 +63,31 @@ void Application::HandleMouse() {
     sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
 
     float d = delta.asMilliseconds() / 1000.0f;
-    float horizontalAngle = 0.025 * d * float(winX - mousePos.x);
-    float verticalAngle = 0.025 * d * float(winY - mousePos.y);
+    glm::vec2 offset = glm::vec2(
+        0.025 * d * float(winX - mousePos.x),
+        0.025 * d * float(winY - mousePos.y)
+    );
 
-    if (abs(horizontalAngle) > std::numeric_limits<float>::epsilon() ||
-        abs(verticalAngle) > std::numeric_limits<float>::epsilon()) {
-        camera->Rotate(horizontalAngle, verticalAngle);
-        //INFO("(", horizontalAngle, ", ", verticalAngle, ")");
+    if (abs(offset[0]) > std::numeric_limits<float>::epsilon() ||
+        abs(offset[1]) > std::numeric_limits<float>::epsilon()) {
+        world->GetCamera().Rotate(offset);
     }
 
 }
 
 void Application::DrawScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture->GetId());
-    glUniform1i(sampleTexId, 0);
-
-    mesh->Draw(*camera, *shader);
+    world->Draw();
     window.display();
 }
+
+static bool LoadGlad() {
+    if (!gladLoadGL()) {
+        throw OpenGLError("gladLoadGL", __FUNCTION__);
+    }
+    INFO("Glad loaded");
+    return true;
+}
+
 
 }   // namespace mc

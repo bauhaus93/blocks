@@ -20,7 +20,7 @@ class Mesh {
 
     explicit     Mesh(const std::string& filename);
                 ~Mesh();
-    void        Draw(Camera& camera, ShaderProgram& shader);
+    void        Draw() const;
 
  private:
     GLuint       vao;

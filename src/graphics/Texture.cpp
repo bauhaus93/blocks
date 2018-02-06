@@ -15,6 +15,11 @@ Texture::~Texture() {
     }
 }
 
+void Texture::MakeActive() const {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, id);
+}
+
 
 
 }   // namespace mc

@@ -4,38 +4,14 @@
 
 namespace mc {
 
-static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
-    GLuint id = glCreateShader(shaderType);
-
-    DEBUG("Compiling shader \"", filePath, "\"...");
-
-    std::string code = ReadFile(filePath);
-
-    const char* ptr = code.c_str();
-    glShaderSource(id, 1, &ptr, nullptr);
-    glCompileShader(id);
-
-    GLint result = GL_FALSE;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-
-    if (result == GL_FALSE) {
-        throw ShaderError(__FUNCTION__, id);
-    }
-    else {
-        switch (shaderType) {
-        case GL_VERTEX_SHADER: INFO("Compiled vertex shader");  break;
-        case GL_FRAGMENT_SHADER: INFO("Compiled fragment shader");  break;
-        default: INFO("Compiled shader");   break;
-        }
-    }
-    return id;
-}
+static GLuint LoadShader(const std::string& filePath, GLenum shaderType);
 
 ShaderProgram::ShaderProgram():
     programId { glCreateProgram() },
     vertexShader { 0 },
     fragmentShader { 0 },
-    mvpHandle { 0 } {
+    mvpHandle { 0 },
+    uniformTexture { 0 } {
 }
 
 ShaderProgram::~ShaderProgram() {
@@ -70,19 +46,29 @@ void ShaderProgram::Link() {
     INFO("Linked shader program");
 
     LoadMVPHandle();
+    LoadUniformTexture();
 }
 
 void ShaderProgram::LoadMVPHandle() {
     mvpHandle = glGetUniformLocation(programId, "MVP");
     if (mvpHandle == -1) {
-        throw ShaderProgramError(__FUNCTION__, "Could not get mvp handle");
+        throw ShaderProgramError(__FUNCTION__,
+                                 "Could not get mvp handle");
     }
 }
 
-void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) {
-    glUniformMatrix4fv(mvpHandle, 1, GL_FALSE, &mvp[0][0]);
+void ShaderProgram::LoadUniformTexture() {
+    uniformTexture = glGetUniformLocation(programId, "uniformTexture");
+    if (uniformTexture == -1) {
+        throw ShaderProgramError(__FUNCTION__,
+                                 "Could not get uniform texture location");
+    }
+    glUniform1i(uniformTexture, 0); //TODO maybe move to other location to set each frame
 }
 
+void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) const {
+    glUniformMatrix4fv(mvpHandle, 1, GL_FALSE, &mvp[0][0]);
+}
 
 void ShaderProgram::Use() {
     glUseProgram(programId);
@@ -111,6 +97,33 @@ void ShaderProgram::LinkCleanup() {
         glDeleteShader(fragmentShader);
         fragmentShader = 0;
     }
+}
+
+static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
+    GLuint id = glCreateShader(shaderType);
+
+    DEBUG("Compiling shader \"", filePath, "\"...");
+
+    std::string code = ReadFile(filePath);
+
+    const char* ptr = code.c_str();
+    glShaderSource(id, 1, &ptr, nullptr);
+    glCompileShader(id);
+
+    GLint result = GL_FALSE;
+    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+
+    if (result == GL_FALSE) {
+        throw ShaderError(__FUNCTION__, id);
+    }
+    else {
+        switch (shaderType) {
+        case GL_VERTEX_SHADER: INFO("Compiled vertex shader");  break;
+        case GL_FRAGMENT_SHADER: INFO("Compiled fragment shader");  break;
+        default: INFO("Compiled shader");   break;
+        }
+    }
+    return id;
 }
 
 

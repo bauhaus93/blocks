@@ -4,12 +4,15 @@
 
 namespace mc {
 
-class World {
-
 World::World():
-    player { glm::vec3(4.0, 4.0, 4.0), glm::vec2(0.0, 0.0) },
-    camera { player } {
+    camera { glm::vec3(4.0, 4.0, 4.0), glm::vec2(0.0, 0.0) },
+    mesh { "cube.obj" },
+    texture { "test.bmp" },
+    cube { glm::vec3(0.0, 0.0, 0.0), mesh, texture } {
+}
 
+void World::Draw() const {
+    cube.Draw(camera);
 }
 
 

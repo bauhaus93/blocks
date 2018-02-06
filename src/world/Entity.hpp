@@ -4,16 +4,20 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace mc {
 
-class Object {
+//TODO handle model variable
+class Entity {
 
  public:
 
-                    Object(glm::vec3 position_, glm::vec2 rotation_);
-                    Object(const Object& other);
-    virtual         ~Object() = default;
+                    Entity(glm::vec3 position_, glm::vec2 rotation_);
+                    Entity(const Entity& other);
+    Entity&         operator=(const Entity& lhs);
+
+    virtual         ~Entity() = default;
 
     void            SetPosition(glm::vec3 newPosition);
     void            SetRotation(glm::vec2 newRotation);
@@ -21,10 +25,11 @@ class Object {
     virtual void    Rotate(glm::vec2 offset);
     void            Move(glm::vec3 offset);
 
- private:
+ protected:
 
-     glm::vec3      position;
-     glm::vec2      rotation;
+    glm::vec3      position;
+    glm::vec2      rotation;
+    glm::mat4      model;
 
 };
 

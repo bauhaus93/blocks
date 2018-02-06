@@ -11,8 +11,7 @@
 
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
-#include "graphics/ShaderProgram.hpp"
-#include "graphics/Mesh.hpp"
+#include "world/World.hpp"
 
 namespace mc {
 
@@ -22,13 +21,11 @@ class Application {
     bool            active;
     sf::Time        delta;
     sf::Window      window;
-    std::unique_ptr<ShaderProgram>  shader;
-    std::unique_ptr<Mesh>           mesh;
-    std::unique_ptr<Texture>        texture;
-    GLuint                          sampleTexId;
+
+    std::unique_ptr<World>  world;
 
 
-
+                    Application();
     void            HandleEvents();
     void            HandleMouse();
     void            DrawScene();

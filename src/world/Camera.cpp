@@ -2,30 +2,33 @@
 
 #include "Camera.hpp"
 
-
 namespace mc {
 
+ShaderProgram LoadShader();
+
 Camera::Camera(glm::vec3 position_, glm::vec2 rotation_):
-    Object(position_, rotation_),
+    Entity(position_, rotation_),
+    shader { LoadShader() },
     view { glm::lookAt(
-                    position,
+                    position_,
                     glm::vec3 { 0, 0, 0 },
                     glm::vec3 { 0, 1, 0 }) },
     projection { glm::perspective(
                             glm::radians(45.0f),
                             4.0f / 3.0f,
                             0.1f,
-                            100.0f)} {
+                            100.0f) } {
 }
 
-glm::mat4 Camera::CreateMVPMatrix(const glm::mat4& model) {
-    return projection * view * model;
+void Camera::LoadMVPMatrix(const glm::mat4& model) const {
+    const glm::mat4 mvp = projection * view * model;
+    shader.SetMVPMatrix(mvp);
 }
 
 //offset[0] -> horizontal
 //offset[1] -> vertical
 void Camera::Rotate(glm::vec2 offset) {
-    Object::Rotate(offset);
+    Entity::Rotate(offset);
 
     direction = glm::vec3(
         cos(offset[1]) * sin(offset[0]),
@@ -46,6 +49,15 @@ void Camera::Rotate(glm::vec2 offset) {
         position + direction,
         up
     );
+}
+
+ShaderProgram LoadShader() {
+    ShaderProgram program;
+    program.AddVertexShader("shader/VertexShader.glsl");
+    program.AddFragmentShader("shader/FragmentShader.glsl");
+    program.Link();
+    program.Use();
+    return program;
 }
 
 }   // namespace mc

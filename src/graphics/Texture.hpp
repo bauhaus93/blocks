@@ -15,6 +15,7 @@ class Texture {
     explicit    Texture(const std::string& filePath);
                 ~Texture();
     GLuint      GetId() const { return id; }
+    void        MakeActive() const;
 
  private:
     GLuint      id;

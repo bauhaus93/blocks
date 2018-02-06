@@ -1,6 +1,6 @@
 add_sources(
-  World.hpp
-  Object.cpp
+  World.cpp
+  Entity.cpp
   Camera.cpp
-  Player.cpp
+  Cube.cpp
 )

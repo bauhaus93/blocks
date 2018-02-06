@@ -45,10 +45,7 @@ Mesh::~Mesh() {
     }
 }
 
-void Mesh::Draw(Camera& camera, ShaderProgram& shader) {
-
-    glm::mat4 mvp = camera.CreateMVPMatrix(model);
-    shader.SetMVPMatrix(mvp);
+void Mesh::Draw() const {
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
