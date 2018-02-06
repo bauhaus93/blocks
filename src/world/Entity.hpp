@@ -6,6 +6,10 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "Position.hpp"
+#include "Rotation.hpp"
+
+
 namespace mc {
 
 //TODO handle model variable
@@ -13,23 +17,25 @@ class Entity {
 
  public:
 
-                    Entity(glm::vec3 position_, glm::vec2 rotation_);
+                    Entity(Position position_, Rotation Rotation_);
                     Entity(const Entity& other);
-    Entity&         operator=(const Entity& lhs);
-
     virtual         ~Entity() = default;
 
-    void            SetPosition(glm::vec3 newPosition);
-    void            SetRotation(glm::vec2 newRotation);
+    Entity&         operator=(const Entity& lhs);
 
-    virtual void    Rotate(glm::vec2 offset);
-    void            Move(glm::vec3 offset);
+    void            SetPosition(const Position& newPosition);
+    void            SetRotation(const Rotation& newOientation);
+
+    void            Move(const Position& offset);
+    virtual void    Rotate(const Rotation& offset);
 
  protected:
 
-    glm::vec3      position;
-    glm::vec2      rotation;
-    glm::mat4      model;
+     void           UpdateModel();
+
+     Position       position;
+     Rotation       rotation;
+     glm::mat4      model;
 
 };
 

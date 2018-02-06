@@ -12,6 +12,7 @@
 #include "graphics/ShaderProgram.hpp"
 
 #include "Entity.hpp"
+#include "Rotation.hpp"
 
 namespace mc {
 
@@ -21,7 +22,7 @@ class Camera: public Entity {
                     Camera(glm::vec3 position_, glm::vec2 rotation_);
 
     void            LoadMVPMatrix(const glm::mat4& model) const;
-    void            Rotate(glm::vec2 offset) override;
+    void            Rotate(const Rotation& offset) override;
 
  private:
      ShaderProgram  shader;

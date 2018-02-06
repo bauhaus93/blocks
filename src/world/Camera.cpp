@@ -25,21 +25,19 @@ void Camera::LoadMVPMatrix(const glm::mat4& model) const {
     shader.SetMVPMatrix(mvp);
 }
 
-//offset[0] -> horizontal
-//offset[1] -> vertical
-void Camera::Rotate(glm::vec2 offset) {
+void Camera::Rotate(const Rotation& offset) {
     Entity::Rotate(offset);
 
     direction = glm::vec3(
-        cos(offset[1]) * sin(offset[0]),
-        sin(offset[1]),
-        cos(offset[1]) * cos(offset[0])
+        cos(x) * sin(y),
+        sin(x),
+        cos(x) * cos(y)
     );
 
     right = glm::vec3(
-        sin(offset[0] - 3.14f / 2.0f),
+        sin(y - 3.14f / 2.0f),
         0,
-        cos(offset[0] - 3.14f / 2.0f)
+        cos(y - 3.14f / 2.0f)
     );
 
     glm::vec3 up = glm::cross(right, direction);

@@ -4,8 +4,7 @@
 
 namespace mc {
 
-//TODO currently ignoring model variable
-Entity::Entity(glm::vec3 position_, glm::vec2 rotation_):
+Entity::Entity(Position position_, Rotation Rotation_):
     position { position_ },
     rotation { rotation_ },
     model { glm::mat4(1.0f) } {
@@ -22,18 +21,23 @@ Entity& Entity::operator=(const Entity& lhs) {
     return *this;
 }
 
-void Entity::SetPosition(glm::vec3 newPosition) {
+void Entity::UpdateModel() {
+    model = glm::mat4(1.0f);
+}
+
+void Entity::SetPosition(const Position& newPosition) {
     position = newPosition;
 }
-void Entity::SetRotation(glm::vec2 newRotation) {
+
+void Entity::SetRotation(const Rotation& newRotation) {
     rotation = newRotation;
 }
 
-void Entity::Move(glm::vec3 offset) {
+void Entity::Move(const Position& offset) {
     position += offset;
 }
 
-void Entity::Rotate(glm::vec2 offset) {
+void Entity::Rotate(const Rotation& offset) {
     rotation += offset;
 }
 
