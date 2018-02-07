@@ -10,6 +10,8 @@
 
 #include "Camera.hpp"
 #include "Cube.hpp"
+#include "Position.hpp"
+#include "Rotation.hpp"
 
 
 namespace mc {

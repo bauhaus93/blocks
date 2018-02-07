@@ -4,16 +4,15 @@
 
 namespace mc {
 
-Rotation::Rotation(float x, float y, float z):
-    x { x_ },
-    y { y_ },
-    z { z_ } {
+Rotation::Rotation(float x_, float y_, float z_):
+    Point(x_, y_, z_) {
 }
 
 void Rotation::UpdateMatrix() {
-    constexpr vec3 rotateY { 0, 1, 0 };
-    constexpr vec3 rotateX { 1, 0, 0 };
-    matrix = glm::rotate(
+    glm::vec3 eulerAngles(glm::degrees(x),
+                          glm::degrees(y),
+                          glm::degrees(z));
+    matrix = glm::toMat4(glm::quat(eulerAngles));
 }
 
 

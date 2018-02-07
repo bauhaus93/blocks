@@ -8,7 +8,7 @@ Position::Position(float x_, float y_, float z_):
     Point(x_, y_, z_) {
 }
 
-void UpdateMatrix() {
+void Position::UpdateMatrix() {
     matrix = glm::translate(glm::mat4(), glm::vec3(x, y, z));
 }
 

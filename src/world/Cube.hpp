@@ -9,6 +9,8 @@
 
 #include "Entity.hpp"
 #include "Camera.hpp"
+#include "Position.hpp"
+#include "Rotation.hpp"
 
 namespace mc {
 
@@ -16,7 +18,7 @@ class Cube: public Entity {
 
  public:
 
-                Cube(glm::vec3 position_,
+                Cube(const Position& position_,
                      const Mesh& mesh_,
                      const Texture& texture_);
     void        Draw(const Camera& camera) const;

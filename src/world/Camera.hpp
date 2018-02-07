@@ -12,6 +12,7 @@
 #include "graphics/ShaderProgram.hpp"
 
 #include "Entity.hpp"
+#include "Position.hpp"
 #include "Rotation.hpp"
 
 namespace mc {
@@ -19,7 +20,7 @@ namespace mc {
 class Camera: public Entity {
 
  public:
-                    Camera(glm::vec3 position_, glm::vec2 rotation_);
+                    Camera(const Position& position_, const Rotation& rotation_);
 
     void            LoadMVPMatrix(const glm::mat4& model) const;
     void            Rotate(const Rotation& offset) override;

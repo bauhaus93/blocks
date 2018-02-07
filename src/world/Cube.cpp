@@ -5,8 +5,8 @@
 namespace mc {
 
 
-Cube::Cube(glm::vec3 position_, const Mesh& mesh_, const Texture& texture_):
-    Entity(position_, glm::vec2(0.0f, 0.0f)),
+Cube::Cube(const Position& position_, const Mesh& mesh_, const Texture& texture_):
+    Entity(position_, Rotation(0, 0, 0)),
     mesh { mesh_ },
     texture { texture_ } {
 

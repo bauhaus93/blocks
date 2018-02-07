@@ -6,11 +6,11 @@ namespace mc {
 
 ShaderProgram LoadShader();
 
-Camera::Camera(glm::vec3 position_, glm::vec2 rotation_):
+Camera::Camera(const Position& position_, const Rotation& rotation_):
     Entity(position_, rotation_),
     shader { LoadShader() },
     view { glm::lookAt(
-                    position_,
+                    position_.CreateGLMVec(),
                     glm::vec3 { 0, 0, 0 },
                     glm::vec3 { 0, 1, 0 }) },
     projection { glm::perspective(
@@ -29,22 +29,24 @@ void Camera::Rotate(const Rotation& offset) {
     Entity::Rotate(offset);
 
     direction = glm::vec3(
-        cos(x) * sin(y),
-        sin(x),
-        cos(x) * cos(y)
+        cos(rotation.GetX()) * sin(rotation.GetY()),
+        sin(rotation.GetX()),
+        cos(rotation.GetX()) * sin(rotation.GetY())
     );
 
     right = glm::vec3(
-        sin(y - 3.14f / 2.0f),
+        sin(rotation.GetY() - 3.14f / 2.0f),
         0,
-        cos(y - 3.14f / 2.0f)
+        cos(rotation.GetY() - 3.14f / 2.0f)
     );
 
     glm::vec3 up = glm::cross(right, direction);
 
+    glm::vec3 posVec = position.CreateGLMVec();
+
     view = glm::lookAt(
-        position,
-        position + direction,
+        posVec,
+        posVec + direction,
         up
     );
 }

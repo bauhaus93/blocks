@@ -12,6 +12,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
 #include "world/World.hpp"
+#include "world/Rotation.hpp"
 
 namespace mc {
 

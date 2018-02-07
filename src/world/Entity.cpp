@@ -4,7 +4,7 @@
 
 namespace mc {
 
-Entity::Entity(Position position_, Rotation Rotation_):
+Entity::Entity(Position position_, Rotation rotation_):
     position { position_ },
     rotation { rotation_ },
     model { glm::mat4(1.0f) } {
@@ -22,7 +22,7 @@ Entity& Entity::operator=(const Entity& lhs) {
 }
 
 void Entity::UpdateModel() {
-    model = glm::mat4(1.0f);
+    model = glm::mat4(1.0f);    //TODO apply translation & rotation
 }
 
 void Entity::SetPosition(const Position& newPosition) {

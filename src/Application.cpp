@@ -63,13 +63,14 @@ void Application::HandleMouse() {
     sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
 
     float d = delta.asMilliseconds() / 1000.0f;
-    glm::vec2 offset = glm::vec2(
+    Rotation offset = Rotation(
         0.025 * d * float(winX - mousePos.x),
-        0.025 * d * float(winY - mousePos.y)
+        0.025 * d * float(winY - mousePos.y),
+        0.0f
     );
 
-    if (abs(offset[0]) > std::numeric_limits<float>::epsilon() ||
-        abs(offset[1]) > std::numeric_limits<float>::epsilon()) {
+    if (abs(offset.GetX()) > std::numeric_limits<float>::epsilon() ||
+        abs(offset.GetY()) > std::numeric_limits<float>::epsilon()) {
         world->GetCamera().Rotate(offset);
     }
 

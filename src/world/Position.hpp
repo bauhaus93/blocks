@@ -3,6 +3,7 @@
 #pragma once
 
 #include <glm/vec4.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include "Point.hpp"
 

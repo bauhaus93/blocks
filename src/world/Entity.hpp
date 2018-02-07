@@ -12,12 +12,11 @@
 
 namespace mc {
 
-//TODO handle model variable
 class Entity {
 
  public:
 
-                    Entity(Position position_, Rotation Rotation_);
+                    Entity(Position position_, Rotation rotation_);
                     Entity(const Entity& other);
     virtual         ~Entity() = default;
 
