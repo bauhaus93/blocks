@@ -2,20 +2,21 @@
 
 #pragma once
 
-#include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "Point.hpp"
 
 namespace mc {
 
-class Position: public Point {
+class Position {
  public:
-                Position(float x, float y, float z);
+                        Position(float x, float y, float z);
 
- protected:
-
-     void       UpdateMatrix();
+    const glm::vec3&    GetVec() const;
+    glm::mat4           CreateMatrix() const;
+    void                Move(const Position& offset);
+ private:
+    glm::vec3    pos;
 };
 
 

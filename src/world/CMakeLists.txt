@@ -3,7 +3,6 @@ add_sources(
   Entity.cpp
   Camera.cpp
   Cube.cpp
-  Point.cpp
   Position.cpp
   Rotation.cpp
 )

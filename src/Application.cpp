@@ -63,14 +63,12 @@ void Application::HandleMouse() {
     sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
 
     float d = delta.asMilliseconds() / 1000.0f;
-    Rotation offset = Rotation(
-        0.025 * d * float(winX - mousePos.x),
-        0.025 * d * float(winY - mousePos.y),
-        0.0f
-    );
+    float horizontal = 0.025 * d * float(winX - mousePos.x);
+    float vertical =  0.025 * d * float(winY - mousePos.y);
 
-    if (abs(offset.GetX()) > std::numeric_limits<float>::epsilon() ||
-        abs(offset.GetY()) > std::numeric_limits<float>::epsilon()) {
+    if (abs(horizontal) > std::numeric_limits<float>::epsilon() ||
+        abs(vertical) > std::numeric_limits<float>::epsilon()) {
+        Rotation offset = Rotation { -vertical, -horizontal, 0.0f };    //TODO fix negative angles
         world->GetCamera().Rotate(offset);
     }
 

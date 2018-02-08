@@ -22,9 +22,6 @@ class Entity {
 
     Entity&         operator=(const Entity& lhs);
 
-    void            SetPosition(const Position& newPosition);
-    void            SetRotation(const Rotation& newOientation);
-
     void            Move(const Position& offset);
     virtual void    Rotate(const Rotation& offset);
 

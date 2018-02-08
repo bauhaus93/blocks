@@ -10,7 +10,7 @@ Camera::Camera(const Position& position_, const Rotation& rotation_):
     Entity(position_, rotation_),
     shader { LoadShader() },
     view { glm::lookAt(
-                    position_.CreateGLMVec(),
+                    position_.GetVec(),
                     glm::vec3 { 0, 0, 0 },
                     glm::vec3 { 0, 1, 0 }) },
     projection { glm::perspective(
@@ -21,34 +21,14 @@ Camera::Camera(const Position& position_, const Rotation& rotation_):
 }
 
 void Camera::LoadMVPMatrix(const glm::mat4& model) const {
-    const glm::mat4 mvp = projection * view * model;
+    glm::mat4 mvp = projection * view * model;
     shader.SetMVPMatrix(mvp);
 }
 
 void Camera::Rotate(const Rotation& offset) {
     Entity::Rotate(offset);
+    view = rotation.CreateMatrix() * position.CreateMatrix();
 
-    direction = glm::vec3(
-        cos(rotation.GetX()) * sin(rotation.GetY()),
-        sin(rotation.GetX()),
-        cos(rotation.GetX()) * sin(rotation.GetY())
-    );
-
-    right = glm::vec3(
-        sin(rotation.GetY() - 3.14f / 2.0f),
-        0,
-        cos(rotation.GetY() - 3.14f / 2.0f)
-    );
-
-    glm::vec3 up = glm::cross(right, direction);
-
-    glm::vec3 posVec = position.CreateGLMVec();
-
-    view = glm::lookAt(
-        posVec,
-        posVec + direction,
-        up
-    );
 }
 
 ShaderProgram LoadShader() {

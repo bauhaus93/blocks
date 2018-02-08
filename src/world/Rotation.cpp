@@ -4,17 +4,20 @@
 
 namespace mc {
 
-Rotation::Rotation(float x_, float y_, float z_):
-    Point(x_, y_, z_) {
+Rotation::Rotation(float x, float y, float z):
+    quaternion { glm::quat(glm::vec3(
+                 glm::degrees(x),
+                 glm::degrees(y),
+                 glm::degrees(z))) } {
 }
 
-void Rotation::UpdateMatrix() {
-    glm::vec3 eulerAngles(glm::degrees(x),
-                          glm::degrees(y),
-                          glm::degrees(z));
-    matrix = glm::toMat4(glm::quat(eulerAngles));
+glm::mat4 Rotation::CreateMatrix() const {
+    return glm::toMat4(quaternion);
 }
 
+void Rotation::Rotate(const Rotation& offset) {
+    quaternion = offset.quaternion * quaternion;
+}
 
 
 }   // namespace mc

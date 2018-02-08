@@ -2,22 +2,20 @@
 
 #pragma once
 
-#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-
-#include "Point.hpp"
-
 namespace mc {
 
-class Rotation: public Point {
+class Rotation {
  public:
-        Rotation(float x, float y, float z);
+                Rotation(float x, float y, float z);
+    glm::mat4   CreateMatrix() const;
 
-protected:
-    void        UpdateMatrix();
-
+    void        Rotate(const Rotation& offset);
+ private:
+    glm::quat   quaternion;
 };
 
 
