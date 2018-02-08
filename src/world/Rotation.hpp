@@ -2,20 +2,24 @@
 
 #pragma once
 
+#include <cmath>
+
 #include <glm/mat4x4.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace mc {
 
 class Rotation {
  public:
-                Rotation(float x, float y, float z);
-    glm::mat4   CreateMatrix() const;
+                        Rotation(float x, float y, float z);
+    const glm::vec3&    GetVec() const;
+    glm::mat4           CreateMatrix() const;
 
     void        Rotate(const Rotation& offset);
+    void        EnforceBoundary(const Rotation& min, const Rotation& max);
  private:
-    glm::quat   quaternion;
+    glm::vec3   angle;
 };
 
 

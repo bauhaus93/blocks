@@ -27,7 +27,28 @@ void Camera::LoadMVPMatrix(const glm::mat4& model) const {
 
 void Camera::Rotate(const Rotation& offset) {
     Entity::Rotate(offset);
-    view = rotation.CreateMatrix() * position.CreateMatrix();
+
+    //rotation.EnforceBoundary(
+    //    Rotation(-M_PI / 2.0f, 0.0f, 0.0f),
+    //    Rotation(M_PI / 2.0f, 2.0f * M_PI, 0.0f));
+
+    auto rot = rotation.GetVec();
+
+    glm::vec3 direction { cos(rot[1]) * sin(rot[0]),
+                          sin(rot[1]),
+                          cos(rot[1]) * cos(rot[0]) };
+
+    glm::vec3 right { sin(rot[0] - M_PI / 2.0f),
+                      0,
+                      cos(rot[0] - M_PI/ 2.0f) };
+
+    glm::vec3 up = glm::cross(right, direction);
+
+    view = glm::lookAt(
+        position.GetVec(),
+        position.GetVec() + direction,
+        up
+    );
 
 }
 
