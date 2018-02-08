@@ -12,7 +12,7 @@ Camera::Camera(const Position& position_, const Rotation& rotation_):
     view { glm::lookAt(
                     position_.GetVec(),
                     glm::vec3 { 0, 0, 0 },
-                    glm::vec3 { 0, 1, 0 }) },
+                    glm::vec3 { 0, 0, 1 }) },
     projection { glm::perspective(
                             glm::radians(45.0f),
                             4.0f / 3.0f,
@@ -28,28 +28,22 @@ void Camera::LoadMVPMatrix(const glm::mat4& model) const {
 void Camera::Rotate(const Rotation& offset) {
     Entity::Rotate(offset);
 
-    //rotation.EnforceBoundary(
-    //    Rotation(-M_PI / 2.0f, 0.0f, 0.0f),
-    //    Rotation(M_PI / 2.0f, 2.0f * M_PI, 0.0f));
+    rotation.EnforceBoundary(
+        Rotation(0.0f, M_PI / 2.0f, 0.0f),
+        Rotation(2.0f * M_PI, 3.0f * M_PI / 2.0f, 0.0f));
 
     auto rot = rotation.GetVec();
 
-    glm::vec3 direction { cos(rot[1]) * sin(rot[0]),
-                          sin(rot[1]),
-                          cos(rot[1]) * cos(rot[0]) };
-
-    glm::vec3 right { sin(rot[0] - M_PI / 2.0f),
-                      0,
-                      cos(rot[0] - M_PI/ 2.0f) };
-
-    glm::vec3 up = glm::cross(right, direction);
-
+    //converts spherical coordinates to cartesian coordinates
+    glm::vec3 direction { sin(rot[1]) * cos(rot[0]),
+                          sin(rot[1]) * sin(rot[0]),
+                          cos(rot[1]) };
+    TRACE("direction: ", direction[0], "/", direction[1], "/", direction[2]);
     view = glm::lookAt(
         position.GetVec(),
         position.GetVec() + direction,
-        up
+        glm::vec3(0, 0, 1)      //we want z to be up
     );
-
 }
 
 ShaderProgram LoadShader() {

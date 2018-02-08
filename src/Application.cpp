@@ -68,7 +68,7 @@ void Application::HandleMouse() {
 
     if (abs(horizontal) > std::numeric_limits<float>::epsilon() ||
         abs(vertical) > std::numeric_limits<float>::epsilon()) {
-        Rotation offset = Rotation { -horizontal, vertical, 0.0f };
+        Rotation offset = Rotation { horizontal, vertical, 0.0f };
         world->GetCamera().Rotate(offset);
     }
 

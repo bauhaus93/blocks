@@ -2,6 +2,8 @@
 
 #include "Rotation.hpp"
 
+#include "logger/GlobalLogger.hpp"
+
 namespace mc {
 
 Rotation::Rotation(float x, float y, float z):
@@ -24,10 +26,9 @@ void Rotation::EnforceBoundary(const Rotation& min,
 }
 
 glm::mat4 Rotation::CreateMatrix() const {
-    return glm::rotate(angle[2], glm::vec3(0, 0, 1)) *
+    return glm::rotate(angle[0], glm::vec3(1, 0, 0)) *
            glm::rotate(angle[1], glm::vec3(0, 1, 0)) *
-           glm::rotate(angle[0], glm::vec3(1, 0, 0)) *
-           glm::mat4(1.0f);
+           glm::rotate(angle[2], glm::vec3(0, 0, 1));
 }
 
 void Rotation::Rotate(const Rotation& offset) {
