@@ -1,6 +1,8 @@
 add_sources(
   Main.cpp
   Application.cpp
+  GameState.cpp
+  WorldState.cpp
   ApplicationError.cpp
   FileNotFoundError.cpp
 )

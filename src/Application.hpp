@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <vector>
 #include <memory>
 
 #include <glad/glad.h>
@@ -11,33 +12,24 @@
 
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
-#include "world/World.hpp"
-#include "world/Rotation.hpp"
+#include "GameState.hpp"
+#include "WorldState.hpp"
 
 namespace mc {
 
 class Application {
- private:
-
-    bool            active;
-    sf::Time        delta;
-    sf::Window      window;
-
-    std::unique_ptr<World>  world;
-
-
-                    Application();
-    void            HandleEvents();
-    void            HandleMouseMovement();
-    void            HandleKeys();
-    void            DrawScene();
-
- public:
+  public:
 
                     Application(unsigned int winX, unsigned int winY);
                     ~Application();
 
     void            Loop();
+private:
+
+    sf::Window                                  window;
+    std::vector<std::unique_ptr<GameState>>     stateStack;
+
+
 };
 
 }   // namespace mc

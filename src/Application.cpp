@@ -7,12 +7,11 @@ namespace mc {
 static bool LoadGlad();
 
 Application::Application(unsigned int winX, unsigned int winY):
-    active { true },
     window { sf::VideoMode(winX, winY),
             "MC",
             sf::Style::Default,
             sf::ContextSettings(24, 8, 4, 4, 6) },
-    world { nullptr } {
+    stateStack { } {
 
     LoadGlad();
 
@@ -21,8 +20,6 @@ Application::Application(unsigned int winX, unsigned int winY):
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
-    world = std::make_unique<World>();
 }
 
 Application::~Application() {
@@ -31,79 +28,13 @@ Application::~Application() {
 
 void Application::Loop() {
     INFO("Starting application main loop");
-    sf::Clock clock;
 
-    while (active) {
-        HandleMouseMovement();
-        HandleKeys();
-        HandleEvents();
-        world->Tick();
-        DrawScene();
-        sf::sleep(sf::milliseconds(20));
-        delta = clock.restart();
+    stateStack.emplace_back(std::make_unique<WorldState>(stateStack, window));
+
+    while (!stateStack.empty()) {
+        stateStack.back()->Run();       
     }
     INFO("Finishing application main loop");
-}
-
-void Application::HandleEvents() {
-    sf::Event event;
-
-    while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            active = false;
-        } else if (event.type == sf::Event::Resized) {
-           glViewport(0, 0, event.size.width, event.size.height);
-        }
-    }
-}
-
-void Application::HandleMouseMovement() {
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    sf::Vector2u windowSize = window.getSize();
-    float winX = windowSize.x / 2;
-    float winY = windowSize.y / 2;
-    sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
-    float diffX = float(winX - mousePos.x);
-    float diffY = float(winY - mousePos.y);
-
-    if (abs(diffX) > std::numeric_limits<float>::epsilon() ||
-        abs(diffY) > std::numeric_limits<float>::epsilon()) {
-        float d = delta.asMilliseconds() / 1000.0f;
-        diffX *= 0.15 * d;
-        diffY *= 0.15 * d;
-        Rotation offset = Rotation { diffX, -diffY, 0.0f };
-        world->GetCamera().Rotate(offset);
-    }
-}
-
-void Application::HandleKeys() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        auto dir = world->GetCamera().GetRotation().CreateDirection();
-        Position offset = Position(dir[0], dir[1], dir[2]);
-        world->GetCamera().Move(offset);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        auto dir = world->GetCamera().GetRotation().CreateDirection();
-        Position offset = Position(-dir[0], -dir[1], -dir[2]);
-        world->GetCamera().Move(offset);
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        auto dir = world->GetCamera().GetRotation().CreateDirection();
-        auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
-        Position offset = Position(right[0], right[1], right[2]);
-        world->GetCamera().Move(offset);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        auto dir = world->GetCamera().GetRotation().CreateDirection();
-        auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
-        Position offset = Position(-right[0], -right[1], -right[2]);
-        world->GetCamera().Move(offset);
-    }
-}
-
-void Application::DrawScene() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    world->Draw();
-    window.display();
 }
 
 static bool LoadGlad() {
@@ -113,6 +44,5 @@ static bool LoadGlad() {
     INFO("Glad loaded");
     return true;
 }
-
 
 }   // namespace mc

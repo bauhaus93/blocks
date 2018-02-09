@@ -33,6 +33,7 @@ class World {
      Mesh       mesh;
      Texture    texture;
      Cube       cube;
+     Cube       cube2;
 
 
 
