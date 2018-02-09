@@ -19,7 +19,9 @@ class Rotation {
     glm::mat4           CreateMatrix() const;
 
     void        Rotate(const Rotation& offset);
-    void        EnforceBoundary(const Rotation& min, const Rotation& max);
+    void        Rotate(const Rotation& offset,
+                       const Rotation& min,
+                       const Rotation& max);
  private:
     glm::vec3   angle;
 };

@@ -21,17 +21,6 @@ glm::vec3 Rotation::CreateDirection() const {
         cos(angle[1]) } );
 }
 
-void Rotation::EnforceBoundary(const Rotation& min,
-                               const Rotation& max) {
-    for (int i = 0; i < 3; i++) {
-        if (angle[i] < min.angle[i])
-            angle[i] = min.angle[i];
-        else if (angle[i] > max.angle[i]) { 
-            angle[i] = max.angle[i];
-        }
-    }
-}
-
 glm::mat4 Rotation::CreateMatrix() const {
     return glm::rotate(angle[0], glm::vec3(1, 0, 0)) *
            glm::rotate(angle[1], glm::vec3(0, 1, 0)) *
@@ -41,13 +30,34 @@ glm::mat4 Rotation::CreateMatrix() const {
 void Rotation::Rotate(const Rotation& offset) {
     angle += offset.angle;
     for (int i = 0; i < 3; i++) {
-        if (angle[i] >= 2 * M_PI) {
+        if (angle[i] > 2 * M_PI) {
             angle[i] -= 2 * M_PI;
         }
         else if (angle[i] < 0) {
             angle[i] += 2 * M_PI;
         }
     }
+}
+
+void Rotation::Rotate(const Rotation& offset,
+                      const Rotation& min,
+                      const Rotation& max) {
+    angle += offset.angle;
+    for (int i = 0; i < 3; i++) {
+        if (angle[i] < min.angle[i]) {
+            angle[i] = min.angle[i];
+        } else if (angle[i] > max.angle[i]) { 
+            angle[i] = max.angle[i];
+        }
+        
+        if (angle[i] > 2 * M_PI) {
+            angle[i] -= 2 * M_PI;
+        } else if (angle[i] < 0) {
+            angle[i] += 2 * M_PI;
+        }
+        
+    }
+    //INFO("angles: ", glm::degrees(angle[0]), "/", glm::degrees(angle[1]), "/", glm::degrees(angle[2]));
 }
 
 

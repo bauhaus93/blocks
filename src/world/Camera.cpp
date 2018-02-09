@@ -42,13 +42,13 @@ void Camera::Move(const Position& offset) {
     UpdateView();
 }
 
+
+//TODO investigate why angle PI causes jumps in view
+//for now, just don't set the view y angle to exact PI/0
 void Camera::Rotate(const Rotation& offset) {
-    Entity::Rotate(offset);
-
-    rotation.EnforceBoundary(
-        Rotation(0.0f, 0.0f, 0.0f),
-        Rotation(2.0f * M_PI, M_PI, 0.0f));
-
+    rotation.Rotate(offset,
+        Rotation(-2.0f * M_PI, 0.001f, 0.0f),
+        Rotation(2.0f * M_PI, M_PI - 0.001, 0.0f));
     UpdateView();
 }
 
