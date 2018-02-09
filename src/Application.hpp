@@ -28,7 +28,8 @@ class Application {
 
                     Application();
     void            HandleEvents();
-    void            HandleMouse();
+    void            HandleMouseMovement();
+    void            HandleKeys();
     void            DrawScene();
 
  public:

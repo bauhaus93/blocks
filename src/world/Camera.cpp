@@ -25,25 +25,31 @@ void Camera::LoadMVPMatrix(const glm::mat4& model) const {
     shader.SetMVPMatrix(mvp);
 }
 
-void Camera::Rotate(const Rotation& offset) {
-    Entity::Rotate(offset);
 
-    rotation.EnforceBoundary(
-        Rotation(0.0f, M_PI / 2.0f, 0.0f),
-        Rotation(2.0f * M_PI, 3.0f * M_PI / 2.0f, 0.0f));
+void Camera::UpdateView() {
+    auto direction = rotation.CreateDirection();
 
-    auto rot = rotation.GetVec();
-
-    //converts spherical coordinates to cartesian coordinates
-    glm::vec3 direction { sin(rot[1]) * cos(rot[0]),
-                          sin(rot[1]) * sin(rot[0]),
-                          cos(rot[1]) };
     TRACE("direction: ", direction[0], "/", direction[1], "/", direction[2]);
     view = glm::lookAt(
         position.GetVec(),
         position.GetVec() + direction,
         glm::vec3(0, 0, 1)      //we want z to be up
     );
+}
+
+void Camera::Move(const Position& offset) {
+    Entity::Move(offset);
+    UpdateView();
+}
+
+void Camera::Rotate(const Rotation& offset) {
+    Entity::Rotate(offset);
+
+    rotation.EnforceBoundary(
+        Rotation(0.0f, 0.0f, 0.0f),
+        Rotation(2.0f * M_PI, M_PI, 0.0f));
+
+    UpdateView();
 }
 
 ShaderProgram LoadShader() {

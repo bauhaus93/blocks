@@ -23,6 +23,8 @@ class World {
                 World();
 
     Camera&     GetCamera() { return camera; }
+
+    void        Tick();
     void        Draw() const;
 
  private:

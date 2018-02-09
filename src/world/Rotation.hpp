@@ -14,6 +14,8 @@ class Rotation {
  public:
                         Rotation(float x, float y, float z);
     const glm::vec3&    GetVec() const;
+
+    glm::vec3           CreateDirection() const;
     glm::mat4           CreateMatrix() const;
 
     void        Rotate(const Rotation& offset);

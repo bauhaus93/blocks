@@ -22,8 +22,10 @@ class Entity {
 
     Entity&         operator=(const Entity& lhs);
 
-    void            Move(const Position& offset);
+    virtual void    Move(const Position& offset);
     virtual void    Rotate(const Rotation& offset);
+
+    const Rotation& GetRotation() const { return rotation; }
 
  protected:
 

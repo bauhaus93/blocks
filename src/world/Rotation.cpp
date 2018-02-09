@@ -14,6 +14,13 @@ const glm::vec3& Rotation::GetVec() const {
     return angle;
 }
 
+glm::vec3 Rotation::CreateDirection() const {
+    return glm::normalize(glm::vec3 { 
+        sin(angle[1]) * cos(angle[0]),
+        sin(angle[1]) * sin(angle[0]),
+        cos(angle[1]) } );
+}
+
 void Rotation::EnforceBoundary(const Rotation& min,
                                const Rotation& max) {
     for (int i = 0; i < 3; i++) {

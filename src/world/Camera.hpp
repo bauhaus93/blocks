@@ -24,16 +24,16 @@ class Camera: public Entity {
                     Camera(const Position& position_, const Rotation& rotation_);
 
     void            LoadMVPMatrix(const glm::mat4& model) const;
+    void            Move(const Position& offset) override;
     void            Rotate(const Rotation& offset) override;
 
  private:
+
+    void            UpdateView();
+
      ShaderProgram  shader;
      glm::mat4      view;
      glm::mat4      projection;
-
-     glm::vec3      direction;
-     glm::vec3      right;
-
 };
 
 }   // namespace mc

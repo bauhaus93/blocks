@@ -24,15 +24,17 @@ Entity& Entity::operator=(const Entity& lhs) {
 }
 
 void Entity::UpdateModel() {
-    model = glm::mat4(1.0f);    //TODO apply translation & rotation
+    model = position.CreateMatrix() * rotation.CreateMatrix()  * glm::mat4(1.0f);    //TODO apply translation & rotation
 }
 
 void Entity::Move(const Position& offset) {
     position.Move(offset);
+    UpdateModel();
 }
 
 void Entity::Rotate(const Rotation& offset) {
     rotation.Rotate(offset);
+    UpdateModel();
 }
 
 }   // namespace mc

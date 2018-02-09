@@ -34,8 +34,10 @@ void Application::Loop() {
     sf::Clock clock;
 
     while (active) {
-        HandleMouse();
+        HandleMouseMovement();
+        HandleKeys();
         HandleEvents();
+        world->Tick();
         DrawScene();
         sf::sleep(sf::milliseconds(20));
         delta = clock.restart();
@@ -55,23 +57,47 @@ void Application::HandleEvents() {
     }
 }
 
-void Application::HandleMouse() {
+void Application::HandleMouseMovement() {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2u windowSize = window.getSize();
     float winX = windowSize.x / 2;
     float winY = windowSize.y / 2;
     sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
+    float diffX = float(winX - mousePos.x);
+    float diffY = float(winY - mousePos.y);
 
-    float d = delta.asMilliseconds() / 1000.0f;
-    float horizontal = 0.25 * d * float(winX - mousePos.x);
-    float vertical =  0.25 * d * float(winY - mousePos.y);
-
-    if (abs(horizontal) > std::numeric_limits<float>::epsilon() ||
-        abs(vertical) > std::numeric_limits<float>::epsilon()) {
-        Rotation offset = Rotation { horizontal, vertical, 0.0f };
+    if (abs(diffX) > std::numeric_limits<float>::epsilon() ||
+        abs(diffY) > std::numeric_limits<float>::epsilon()) {
+        float d = delta.asMilliseconds() / 1000.0f;
+        diffX *= 0.15 * d;
+        diffY *= 0.15 * d;
+        Rotation offset = Rotation { diffX, -diffY, 0.0f };
         world->GetCamera().Rotate(offset);
     }
+}
 
+void Application::HandleKeys() {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        auto dir = world->GetCamera().GetRotation().CreateDirection();
+        Position offset = Position(dir[0], dir[1], dir[2]);
+        world->GetCamera().Move(offset);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        auto dir = world->GetCamera().GetRotation().CreateDirection();
+        Position offset = Position(-dir[0], -dir[1], -dir[2]);
+        world->GetCamera().Move(offset);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        auto dir = world->GetCamera().GetRotation().CreateDirection();
+        auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
+        Position offset = Position(right[0], right[1], right[2]);
+        world->GetCamera().Move(offset);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        auto dir = world->GetCamera().GetRotation().CreateDirection();
+        auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
+        Position offset = Position(-right[0], -right[1], -right[2]);
+        world->GetCamera().Move(offset);
+    }
 }
 
 void Application::DrawScene() {
