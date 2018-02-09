@@ -15,6 +15,7 @@
 #include "world/World.hpp"
 #include "world/Rotation.hpp"
 #include "GameState.hpp"
+#include "PauseState.hpp"
 
 namespace mc {
 

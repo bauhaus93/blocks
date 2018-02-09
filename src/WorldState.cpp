@@ -13,7 +13,7 @@ WorldState::WorldState(std::vector<std::unique_ptr<GameState>>& stateStack_, sf:
 }
 
 void WorldState::Run() {
-    INFO("Entering WorldState");
+    DEBUG("Entering WorldState");
     sf::Clock clock;
 
     leave = false;
@@ -26,18 +26,28 @@ void WorldState::Run() {
         sf::sleep(sf::milliseconds(20));
         lastDelta = clock.restart();
     }
-    INFO("Leaving WorldState");
+    DEBUG("Leaving WorldState");
 }
 
 void WorldState::HandleEvents() {
     sf::Event event;
 
     while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            stateStack.pop_back();
+        switch(event.type) {
+        case sf::Event::Closed:
+            stateStack.clear();
             leave  = true;
-        } else if (event.type == sf::Event::Resized) {
-           glViewport(0, 0, event.size.width, event.size.height);
+            break;
+        case sf::Event::Resized:
+            glViewport(0, 0, event.size.width, event.size.height);
+            break;
+        case sf::Event::LostFocus:
+            TRACE("Lost FOCUS");
+            stateStack.emplace_back(std::make_unique<PauseState>(stateStack, window));
+            leave = true;
+            break;
+        default:
+            break;
         }
     }
 }
@@ -90,7 +100,6 @@ void WorldState::DrawScene() {
     world.Draw();
     window.display();
 }
-
 
 
 }       // namespace mc
