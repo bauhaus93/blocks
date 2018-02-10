@@ -4,29 +4,20 @@
 
 namespace mc {
 
-WorldState::WorldState(std::vector<std::unique_ptr<GameState>>& stateStack_, sf::Window& window_):
-    GameState(stateStack_),
-    leave { false },
-    window { window_ },
+WorldState::WorldState(sf::Window& window_):
+    GameState(window_, 20),
     world { } {
 
 }
 
-void WorldState::Run() {
-    DEBUG("Entering WorldState");
-    sf::Clock clock;
+void WorldState::Tick() {
+    HandleMouseMovement();
+    HandleKeys();
+    HandleEvents();
 
-    leave = false;
-    while (!leave) {    //TODO make comparsion with back of stack?!
-        HandleMouseMovement();
-        HandleKeys();
-        HandleEvents();
-        world.Tick();
-        DrawScene();
-        sf::sleep(sf::milliseconds(20));
-        lastDelta = clock.restart();
-    }
-    DEBUG("Leaving WorldState");
+    world.Tick();
+
+    DrawScene();
 }
 
 void WorldState::HandleEvents() {
@@ -35,17 +26,15 @@ void WorldState::HandleEvents() {
     while (window.pollEvent(event)) {
         switch(event.type) {
         case sf::Event::Closed:
-            stateStack.clear();
-            leave  = true;
-            break;
+            SetResultAndLeave(true, State::EXIT);
+            return;
         case sf::Event::Resized:
             glViewport(0, 0, event.size.width, event.size.height);
             break;
         case sf::Event::LostFocus:
             TRACE("Lost FOCUS");
-            stateStack.emplace_back(std::make_unique<PauseState>(stateStack, window));
-            leave = true;
-            break;
+            SetResultAndLeave(false, State::PAUSE);
+            return;
         default:
             break;
         }

@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 
     try {
         mc::Application app { 800, 600 };
-        app.Loop();
+        app.Run();
     }
     catch (const mc::ApplicationError& e) {
         ERROR(e.what());

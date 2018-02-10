@@ -1,6 +1,7 @@
 add_sources(
   Main.cpp
   Application.cpp
+  StateStack.cpp
   GameState.cpp
   WorldState.cpp
   PauseState.cpp

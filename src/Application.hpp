@@ -13,7 +13,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
 #include "GameState.hpp"
-#include "WorldState.hpp"
+#include "StateStack.hpp"
 
 namespace mc {
 
@@ -23,11 +23,11 @@ class Application {
                     Application(unsigned int winX, unsigned int winY);
                     ~Application();
 
-    void            Loop();
+    void            Run();
 private:
 
-    sf::Window                                  window;
-    std::vector<std::unique_ptr<GameState>>     stateStack;
+    sf::Window          window;
+    StateStack          stateStack;
 
 
 };

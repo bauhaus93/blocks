@@ -2,9 +2,6 @@
 
 #pragma once
 
-#include <vector>
-#include <memory>
-
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
@@ -17,16 +14,12 @@ class PauseState: public GameState {
 
  public: 
 
-                        PauseState(std::vector<std::unique_ptr<GameState>>& stateStack_, sf::Window& window_);
+                        PauseState(sf::Window& window_);
                         PauseState() = default;
-    void                Run() override;
+    void                Tick();
 
  private:
-
     void                HandleEvents();
-    
-    sf::Window&         window;
-    bool                leave;
 };
  
 

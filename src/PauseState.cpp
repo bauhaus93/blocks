@@ -4,21 +4,12 @@
 
 namespace mc {
 
-PauseState::PauseState(std::vector<std::unique_ptr<GameState>>& stateStack_, sf::Window& window_):
-    GameState(stateStack_),
-    window { window_ },
-    leave { false } {
+PauseState::PauseState(sf::Window& window_):
+    GameState(window_, 100) {
 }
 
-void PauseState::Run() {
-    DEBUG("Entering PauseState");
-
-    while(!leave) {
-        HandleEvents();
-        sf::sleep(sf::milliseconds(100));
-    }
-
-    DEBUG("Leaving PauseState");
+void PauseState::Tick() {
+    HandleEvents();
 }
 
 void PauseState::HandleEvents() {
@@ -27,13 +18,11 @@ void PauseState::HandleEvents() {
     while (window.pollEvent(event)) {
         switch(event.type) {
         case sf::Event::Closed:
-            stateStack.clear();
-            leave = true;
+            SetResultAndLeave(true, State::EXIT);
             return;
         case sf::Event::GainedFocus:
             TRACE("Gained FOCUS!");
-            stateStack.pop_back();
-            leave = true;
+            SetResultAndLeave(true, State::NONE);
             return;
         default: 
             break;

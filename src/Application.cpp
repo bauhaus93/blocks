@@ -11,7 +11,7 @@ Application::Application(unsigned int winX, unsigned int winY):
             "MC",
             sf::Style::Default,
             sf::ContextSettings(24, 8, 4, 4, 6) },
-    stateStack { } {
+    stateStack { window } {
 
     LoadGlad();
 
@@ -26,15 +26,9 @@ Application::~Application() {
 
 }
 
-void Application::Loop() {
-    INFO("Starting application main loop");
-
-    stateStack.emplace_back(std::make_unique<WorldState>(stateStack, window));
-
-    while (!stateStack.empty()) {
-        stateStack.back()->Run();       
-    }
-    INFO("Finishing application main loop");
+void Application::Run() {
+    stateStack.Push(State::WORLD);
+    stateStack.Run();
 }
 
 static bool LoadGlad() {
