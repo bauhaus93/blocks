@@ -9,13 +9,13 @@ World::World():
     mesh { "cube.obj" },
     texture { "test.bmp" },
     cube { Position(0, 0, 0), mesh, texture },
-    cube2 { Position(5, 0, 0), mesh, texture } {
+    cube2 { Position(2, 0, 0), mesh, texture } {
 }
 
 void World::Tick() {
     //cube.Move(Position(0, 0, 0.01));
-    cube.Rotate(Rotation(0, 0, 0.1));
-    cube2.Rotate(Rotation(0.1, -0.1, 0));
+    //cube.Rotate(Rotation(0, 0, 0.1));
+    //cube2.Rotate(Rotation(0.1, -0.1, 0));
 }
 
 void World::Draw() const {

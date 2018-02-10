@@ -8,6 +8,7 @@ Entity::Entity(Position position_, Rotation rotation_):
     position { position_ },
     rotation { rotation_ },
     model { glm::mat4(1.0f) } {
+    UpdateModel();
 }
 
 Entity::Entity(const Entity& other):
@@ -24,7 +25,7 @@ Entity& Entity::operator=(const Entity& lhs) {
 }
 
 void Entity::UpdateModel() {
-    model = position.CreateMatrix() * rotation.CreateMatrix()  * glm::mat4(1.0f);    //TODO apply translation & rotation
+    model = position.CreateMatrix() * rotation.CreateMatrix()  * glm::mat4(1.0f);
 }
 
 void Entity::Move(const Position& offset) {
