@@ -3,28 +3,23 @@
 #pragma once
 
 #include <map>
+#include <cstdint>
+
+#include "utility/Point3.hpp"
+#include "Position.hpp"
+#include "Cube.hpp"
 
 namespace mc {
 
-
-struct BlockPos {
-    int x;
-    int y;
-    int z;
-};
-
 class Chunk {
  public:
-            Chunk(sizeX, sizeY, sizeZ);
-
+            Chunk(const Position& origin_, const Point3<uint32_t>& gridSize_);
 
  private:
     
-    std::map<BlockPos, Cube>    blocks;
-    //std::vector<Cube>           renderBlocks;
-
-
-
+    const Position                      origin;
+    const Point3<uint32_t>              gridSize;
+    std::map<Point3<uint32_t>, Cube>    grid;
 };
 
 

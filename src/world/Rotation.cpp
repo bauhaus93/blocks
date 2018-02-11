@@ -2,39 +2,37 @@
 
 #include "Rotation.hpp"
 
-#include "logger/GlobalLogger.hpp"
-
 namespace mc {
 
 Rotation::Rotation(float x, float y, float z):
-    angle { x, y, z } {
+     Point3(x, y, z) {
 }
 
-const glm::vec3& Rotation::GetVec() const {
-    return angle;
+glm::vec3 Rotation::GetVec() const {
+    return glm::vec3(GetX(), GetY(), GetZ());
 }
 
 glm::vec3 Rotation::CreateDirection() const {
     return glm::normalize(glm::vec3 { 
-        sin(angle[1]) * cos(angle[0]),
-        sin(angle[1]) * sin(angle[0]),
-        cos(angle[1]) } );
+        sin(GetY()) * cos(GetX()),
+        sin(GetY()) * sin(GetX()),
+        cos(GetY()) });
 }
 
 glm::mat4 Rotation::CreateMatrix() const {
-    return glm::rotate(angle[0], glm::vec3(1, 0, 0)) *
-           glm::rotate(angle[1], glm::vec3(0, 1, 0)) *
-           glm::rotate(angle[2], glm::vec3(0, 0, 1));
+    return glm::rotate(GetX(), glm::vec3(1, 0, 0)) *
+           glm::rotate(GetY(), glm::vec3(0, 1, 0)) *
+           glm::rotate(GetZ(), glm::vec3(0, 0, 1));
 }
 
 void Rotation::Rotate(const Rotation& offset) {
-    angle += offset.angle;
+    (*this) += offset;
     for (int i = 0; i < 3; i++) {
-        if (angle[i] > 2 * M_PI) {
-            angle[i] -= 2 * M_PI;
+        if ((*this)[i] > 2 * M_PI) {
+            (*this)[i] -= 2 * M_PI;
         }
-        else if (angle[i] < 0) {
-            angle[i] += 2 * M_PI;
+        else if ((*this)[i] < 0) {
+            (*this)[i] += 2 * M_PI;
         }
     }
 }
@@ -42,20 +40,19 @@ void Rotation::Rotate(const Rotation& offset) {
 void Rotation::Rotate(const Rotation& offset,
                       const Rotation& min,
                       const Rotation& max) {
-    angle += offset.angle;
+    (*this) += offset;
     for (int i = 0; i < 3; i++) {
-        if (angle[i] < min.angle[i]) {
-            angle[i] = min.angle[i];
-        } else if (angle[i] > max.angle[i]) { 
-            angle[i] = max.angle[i];
+        if ((*this)[i] < min[i]) {
+            (*this)[i] = min[i];
+        } else if ((*this)[i] > max[i]) { 
+            (*this)[i] = max[i];
         }
         
-        if (angle[i] > 2 * M_PI) {
-            angle[i] -= 2 * M_PI;
-        } else if (angle[i] < 0) {
-            angle[i] += 2 * M_PI;
+        if ((*this)[i] > 2 * M_PI) {
+            (*this)[i] -= 2 * M_PI;
+        } else if ((*this)[i] < 0) {
+            (*this)[i] += 2 * M_PI;
         }
-        
     }
     //INFO("angles: ", glm::degrees(angle[0]), "/", glm::degrees(angle[1]), "/", glm::degrees(angle[2]));
 }

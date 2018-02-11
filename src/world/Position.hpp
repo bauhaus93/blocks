@@ -5,18 +5,17 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "utility/Point3.hpp"
 
 namespace mc {
 
-class Position {
+class Position: Point3<float> {
  public:
                         Position(float x, float y, float z);
 
-    const glm::vec3&    GetVec() const;
+    glm::vec3           GetVec() const;
     glm::mat4           CreateMatrix() const;
     void                Move(const Position& offset);
- private:
-    glm::vec3    pos;
 };
 
 

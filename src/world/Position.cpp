@@ -5,19 +5,19 @@
 namespace mc {
 
 Position::Position(float x, float y, float z):
-    pos { x, y, z } {
+    Point3(x, y, z) {
 }
 
-const glm::vec3& Position::GetVec() const {
-    return pos;
+glm::vec3 Position::GetVec() const {
+    return glm::vec3(GetX(), GetY(), GetZ());
 }
 
 glm::mat4 Position::CreateMatrix() const {
-    return glm::translate(glm::mat4(), pos);
+    return glm::translate(glm::mat4(), GetVec());
 }
 
 void Position::Move(const Position& offset) {
-    pos += offset.pos;
+    (*this) += offset;
 }
 
 }   // namespace mc
