@@ -9,7 +9,7 @@
 
 namespace mc {
 
-class Position: Point3<float> {
+class Position: public Point3<float> {
  public:
                         Position(float x, float y, float z);
 

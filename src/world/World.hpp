@@ -9,10 +9,9 @@
 #include "graphics/Texture.hpp"
 
 #include "Camera.hpp"
-#include "Cube.hpp"
 #include "Position.hpp"
 #include "Rotation.hpp"
-
+#include "Chunk.hpp"
 
 namespace mc {
 
@@ -29,11 +28,10 @@ class World {
 
  private:
 
-     Camera     camera;
-     Mesh       mesh;
-     Texture    texture;
-     Cube       cube;
-     Cube       cube2;
+    Camera      camera;
+    Mesh        mesh;
+    Texture     texture;
+    Chunk       chunk;
 
 
 

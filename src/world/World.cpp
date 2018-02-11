@@ -8,8 +8,10 @@ World::World():
     camera { Position(4.0, 4.0, 0), Rotation(0, 0, 0) },
     mesh { "cube.obj" },
     texture { "test.bmp" },
-    cube { Position(0, 0, 0), mesh, texture },
-    cube2 { Position(2, 0, 0), mesh, texture } {
+    chunk { Position(0, 0, 0),
+            Point3<float>(2.0f, 2.0f, 2.0f),
+            Point3<uint32_t>(10, 10, 10) } {
+    chunk.Generate(mesh, texture);
 }
 
 void World::Tick() {
@@ -19,8 +21,7 @@ void World::Tick() {
 }
 
 void World::Draw() const {
-    cube.Draw(camera);
-    cube2.Draw(camera);
+    chunk.Draw(camera);
 }
 
 

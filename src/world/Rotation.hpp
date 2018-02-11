@@ -12,7 +12,7 @@
 
 namespace mc {
 
-class Rotation: Point3<float> {
+class Rotation: public Point3<float> {
  public:
                         Rotation(float x, float y, float z);
     glm::vec3           GetVec() const;
