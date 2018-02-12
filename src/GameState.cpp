@@ -21,6 +21,7 @@ void GameState::SetResultAndLeave(bool pop, State next) {
 StateResult GameState::Run() {
     sf::Clock clock;
     leave = false;
+
     while (!leave) {
         Tick();
         sf::sleep(delay);

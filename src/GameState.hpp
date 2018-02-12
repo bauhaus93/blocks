@@ -8,6 +8,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
+#include "logger/GlobalLogger.hpp"
+
 namespace mc {
 
 enum class State {

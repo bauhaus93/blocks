@@ -7,16 +7,13 @@ namespace mc {
 WorldState::WorldState(sf::Window& window_):
     GameState(window_, 20),
     world { } {
-
 }
 
 void WorldState::Tick() {
     HandleMouseMovement();
     HandleKeys();
     HandleEvents();
-
     world.Tick();
-
     DrawScene();
 }
 

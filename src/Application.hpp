@@ -26,7 +26,7 @@ class Application {
     void            Run();
 private:
 
-    sf::Window          window;
+    sf::Window    window;
     StateStack          stateStack;
 
 

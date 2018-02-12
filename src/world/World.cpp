@@ -10,7 +10,7 @@ World::World():
     texture { "test.bmp" },
     chunk { Position(0, 0, 0),
             Point3<float>(2.0f, 2.0f, 2.0f),
-            Point3<uint32_t>(10, 10, 10) } {
+            Point3<uint32_t>(20, 20, 5) } {
     chunk.Generate(mesh, texture);
 }
 

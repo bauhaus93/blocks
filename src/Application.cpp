@@ -19,6 +19,7 @@ Application::Application(unsigned int winX, unsigned int winY):
     window.setActive(true);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
 }
 
