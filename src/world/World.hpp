@@ -28,10 +28,11 @@ class World {
 
  private:
 
-    Camera      camera;
-    Mesh        mesh;
-    Texture     texture;
-    Chunk       chunk;
+    Camera      	camera;
+    SimplexNoise	noise;
+    Mesh        	mesh;
+    Texture     	texture;
+    Chunk       	chunk;
 
 
 

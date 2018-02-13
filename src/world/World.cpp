@@ -6,12 +6,13 @@ namespace mc {
 
 World::World():
     camera { Position(4.0, 4.0, 0), Rotation(0, 0, 0) },
+    noise { },
     mesh { "cube.obj" },
     texture { "test.bmp" },
-    chunk { Position(0, 0, 0),
+    chunk { Point2<int32_t>(0, 0),
             Point3<float>(2.0f, 2.0f, 2.0f),
-            Point3<uint32_t>(20, 20, 5) } {
-    chunk.Generate(mesh, texture);
+            Point2<uint32_t>(50, 50) } {
+    chunk.Generate(noise, mesh, texture);
 }
 
 void World::Tick() {

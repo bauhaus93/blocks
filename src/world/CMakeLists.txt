@@ -6,4 +6,5 @@ add_sources(
   Position.cpp
   Rotation.cpp
   Chunk.cpp
+  SimplexNoise.cpp
 )
