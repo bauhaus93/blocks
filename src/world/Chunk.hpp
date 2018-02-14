@@ -4,7 +4,9 @@
 
 #include <map>
 #include <functional>
+#include <memory>
 #include <cstdint>
+
 
 #include <SFML/System.hpp>
 
@@ -28,6 +30,7 @@ class Chunk {
             Chunk(const Point2<int32_t>& chunkPos_,
                   const Point3<float>& blockSize_,
                   const Point2<int32_t>& gridSize_);
+            Chunk(Chunk&& other);
 
     void    Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture& texture);
     void    Draw(const Camera& camera) const;

@@ -22,6 +22,7 @@ class Point2 {
     T           GetY() const;
 
     Point2<T>   operator+(const Point2<T>& rhs) const;
+    Point2<T>   operator-(const Point2<T>& rhs) const;
     Point2<T>&  operator+=(const Point2<T>& rhs);
     Point2<T>&  operator=(const Point2<T>& rhs);
     T&          operator[](uint8_t index);
@@ -67,6 +68,12 @@ template<class T>
 Point2<T> Point2<T>::operator+(const Point2<T>& rhs) const {
     return Point2<T>(value[0] + rhs.value[0],
                      value[1] + rhs.value[1]);
+}
+
+template<class T>
+Point2<T> Point2<T>::operator-(const Point2<T>& rhs) const {
+    return Point2<T>(value[0] - rhs.value[0],
+                     value[1] - rhs.value[1]);
 }
 
 template<class T>

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <map>
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
@@ -16,11 +18,13 @@
 
 namespace mc {
 
+typedef std::map<Point2<int32_t>, Chunk>    ChunkMap;
+
 class World {
 
  public:
 
-                World();
+                World(Point2<int32_t> chunkSize_, Point3<float> blockSize_, int32_t activeChunkDistance_);
                 ~World();
     Camera&     GetCamera() { return camera; }
 
@@ -29,14 +33,17 @@ class World {
 
  private:
 
+    Point2<int32_t> GetChunkPos(const Entity& entity);
+
     Camera      	camera;
     SimplexNoise	noise;
     Mesh        	mesh;
     Texture     	texture;
-    Chunk       	chunk;
-
-
-
+    Point2<int32_t> chunkSize;
+    Point3<float>   blockSize;
+    Point2<int32_t> centerChunkPos;
+    int32_t         activeChunkDistance;
+    ChunkMap        activeChunks;
 };
 
 }   // namespace mc

@@ -6,7 +6,9 @@ namespace mc {
 
 WorldState::WorldState(sf::Window& window_):
     GameState(window_, 20),
-    world { } {
+    world { Point2<int32_t>(20, 20),
+            Point3<float>(2.0, 2.0, 2.0),
+            2 } {
 }
 
 State WorldState::GetState() const {

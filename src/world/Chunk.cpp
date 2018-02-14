@@ -19,6 +19,16 @@ Chunk::Chunk(const Point2<int32_t>& chunkPos_,
     renderCandidates { } {
 }
 
+Chunk::Chunk(Chunk&& other):
+    chunkPos { other.chunkPos },
+    blockSize { other.blockSize },
+    gridSize { other.gridSize },
+    origin { other.origin },
+    grid { std::move(other.grid) },
+    renderCandidates { std::move(other.renderCandidates) } {
+    TRACE("Chunk move constructor");
+}
+
 
 void Chunk::Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture& texture) {
     constexpr double MIN_HEIGHT = 1.0;
@@ -27,7 +37,9 @@ void Chunk::Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture&
 
     for (auto y = 0; y < gridSize[1]; y++) {
         for (auto x = 0; x < gridSize[0]; x++) {
-            double normalizedNoise = (1.0 + noise.GetOctavedNoise(x, y, 6, 0.1, 0.025)) / 2.0;
+            double normalizedNoise = (1.0 + noise.GetOctavedNoise(chunkPos[0] * gridSize[0] + x,
+                                                                  chunkPos[1] * gridSize[1] + y,
+                                                                  6, 0.1, 0.025)) / 2.0;
             int32_t height = static_cast<int32_t>(MIN_HEIGHT + HEIGHT_VARIATION * normalizedNoise);
             GenerateColumn(Point3<int32_t>(x, y, height), mesh, texture);
         }
