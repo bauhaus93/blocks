@@ -24,14 +24,17 @@ struct StateResult {
     State next;
 };
 
+std::string GetStateName(State state);
+
 class GameState {
 
- public: 
+ public:
 
                         GameState(sf::Window& window_, unsigned int delay_);
                         GameState(const GameState& other) = delete;
     virtual             ~GameState() = default;
     StateResult         Run();
+    virtual State       GetState() const = 0;
 
  protected:
     virtual void        Tick() = 0;

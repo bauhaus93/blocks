@@ -14,6 +14,7 @@ Mesh::Mesh(const std::string& filename):
     uvBuffer { 0 },
     vertexCount { 0 },
     model { glm::mat4(1.0f) } {
+    DEBUG("Creating mesh from file");
 
     std::vector<GLfloat> vertices, uvs, normals;
     LoadMeshDataFromFile(filename, vertices, uvs, normals);
@@ -30,10 +31,11 @@ Mesh::Mesh(const std::string& filename):
     glGenBuffers(1, &uvBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(GLfloat), uvs.data(), GL_STATIC_DRAW);
-
+    DEBUG("Created mesh");
 }
 
 Mesh::~Mesh() {
+    DEBUG("Destroying mesh");
     if (vertexBuffer != 0) {
         glDeleteBuffers(1, &vertexBuffer);
     }

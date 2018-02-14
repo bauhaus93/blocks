@@ -12,11 +12,13 @@ Application::Application(unsigned int winX, unsigned int winY):
             sf::Style::Default,
             sf::ContextSettings(24, 8, 4, 4, 6) },
     stateStack { window } {
+    INFO("Creating application");
 
     LoadGlad();
 
     window.setVerticalSyncEnabled(true);
     window.setActive(true);
+    window.setMouseCursorVisible(false);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -24,19 +26,21 @@ Application::Application(unsigned int winX, unsigned int winY):
 }
 
 Application::~Application() {
-
+    INFO("Destroying application");
 }
 
 void Application::Run() {
+    INFO("Running application");
     stateStack.Push(State::WORLD);
     stateStack.Run();
 }
 
 static bool LoadGlad() {
+    INFO("Loading glad");
     if (!gladLoadGL()) {
         throw OpenGLError("gladLoadGL", __FUNCTION__);
     }
-    INFO("Glad loaded");
+    DEBUG("Glad loaded");
     return true;
 }
 

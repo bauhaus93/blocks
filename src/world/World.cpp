@@ -11,8 +11,13 @@ World::World():
     texture { "test.bmp" },
     chunk { Point2<int32_t>(0, 0),
             Point3<float>(2.0f, 2.0f, 2.0f),
-            Point2<uint32_t>(50, 50) } {
+            Point2<int32_t>(50, 50) } {
+    INFO("Creating world");
     chunk.Generate(noise, mesh, texture);
+}
+
+World::~World() {
+    INFO("Destroying world");
 }
 
 void World::Tick() {

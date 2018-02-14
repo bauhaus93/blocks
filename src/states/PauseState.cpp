@@ -8,6 +8,10 @@ PauseState::PauseState(sf::Window& window_):
     GameState(window_, 100) {
 }
 
+State PauseState::GetState() const {
+    return State::PAUSE;
+}
+
 void PauseState::Tick() {
     HandleEvents();
 }
@@ -24,7 +28,7 @@ void PauseState::HandleEvents() {
             TRACE("Gained FOCUS!");
             SetResultAndLeave(true, State::NONE);
             return;
-        default: 
+        default:
             break;
         }
     }

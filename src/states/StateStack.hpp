@@ -20,7 +20,7 @@ class StateStack {
 
  public:
 
-                StateStack(sf::Window& window_);
+    explicit    StateStack(sf::Window& window_);
 
     void        Push(State state);
     void        Run();
@@ -29,10 +29,8 @@ class StateStack {
 
     void        Pop();
 
-
     sf::Window&   		                        window;
     std::vector<std::unique_ptr<GameState>>     states;
 };
 
 }       // namespace mc
-

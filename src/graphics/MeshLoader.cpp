@@ -14,20 +14,20 @@ void LoadMeshDataFromFile(const std::string& filename,
                           std::vector<GLfloat>& vertices,
                           std::vector<GLfloat>& uvs,
                           std::vector<GLfloat>& normals) {
-    INFO("Loading mesh data from file \"", filename, "\"");
+    DEBUG("Loading mesh data from file \"", filename, "\"");
 
     std::string data = ReadFile(filename);
 
     std::vector<glm::vec3> verticesTmp = GetVertices(data);
-    DEBUG("Read ", verticesTmp.size(), " vertices");
+    TRACE("Read ", verticesTmp.size(), " vertices");
     std::vector<glm::vec2> uvsTmp = GetUVs(data);
-    DEBUG("Read ", uvsTmp.size(), " UVs");
+    TRACE("Read ", uvsTmp.size(), " UVs");
     std::vector<glm::vec3> normalsTmp = GetNormals(data);
-    DEBUG("Read ", normalsTmp.size(), " normals");
+    TRACE("Read ", normalsTmp.size(), " normals");
 
     std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
     int count = LoadIndices(data, vertexIndices, uvIndices, normalIndices);
-    DEBUG("Read ", count, " faces");
+    TRACE("Read ", count, " faces");
 
     for (auto index: vertexIndices) {
         auto& vertex = verticesTmp[index - 1];

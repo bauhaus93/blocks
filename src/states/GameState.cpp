@@ -30,4 +30,14 @@ StateResult GameState::Run() {
     return result;
 }
 
+std::string GetStateName(State state) {
+    switch (state) {
+    case State::NONE:   return "State::NONE";
+    case State::EXIT:   return "State::EXIT";
+    case State::WORLD:  return "State::WORLD";
+    case State::PAUSE:  return "State::PAUSE";
+    default:            return "Unhandled State";
+    }
+}
+
 }       // namespace mc

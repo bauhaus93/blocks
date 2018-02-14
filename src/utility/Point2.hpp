@@ -3,6 +3,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 #include <stdexcept>
 
 namespace mc {
@@ -30,6 +31,12 @@ class Point2 {
  protected:
     T           value[2];
 };
+
+template<class T>
+std::ostream& operator<<(std::ostream& os, const Point2<T>& p) {
+    os << p[0] << "/" << p[1];
+    return os;
+}
 
 template<class T>
 inline void Point2<T>::SetX(T newX) {

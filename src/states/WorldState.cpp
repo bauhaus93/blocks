@@ -9,6 +9,10 @@ WorldState::WorldState(sf::Window& window_):
     world { } {
 }
 
+State WorldState::GetState() const {
+    return State::WORLD;
+}
+
 void WorldState::Tick() {
     HandleMouseMovement();
     HandleKeys();
@@ -50,8 +54,8 @@ void WorldState::HandleMouseMovement() {
     if (abs(diffX) > std::numeric_limits<float>::epsilon() ||
         abs(diffY) > std::numeric_limits<float>::epsilon()) {
         float d = lastDelta.asMilliseconds() / 1000.0f;
-        diffX *= 0.15 * d;
-        diffY *= 0.15 * d;
+        diffX *= 0.025 * d;
+        diffY *= 0.025 * d;
         Rotation offset = Rotation { diffX, -diffY, 0.0f };
         world.GetCamera().Rotate(offset);
     }
@@ -89,4 +93,3 @@ void WorldState::DrawScene() {
 
 
 }       // namespace mc
-

@@ -20,6 +20,7 @@ static GLuint CreateTexture(const char* data, int width, int height) {
 
 GLuint ReadBitmap(const std::string& filePath) {
     std::ifstream fs(filePath, std::ios::in | std::ios::binary);
+    DEBUG("Reading bitmap: \"", filePath, "\"");
 
     if (fs.is_open()) {
         char header[54];
@@ -62,6 +63,7 @@ GLuint ReadBitmap(const std::string& filePath) {
                 __FUNCTION__,
                 "Read only " + std::to_string(fs.gcount()) + " bytes of data, but expected to read" + std::to_string(imageSize));
         }
+        DEBUG("Successfully read bitmap");
         return CreateTexture(buffer.data(), width, height);
     }
     throw ApplicationError(

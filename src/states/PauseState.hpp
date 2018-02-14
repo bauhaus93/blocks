@@ -12,15 +12,16 @@ namespace mc {
 
 class PauseState: public GameState {
 
- public: 
+ public:
 
-                        PauseState(sf::Window& window_);
+    explicit            PauseState(sf::Window& window_);
                         PauseState() = default;
     void                Tick();
+    State               GetState() const override;
 
  private:
     void                HandleEvents();
 };
- 
+
 
 }       // namespace mc

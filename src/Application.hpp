@@ -12,8 +12,8 @@
 
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
-#include "GameState.hpp"
-#include "StateStack.hpp"
+#include "states/GameState.hpp"
+#include "states/StateStack.hpp"
 
 namespace mc {
 
@@ -27,7 +27,7 @@ class Application {
 private:
 
     sf::Window    window;
-    StateStack          stateStack;
+    StateStack    stateStack;
 
 
 };

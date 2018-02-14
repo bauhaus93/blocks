@@ -12,11 +12,12 @@ ShaderProgram::ShaderProgram():
     fragmentShader { 0 },
     mvpHandle { 0 },
     uniformTexture { 0 } {
+    INFO("Creating shader program");
 }
 
 ShaderProgram::~ShaderProgram() {
     if (programId != 0) {
-        DEBUG("Deleting shader program");
+        INFO("Destroying shader program");
         glDeleteProgram(programId);
     }
 }
@@ -30,7 +31,7 @@ void ShaderProgram::AddFragmentShader(const std::string& filePath) {
 }
 
 void ShaderProgram::Link() {
-    DEBUG("Linking shader program...");
+    INFO("Linking shader program");
 
     LinkSetup();
 
@@ -43,7 +44,7 @@ void ShaderProgram::Link() {
     }
 
     LinkCleanup();
-    INFO("Linked shader program");
+    DEBUG("Linked shader program");
 
     LoadMVPHandle();
     LoadUniformTexture();
@@ -77,12 +78,12 @@ void ShaderProgram::Use() {
 void ShaderProgram::LinkSetup() {
     if (vertexShader != 0) {
         glAttachShader(programId, vertexShader);
-        DEBUG("Attached vertex shader");
+        TRACE("Attached vertex shader");
     }
 
     if (fragmentShader != 0) {
         glAttachShader(programId, fragmentShader);
-        DEBUG("Attached fragment shader");
+        TRACE("Attached fragment shader");
     }
 }
 
@@ -102,7 +103,11 @@ void ShaderProgram::LinkCleanup() {
 static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
     GLuint id = glCreateShader(shaderType);
 
-    DEBUG("Compiling shader \"", filePath, "\"...");
+    switch (shaderType) {
+    case GL_VERTEX_SHADER: INFO("Compiling vertex shader: \"", filePath, "\"");  break;
+    case GL_FRAGMENT_SHADER: INFO("Compiling fragment shader: \"", filePath, "\"");  break;
+    default: INFO("Compiling shader: \"", filePath, "\"");   break;
+    }
 
     std::string code = ReadFile(filePath);
 
@@ -115,13 +120,8 @@ static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
 
     if (result == GL_FALSE) {
         throw ShaderError(__FUNCTION__, id);
-    }
-    else {
-        switch (shaderType) {
-        case GL_VERTEX_SHADER: INFO("Compiled vertex shader");  break;
-        case GL_FRAGMENT_SHADER: INFO("Compiled fragment shader");  break;
-        default: INFO("Compiled shader");   break;
-        }
+    } else {
+        DEBUG("Compiled shader");
     }
     return id;
 }

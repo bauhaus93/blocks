@@ -8,6 +8,7 @@
 
 #include <glad/glad.h>
 
+#include "logger/GlobalLogger.hpp"
 #include "ApplicationError.hpp"
 
 namespace mc {

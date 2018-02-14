@@ -9,6 +9,7 @@ StateStack::StateStack(sf::Window& window_):
 }
 
 void StateStack::Push(State state) {
+    DEBUG("Pushing new state on stack: ", GetStateName(state));
     switch(state) {
     case State::WORLD:
         states.emplace_back(std::make_unique<WorldState>(window));
@@ -22,15 +23,18 @@ void StateStack::Push(State state) {
 }
 
 void StateStack::Pop() {
+    DEBUG("Popping state from stack: ", GetStateName(states.back()->GetState()));
     states.pop_back();
 }
 
 
 void StateStack::Run() {
     while(!states.empty()) {
+        INFO("Entering ", GetStateName(states.back()->GetState()));
         StateResult result = states.back()->Run();
-        DEBUG("Changing state");
+
         if (result.next == State::EXIT) {
+            DEBUG("Clearing state stack");
             states.clear();
         } else {
             if (result.pop) {

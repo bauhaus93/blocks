@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "logger/GlobalLogger.hpp"
 #include "graphics/Mesh.hpp"
 #include "graphics/Texture.hpp"
 
@@ -20,7 +21,7 @@ class World {
  public:
 
                 World();
-
+                ~World();
     Camera&     GetCamera() { return camera; }
 
     void        Tick();

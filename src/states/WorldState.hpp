@@ -14,11 +14,12 @@ namespace mc {
 
 class WorldState: public GameState {
 
- public: 
+ public:
 
-                        WorldState(sf::Window& window_);
+    explicit            WorldState(sf::Window& window_);
                         ~WorldState() = default;
     void                Tick();
+    State               GetState() const override;
 
  private:
 
@@ -29,6 +30,6 @@ class WorldState: public GameState {
 
     World               world;
 };
- 
+
 
 }       // namespace mc
