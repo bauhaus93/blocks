@@ -18,7 +18,7 @@ class WorldState: public GameState {
 
     explicit            WorldState(sf::Window& window_);
                         ~WorldState() = default;
-    void                Tick();
+    void                Tick() override;
     State               GetState() const override;
 
  private:
