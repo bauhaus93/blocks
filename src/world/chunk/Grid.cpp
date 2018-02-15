@@ -8,8 +8,8 @@ namespace mc::world::chunk {
 Element* LinkGrid(ElementMap& grid,
                   const Point2i& min,
                   const Point2i& max) {
-    for (auto y = min[1]; y < max[1]; y++) {
-        for (auto x = min[0]; x < max[0]; x++) {
+    for (auto y = min[1]; y <= max[1]; y++) {
+        for (auto x = min[0]; x <= max[0]; x++) {
             Point2i pos(x, y);
             if (x > min[0]) {
                 Point2i western(x - 1, y);
@@ -61,8 +61,8 @@ void Grid::SetCenter(Point2i gridPos) {
         Point2i min (gridPos - sizeHalf);
         Point2i max (gridPos + sizeHalf);
 
-        for (int32_t y = min[1]; y < max[1]; y++) {
-            for (int32_t x = min[0]; x < max[0]; x++) {
+        for (auto y = min[1]; y <= max[1]; y++) {
+            for (auto x = min[0]; x <= max[0]; x++) {
                 Point2i currPos(x, y);
                 tmpGrid.insert(std::make_pair(currPos, GenerateElement(currPos)));
             }
@@ -74,17 +74,24 @@ void Grid::SetCenter(Point2i gridPos) {
 
 void Grid::Draw(const Camera& camera) const {
 
-
-    Element* curr = center;
-    curr->GetChunk().Draw(camera);
-    for (auto y = 1; y < size / 2; y++) {
-        for (auto x = 0; x < size / 2; x++) {
-            curr = curr->GetNeighbour(Direction::EAST);
-            assert(curr != nullptr);
-            curr->GetChunk().Draw(camera);
+    for (auto currY = center; currY != nullptr; currY = currY->GetNeighbour(Direction::NORTH)) {
+        currY->GetChunk().Draw(camera);
+        for (auto currX = currY->GetNeighbour(Direction::EAST); currX != nullptr; currX = currX->GetNeighbour(Direction::EAST)) {
+            currX->GetChunk().Draw(camera);
+        }
+        for (auto currX = currY->GetNeighbour(Direction::WEST); currX != nullptr; currX = currX->GetNeighbour(Direction::WEST)) {
+            currX->GetChunk().Draw(camera);
         }
     }
-
+    for (auto currY = center->GetNeighbour(Direction::SOUTH); currY != nullptr; currY = currY->GetNeighbour(Direction::SOUTH)) {
+        currY->GetChunk().Draw(camera);
+        for (auto currX = currY->GetNeighbour(Direction::EAST); currX != nullptr; currX = currX->GetNeighbour(Direction::EAST)) {
+            currX->GetChunk().Draw(camera);
+        }
+        for (auto currX = currY->GetNeighbour(Direction::WEST); currX != nullptr; currX = currX->GetNeighbour(Direction::WEST)) {
+            currX->GetChunk().Draw(camera);
+        }
+    }
 }
 
 
