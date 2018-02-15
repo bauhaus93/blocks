@@ -9,11 +9,11 @@ Position::Position(float x, float y, float z):
 }
 
 Position::Position(const Position& other):
-    Point3f(other) {
+    Point3f(static_cast<const Point3f&>(other)) {
 }
 
 glm::vec3 Position::GetVec() const {
-    return glm::vec3(GetX(), GetY(), GetZ());
+    return glm::vec3((*this)[0], (*this)[1], (*this)[2]);
 }
 
 glm::mat4 Position::CreateMatrix() const {

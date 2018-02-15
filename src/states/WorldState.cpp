@@ -7,7 +7,7 @@ namespace mc {
 WorldState::WorldState(sf::Window& window_):
     GameState(window_, 20),
     world { Point2i(20, 20),
-            Point3f(2.0, 2.0, 2.0) } {
+            Point3f(2.0f, 2.0f, 2.0f) } {
 }
 
 State WorldState::GetState() const {

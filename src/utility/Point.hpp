@@ -11,19 +11,6 @@
 
 namespace mc {
 
-template<typename T, size_t N, typename... Tail>
-void FillArray(std::array<T, N>& a, size_t index, T value) {
-    assert(index < N);
-    a[index] = value;
-}
-
-template<typename T, size_t N, typename... Tail>
-void FillArray(std::array<T, N>& a, size_t index, T value, Tail... tail) {
-    assert(index < N);
-    a[index] = value;
-    FillArray(a, index + 1, tail...);
-}
-
 template<typename T, size_t N>
 class Point {
 
@@ -55,15 +42,11 @@ class Point {
     std::array<T, N>    value;
 };
 
-template<typename T, size_t N, typename... Args>
-Point<T, N>::Point(Args... args) {
-    FillArray(value, 0, args);
-}
-
+//TODO type check of args elements
 template<typename T, size_t N>
-Point<T, N>::Point(std::initializer_list<T> l):
-    value { l } {
-    assert(l.size() == N);
+template<typename... Args>
+Point<T, N>::Point(Args... args):
+    value { args... } {
 }
 
 template<typename T, size_t N>
@@ -79,7 +62,7 @@ Point<T, N>& Point<T, N>::operator=(const Point<T, N>& other) {
 
 template<typename T, size_t N>
 Point<T, N>& Point<T, N>::operator+=(const Point<T, N>& other) {
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         value[i] += other[i];
     }
     return *this;
@@ -87,7 +70,7 @@ Point<T, N>& Point<T, N>::operator+=(const Point<T, N>& other) {
 
 template<typename T, size_t N>
 Point<T, N>& Point<T, N>::operator-=(const Point<T, N>& other) {
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         value[i] -= other[i];
     }
     return *this;
@@ -95,7 +78,7 @@ Point<T, N>& Point<T, N>::operator-=(const Point<T, N>& other) {
 
 template<typename T, size_t N>
 Point<T, N>& Point<T, N>::operator*=(const Point<T, N>& other) {
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         value[i] *= other[i];
     }
     return *this;
@@ -103,7 +86,7 @@ Point<T, N>& Point<T, N>::operator*=(const Point<T, N>& other) {
 
 template<typename T, size_t N>
 Point<T, N>& Point<T, N>::operator/=(const Point<T, N>& other) {
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         value[i] /= other[i];
     }
     return *this;
@@ -124,7 +107,7 @@ const T& Point<T, N>::operator[](size_t index) const {
 template<typename T, size_t N>
 Point<T, N> Point<T, N>::operator+(const Point<T, N>& rhs) const {
     Point<T, N> result = *this;
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         result[i] += rhs[i];
     }
     return result;
@@ -133,7 +116,7 @@ Point<T, N> Point<T, N>::operator+(const Point<T, N>& rhs) const {
 template<typename T, size_t N>
 Point<T, N> Point<T, N>::operator-(const Point<T, N>& rhs) const {
     Point<T, N> result = *this;
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         result[i] -= rhs[i];
     }
     return result;
@@ -142,7 +125,7 @@ Point<T, N> Point<T, N>::operator-(const Point<T, N>& rhs) const {
 template<typename T, size_t N>
 Point<T, N> Point<T, N>::operator*(const Point<T, N>& rhs) const {
     Point<T, N> result = *this;
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         result[i] *= rhs[i];
     }
     return result;
@@ -151,7 +134,7 @@ Point<T, N> Point<T, N>::operator*(const Point<T, N>& rhs) const {
 template<typename T, size_t N>
 Point<T, N> Point<T, N>::operator/(const Point<T, N>& rhs) const {
     Point<T, N> result = *this;
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         result[i] /= rhs[i];
     }
     return result;
@@ -160,7 +143,7 @@ Point<T, N> Point<T, N>::operator/(const Point<T, N>& rhs) const {
 template<typename T, size_t N>
 Point<T, N> Point<T, N>::operator/(T scalar) const {
     Point<T, N> result = *this;
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         result[i] /= 2;
     }
     return result;
@@ -168,7 +151,7 @@ Point<T, N> Point<T, N>::operator/(T scalar) const {
 
 template<typename T, size_t N>
 bool Point<T, N>::operator<(const Point<T, N>& rhs) const {
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         if (value[i] < rhs.value[i]) {
             return true;
         } else if (value[i] > rhs.value[i]) {
@@ -180,7 +163,7 @@ bool Point<T, N>::operator<(const Point<T, N>& rhs) const {
 
 template<typename T, size_t N>
 bool Point<T, N>::operator==(const Point<T, N>& rhs) const {
-    for (auto i = 0; i < N; i++) {
+    for (decltype(N) i = 0; i < N; i++) {
         if (value[i] != rhs.value[i]) {
             return false;
         }
@@ -191,7 +174,7 @@ bool Point<T, N>::operator==(const Point<T, N>& rhs) const {
 template<typename T, size_t N>
 std::ostream& operator<<(std::ostream& os, const Point<T, N>& point) {
     os << point[0];
-    for (auto i = 1; i < N; i++) {
+    for (decltype(N) i = 1; i < N; i++) {
         os << "/" << point[i];
     }
     return os;

@@ -59,13 +59,13 @@ void Chunk::GenerateColumn(Point3i top, const Mesh& mesh, const Texture& texture
 }
 
 void Chunk::CreateRenderCandidates() {
-    const static Point3i offset[6] {
-        { 1, 0, 0 },
-        { 0, 1, 0 },
-        { -1, 0, 0 },
-        { 0, -1, 0 },
-        { 0, 0, 1 },
-        { 0, 0, -1 }
+    const static std::array<Point3i, 6> offset {
+        Point3i(1, 0, 0),
+        Point3i(0, 1, 0),
+        Point3i(-1, 0, 0),
+        Point3i(0, -1, 0),
+        Point3i(0, 0, 1),
+        Point3i(0, 0, -1)
     };
 
     renderCandidates.clear();

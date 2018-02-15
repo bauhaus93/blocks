@@ -5,28 +5,28 @@
 namespace mc::world {
 
 Rotation::Rotation(float x, float y, float z):
-     Point3(x, y, z) {
+     Point3f(x, y, z) {
 }
 
 Rotation::Rotation(const Rotation& other):
-    Point3(other) {
+    Point3f(static_cast<const Point3f&>(other)) {
 }
 
 glm::vec3 Rotation::GetVec() const {
-    return glm::vec3(GetX(), GetY(), GetZ());
+    return glm::vec3((*this)[0], (*this)[1], (*this)[2]);
 }
 
 glm::vec3 Rotation::CreateDirection() const {
     return glm::normalize(glm::vec3 {
-        sin(GetY()) * cos(GetX()),
-        sin(GetY()) * sin(GetX()),
-        cos(GetY()) });
+        sin((*this)[1]) * cos((*this)[0]),
+        sin((*this)[1]) * sin((*this)[0]),
+        cos((*this)[1]) });
 }
 
 glm::mat4 Rotation::CreateMatrix() const {
-    return glm::rotate(GetX(), glm::vec3(1, 0, 0)) *
-           glm::rotate(GetY(), glm::vec3(0, 1, 0)) *
-           glm::rotate(GetZ(), glm::vec3(0, 0, 1));
+    return glm::rotate((*this)[0], glm::vec3(1, 0, 0)) *
+           glm::rotate((*this)[1], glm::vec3(0, 1, 0)) *
+           glm::rotate((*this)[2], glm::vec3(0, 0, 1));
 }
 
 void Rotation::Rotate(const Rotation& offset) {

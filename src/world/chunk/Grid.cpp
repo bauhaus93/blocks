@@ -10,13 +10,13 @@ Element* LinkGrid(ElementMap& grid,
                   const Point2i& max) {
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
-            Point2i pos { x, y };
+            Point2i pos(x, y);
             if (x > min[0]) {
-                Point2i western { x - 1, y };
+                Point2i western(x - 1, y);
                 grid.at(pos)->Link(grid.at(western), Direction::WEST);
             }
             if (y > min[1]) {
-                Point2i northern { x , y - 1 };
+                Point2i northern(x , y - 1);
                 grid.at(pos)->Link(grid.at(northern), Direction::NORTH);
             }
         }
@@ -49,21 +49,21 @@ Element* Grid::GenerateElement(Point2i pos) {
 }
 
 void Grid::SetCenter(Point3f worldPos) {
-    Point2i gridPos { static_cast<int32_t>(worldPos[0] / chunkSize[0] / blockSize[0]),
-                      static_cast<int32_t>(worldPos[1] / chunkSize[1] / blockSize[1]) };
+    Point2i gridPos(static_cast<int32_t>(worldPos[0] / chunkSize[0] / blockSize[0]),
+                    static_cast<int32_t>(worldPos[1] / chunkSize[1] / blockSize[1]));
     SetCenter(gridPos);
 }
 
 void Grid::SetCenter(Point2i gridPos) {
     if (center == nullptr) {
         ElementMap tmpGrid;
-        Point2i sizeHalf { size / 2, size / 2 };
-        Point2i min { gridPos - sizeHalf };
-        Point2i max { gridPos + sizeHalf };
+        Point2i sizeHalf(size / 2, size / 2);
+        Point2i min (gridPos - sizeHalf);
+        Point2i max (gridPos + sizeHalf);
 
         for (int32_t y = min[1]; y < max[1]; y++) {
             for (int32_t x = min[0]; x < max[0]; x++) {
-                Point2i currPos { x, y };
+                Point2i currPos(x, y);
                 tmpGrid.insert(std::make_pair(currPos, GenerateElement(currPos)));
             }
         }
