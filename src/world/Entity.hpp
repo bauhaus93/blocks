@@ -10,7 +10,7 @@
 #include "Rotation.hpp"
 
 
-namespace mc {
+namespace mc::world {
 
 class Entity {
 
@@ -40,4 +40,4 @@ class Entity {
 
 
 
-}   // namespace mc
+}   // namespace mc::world

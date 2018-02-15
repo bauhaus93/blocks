@@ -2,10 +2,14 @@
 
 #include "Position.hpp"
 
-namespace mc {
+namespace mc::world {
 
 Position::Position(float x, float y, float z):
-    Point3(x, y, z) {
+    Point3f(x, y, z) {
+}
+
+Position::Position(const Position& other):
+    Point3f(other) {
 }
 
 glm::vec3 Position::GetVec() const {
@@ -20,4 +24,4 @@ void Position::Move(const Position& offset) {
     (*this) += offset;
 }
 
-}   // namespace mc
+}   // namespace mc::world

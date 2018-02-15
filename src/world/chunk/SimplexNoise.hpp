@@ -8,7 +8,12 @@
 #include <iostream>
 #include <cmath>
 
-class SimplexNoise{
+
+namespace mc::world::chunk {
+
+typedef std::vector<uint8_t> Vec8u;
+
+class SimplexNoise {
  public:
                 SimplexNoise();
     explicit    SimplexNoise(uint32_t seed_);
@@ -17,11 +22,11 @@ class SimplexNoise{
     uint32_t    GetSeed() const;
     double      GetNoise(double x, double y) const;
     double      GetOctavedNoise(int x, int y, int octaves, double roughness, double scale) const;
-    
+
  private:
-    const uint32_t          seed;
-    std::mt19937            rng;
-    std::vector<uint8_t>    permutation;
+    const uint32_t  seed;
+    std::mt19937    rng;
+    Vec8u           permutation;
 
     double              Fade(double t) const;
     double              Lerp(double t, double a, double b) const;
@@ -29,3 +34,5 @@ class SimplexNoise{
 
 
 };
+
+}   // namespace mc::world::chunk

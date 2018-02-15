@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 
-namespace mc {
+namespace mc::world {
 
 Entity::Entity(Position position_, Rotation rotation_):
     position { position_ },
@@ -38,4 +38,4 @@ void Entity::Rotate(const Rotation& offset) {
     UpdateModel();
 }
 
-}   // namespace mc
+}   // namespace mc::world

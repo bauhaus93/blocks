@@ -2,7 +2,7 @@
 
 #include "Cube.hpp"
 
-namespace mc {
+namespace mc::world {
 
 
 Cube::Cube(const Position& position_, const Mesh& mesh_, const Texture& texture_):
@@ -20,4 +20,4 @@ void Cube::Draw(const Camera& camera) const {
 
 
 
-}   // namespace mc
+}   // namespace mc::world

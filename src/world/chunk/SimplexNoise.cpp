@@ -1,7 +1,7 @@
 /*  Copyright 2018 Jakob Fischer <JakobFischer93@gmail.com>
 
     Noise calculation based on code by
-    Stefan Gustavson <stegu@itn.liu.se> & 
+    Stefan Gustavson <stegu@itn.liu.se> &
     Peter Eastman <peastman@drizzle.stanford.edu>
     itn.liu.se/~stegu/simplexnoise/SimplexNoise.java
 
@@ -10,6 +10,8 @@
 */
 
 #include "SimplexNoise.hpp"
+
+namespace mc::world::chunk {
 
 static const double F2 = 0.5 * (sqrt(3.0) - 1.0);
 static const double G2 = (3.0 - sqrt(3.0)) / 6.0;
@@ -27,8 +29,8 @@ SimplexNoise::SimplexNoise():
 }
 
 SimplexNoise::SimplexNoise(uint32_t seed_):
-    seed{ seed_ },
-    rng{ seed_ }{
+    seed { seed_ },
+    rng { seed_ } {
 
     permutation.resize(256);
 
@@ -135,3 +137,5 @@ double SimplexNoise::GetOctavedNoise(int x, int y,
     }
     return sum / weightSum;
 }
+
+}   // namespace mc::world::chunk

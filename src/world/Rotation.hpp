@@ -10,11 +10,12 @@
 
 #include "utility/Point3.hpp"
 
-namespace mc {
+namespace mc::world {
 
-class Rotation: public Point3<float> {
+class Rotation: public Point3f {
  public:
                         Rotation(float x, float y, float z);
+                        Rotation(const Rotation& other);
     glm::vec3           GetVec() const;
 
     glm::vec3           CreateDirection() const;
@@ -27,4 +28,4 @@ class Rotation: public Point3<float> {
 };
 
 
-}   // namespace mc
+}   // namespace mc::world

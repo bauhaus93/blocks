@@ -6,9 +6,8 @@ namespace mc {
 
 WorldState::WorldState(sf::Window& window_):
     GameState(window_, 20),
-    world { Point2<int32_t>(20, 20),
-            Point3<float>(2.0, 2.0, 2.0),
-            2 } {
+    world { Point2i(20, 20),
+            Point3f(2.0, 2.0, 2.0) } {
 }
 
 State WorldState::GetState() const {
@@ -58,7 +57,7 @@ void WorldState::HandleMouseMovement() {
         float d = lastDelta.asMilliseconds() / 1000.0f;
         diffX *= 0.025 * d;
         diffY *= 0.025 * d;
-        Rotation offset = Rotation { diffX, -diffY, 0.0f };
+        world::Rotation offset { diffX, -diffY, 0.0f };
         world.GetCamera().Rotate(offset);
     }
 }
@@ -66,23 +65,23 @@ void WorldState::HandleMouseMovement() {
 void WorldState::HandleKeys() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         auto dir = world.GetCamera().GetRotation().CreateDirection();
-        Position offset = Position(dir[0], dir[1], dir[2]);
+        world::Position offset { dir[0], dir[1], dir[2] };
         world.GetCamera().Move(offset);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         auto dir = world.GetCamera().GetRotation().CreateDirection();
-        Position offset = Position(-dir[0], -dir[1], -dir[2]);
+        world::Position offset { -dir[0], -dir[1], -dir[2] };
         world.GetCamera().Move(offset);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {  //right is maybe left?!
         auto dir = world.GetCamera().GetRotation().CreateDirection();
         auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
-        Position offset = Position(right[0], right[1], right[2]);
+        world::Position offset { right[0], right[1], right[2] };
         world.GetCamera().Move(offset);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         auto dir = world.GetCamera().GetRotation().CreateDirection();
         auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
-        Position offset = Position(-right[0], -right[1], -right[2]);
+        world::Position offset { -right[0], -right[1], -right[2] };
         world.GetCamera().Move(offset);
     }
 }

@@ -2,7 +2,7 @@
 
 #include "Camera.hpp"
 
-namespace mc {
+namespace mc::world {
 
 ShaderProgram LoadShader();
 
@@ -61,4 +61,4 @@ ShaderProgram LoadShader() {
     return program;
 }
 
-}   // namespace mc
+}   // namespace mc::world

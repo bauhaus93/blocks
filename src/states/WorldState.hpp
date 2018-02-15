@@ -8,6 +8,8 @@
 #include <SFML/System.hpp>
 
 #include "world/World.hpp"
+#include "world/Rotation.hpp"
+
 #include "GameState.hpp"
 
 namespace mc {
@@ -28,7 +30,7 @@ class WorldState: public GameState {
     void                HandleKeys();
     void                DrawScene();
 
-    World               world;
+    world::World        world;
 };
 
 

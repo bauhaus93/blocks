@@ -2,10 +2,14 @@
 
 #include "Rotation.hpp"
 
-namespace mc {
+namespace mc::world {
 
 Rotation::Rotation(float x, float y, float z):
      Point3(x, y, z) {
+}
+
+Rotation::Rotation(const Rotation& other):
+    Point3(other) {
 }
 
 glm::vec3 Rotation::GetVec() const {
@@ -13,7 +17,7 @@ glm::vec3 Rotation::GetVec() const {
 }
 
 glm::vec3 Rotation::CreateDirection() const {
-    return glm::normalize(glm::vec3 { 
+    return glm::normalize(glm::vec3 {
         sin(GetY()) * cos(GetX()),
         sin(GetY()) * sin(GetX()),
         cos(GetY()) });
@@ -44,10 +48,10 @@ void Rotation::Rotate(const Rotation& offset,
     for (int i = 0; i < 3; i++) {
         if ((*this)[i] < min[i]) {
             (*this)[i] = min[i];
-        } else if ((*this)[i] > max[i]) { 
+        } else if ((*this)[i] > max[i]) {
             (*this)[i] = max[i];
         }
-        
+
         if ((*this)[i] > 2 * M_PI) {
             (*this)[i] -= 2 * M_PI;
         } else if ((*this)[i] < 0) {
@@ -58,4 +62,4 @@ void Rotation::Rotate(const Rotation& offset,
 }
 
 
-}   // namespace mc
+}   // namespace mc::world

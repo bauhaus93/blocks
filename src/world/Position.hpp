@@ -7,11 +7,12 @@
 
 #include "utility/Point3.hpp"
 
-namespace mc {
+namespace mc::world {
 
-class Position: public Point3<float> {
+class Position: public Point3f {
  public:
                         Position(float x, float y, float z);
+                        Position(const Position& other);
 
     glm::vec3           GetVec() const;
     glm::mat4           CreateMatrix() const;
@@ -19,4 +20,4 @@ class Position: public Point3<float> {
 };
 
 
-}   // namespace mc
+}   // namespace mc::world

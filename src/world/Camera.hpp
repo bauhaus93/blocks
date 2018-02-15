@@ -16,7 +16,7 @@
 #include "Position.hpp"
 #include "Rotation.hpp"
 
-namespace mc {
+namespace mc::world {
 
 class Camera: public Entity {
 
@@ -36,4 +36,4 @@ class Camera: public Entity {
      glm::mat4      projection;
 };
 
-}   // namespace mc
+}   // namespace mc::world

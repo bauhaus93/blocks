@@ -12,7 +12,7 @@
 #include "Position.hpp"
 #include "Rotation.hpp"
 
-namespace mc {
+namespace mc::world {
 
 class Cube: public Entity {
 
@@ -32,4 +32,4 @@ class Cube: public Entity {
 
 
 
-}   // namespace mc
+}   // namespace mc::world

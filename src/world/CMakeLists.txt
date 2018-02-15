@@ -5,6 +5,6 @@ add_sources(
   Cube.cpp
   Position.cpp
   Rotation.cpp
-  Chunk.cpp
-  SimplexNoise.cpp
 )
+
+add_subdirectory(chunk)
