@@ -34,7 +34,7 @@ Grid::Grid(int32_t gridSize,
     heightNoise { },
     center { nullptr },
     mesh { "cube.obj" },
-    texture { "test.bmp" } {
+    texture { "grass.bmp" } {
     if (size % 2 != 0) {
         throw ApplicationError("Chunk grid size error",
                                 __FUNCTION__,

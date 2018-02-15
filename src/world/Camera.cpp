@@ -17,7 +17,7 @@ Camera::Camera(const Position& position_, const Rotation& rotation_):
                             glm::radians(45.0f),
                             4.0f / 3.0f,
                             0.1f,
-                            100.0f) } {
+                            500.0f) } {
 }
 
 void Camera::LoadMVPMatrix(const glm::mat4& model) const {

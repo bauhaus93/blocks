@@ -6,7 +6,7 @@ namespace mc::world {
 
 World::World(Point2i chunkSize, Point3f blockSize):
     camera { Position(4.0, 4.0, 0), Rotation(0, 0, 0) },
-    grid { 4, chunkSize, blockSize } {
+    grid { 2, chunkSize, blockSize } {
     INFO("Creating world");
     grid.SetCenter(camera.GetPosition());
 }
