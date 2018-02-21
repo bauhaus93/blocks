@@ -19,13 +19,11 @@ class Cube: public Entity {
  public:
 
                 Cube(const Position& position_,
-                     const Mesh& mesh_,
                      const Texture& texture_);
-    void        Draw(const Camera& camera) const;
+    void        Draw(const Camera& camera, const Mesh& mesh) const;
 
  private:
 
-     const Mesh&      mesh;
      const Texture&   texture;
 
 };

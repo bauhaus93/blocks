@@ -33,7 +33,6 @@ Grid::Grid(int32_t gridSize,
     blockSize { blockSize_ },
     heightNoise { },
     center { nullptr },
-    mesh { "cube.obj" },
     texture { "grass.bmp" } {
     if (size % 2 != 0) {
         throw ApplicationError("Chunk grid size error",
@@ -44,7 +43,7 @@ Grid::Grid(int32_t gridSize,
 
 Element* Grid::GenerateElement(Point2i pos) {
     Chunk chunk { pos, chunkSize, blockSize };
-    chunk.Generate(heightNoise, mesh, texture);
+    chunk.Generate(heightNoise, texture);
     return new Element(std::move(chunk));
 }
 
@@ -72,24 +71,24 @@ void Grid::SetCenter(Point2i gridPos) {
     }
 }
 
-void Grid::Draw(const Camera& camera) const {
+void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
 
     for (auto currY = center; currY != nullptr; currY = currY->GetNeighbour(Direction::NORTH)) {
-        currY->GetChunk().Draw(camera);
+        currY->GetChunk().DrawBlocks(camera, mesh);
         for (auto currX = currY->GetNeighbour(Direction::EAST); currX != nullptr; currX = currX->GetNeighbour(Direction::EAST)) {
-            currX->GetChunk().Draw(camera);
+            currX->GetChunk().DrawBlocks(camera, mesh);
         }
         for (auto currX = currY->GetNeighbour(Direction::WEST); currX != nullptr; currX = currX->GetNeighbour(Direction::WEST)) {
-            currX->GetChunk().Draw(camera);
+            currX->GetChunk().DrawBlocks(camera, mesh);
         }
     }
     for (auto currY = center->GetNeighbour(Direction::SOUTH); currY != nullptr; currY = currY->GetNeighbour(Direction::SOUTH)) {
-        currY->GetChunk().Draw(camera);
+        currY->GetChunk().DrawBlocks(camera, mesh);
         for (auto currX = currY->GetNeighbour(Direction::EAST); currX != nullptr; currX = currX->GetNeighbour(Direction::EAST)) {
-            currX->GetChunk().Draw(camera);
+            currX->GetChunk().DrawBlocks(camera, mesh);
         }
         for (auto currX = currY->GetNeighbour(Direction::WEST); currX != nullptr; currX = currX->GetNeighbour(Direction::WEST)) {
-            currX->GetChunk().Draw(camera);
+            currX->GetChunk().DrawBlocks(camera, mesh);
         }
     }
 }

@@ -4,18 +4,13 @@
 
 namespace mc {
 
-std::vector<GLfloat> GetVertices(const std::string& data);
-std::vector<GLfloat> GetUVs(const std::string& data);
-std::vector<GLfloat> GetNormals(const std::string& data);
-
 Mesh::Mesh(const std::string& filename):
     vao { 0 },
     vertexBuffer { 0 },
     uvBuffer { 0 },
     normalBuffer { 0 },
     indexBuffer { 0 },
-    indexCount { 0 },
-    model { glm::mat4(1.0f) } {
+    indexCount { 0 } {
     DEBUG("Creating mesh from file");
 
     std::vector<glm::vec3> vertices, normals;
@@ -69,6 +64,12 @@ Mesh::Mesh(const std::string& filename):
 
 Mesh::~Mesh() {
     DEBUG("Destroying mesh");
+    if (indexBuffer != 0) {
+        glDeleteBuffers(1, &indexBuffer);
+    }
+    if (normalBuffer != 0) {
+        glDeleteBuffers(1, &normalBuffer);
+    }
     if (vertexBuffer != 0) {
         glDeleteBuffers(1, &vertexBuffer);
     }
@@ -80,7 +81,7 @@ Mesh::~Mesh() {
     }
 }
 
-void Mesh::Draw() const {
+void Mesh::Load() const {
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -116,16 +117,21 @@ void Mesh::Draw() const {
     );
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+}
+
+void Mesh::Unload() const {
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+}
+
+void Mesh::Draw() const {
     glDrawElements(
         GL_TRIANGLES,
         indexCount,
         GL_UNSIGNED_INT,
         nullptr
     );
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
 }
 
 

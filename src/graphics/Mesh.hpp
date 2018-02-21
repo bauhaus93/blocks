@@ -3,13 +3,7 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <glm/mat4x4.hpp>
 
-#include "utility/FileRead.hpp"
-#include "world/Camera.hpp"
-
-#include "ShaderProgram.hpp"
-#include "Texture.hpp"
 #include "MeshLoader.hpp"
 
 namespace mc {
@@ -20,6 +14,8 @@ class Mesh {
 
     explicit     Mesh(const std::string& filename);
                 ~Mesh();
+    void        Load() const;
+    void        Unload() const;
     void        Draw() const;
 
  private:
@@ -29,8 +25,6 @@ class Mesh {
     GLuint       normalBuffer;
     GLuint       indexBuffer;
     uint32_t     indexCount;
-    glm::mat4    model;
-
 };
 
 }   // namespace mc

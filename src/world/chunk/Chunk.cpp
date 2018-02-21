@@ -26,7 +26,7 @@ Chunk::Chunk(Chunk&& other):
     renderCandidates { std::move(other.renderCandidates) } {
 }
 
-void Chunk::Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture& texture) {
+void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
     constexpr double MIN_HEIGHT = 1.0;
     constexpr double HEIGHT_VARIATION = 10.0;
     sf::Clock clock;
@@ -37,7 +37,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture&
                                                                   chunkPos[1] * chunkSize[1] + y,
                                                                   6, 0.1, 0.025)) / 2.0;
             int32_t height = static_cast<int32_t>(MIN_HEIGHT + HEIGHT_VARIATION * normalizedNoise);
-            GenerateColumn(Point3i(x, y, height), mesh, texture);
+            GenerateColumn(Point3i(x, y, height), texture);
         }
     }
     CreateRenderCandidates();
@@ -48,13 +48,13 @@ void Chunk::Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture&
 }
 
 
-void Chunk::GenerateColumn(Point3i top, const Mesh& mesh, const Texture& texture) {
+void Chunk::GenerateColumn(Point3i top, const Texture& texture) {
     for (int32_t z = top[2]; z  >= 0; z--) {
         Point3i gridPos(top[0], top[1], z);
         Position worldPos(origin[0] + top[0] * blockSize[0],
                           origin[1] + top[1] * blockSize[1],
                           origin[2] + static_cast<int32_t>(z) * blockSize[2]);
-        blocks.emplace(gridPos, Cube (worldPos, mesh, texture));
+        blocks.emplace(gridPos, Cube (worldPos, texture));
     }
 }
 
@@ -86,9 +86,9 @@ void Chunk::CreateRenderCandidates() {
     }
 }
 
-void Chunk::Draw(const Camera& camera) const {
+void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     for (auto iter = renderCandidates.begin(); iter != renderCandidates.end(); ++iter) {
-        iter->get().Draw(camera);
+        iter->get().Draw(camera, mesh);
     }
 }
 

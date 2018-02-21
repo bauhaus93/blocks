@@ -25,7 +25,7 @@ class Grid {
 
     void            SetCenter(Point3f worldPos);
     void            MoveCenter(Direction direction);
-    void            Draw(const Camera& camera) const;
+    void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
 
  private:
      void           SetCenter(Point2i centerPos);
@@ -37,9 +37,7 @@ class Grid {
      SimplexNoise   heightNoise;
      Element*       center;
 
-     Mesh        	mesh;
      Texture     	texture;
-
 };
 
 }   // namespace mc::world::chunk

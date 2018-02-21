@@ -35,11 +35,11 @@ class Chunk {
                   const Point3f& blockSize_);
             Chunk(Chunk&& other);
 
-    void            Generate(const SimplexNoise& noise, const Mesh& mesh, const Texture& texture);
+    void            Generate(const SimplexNoise& noise, const Texture& texture);
     const Point2i&  GetPosition() const { return chunkPos; }
-    void            Draw(const Camera& camera) const;
+    void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
  private:
-    void    GenerateColumn(Point3i top, const Mesh& mesh, const Texture& texture);
+    void    GenerateColumn(Point3i top, const Texture& texture);
     void    CreateRenderCandidates();
 
     const Point2i   chunkPos;

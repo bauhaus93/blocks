@@ -5,14 +5,13 @@
 namespace mc::world {
 
 
-Cube::Cube(const Position& position_, const Mesh& mesh_, const Texture& texture_):
+Cube::Cube(const Position& position_, const Texture& texture_):
     Entity(position_, Rotation(0, 0, 0)),
-    mesh { mesh_ },
     texture { texture_ } {
 
 }
 
-void Cube::Draw(const Camera& camera) const {
+void Cube::Draw(const Camera& camera, const Mesh& mesh) const {
     camera.LoadMVPMatrix(model);
     texture.MakeActive();
     mesh.Draw();
