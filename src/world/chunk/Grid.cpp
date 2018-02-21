@@ -4,27 +4,6 @@
 
 namespace mc::world::chunk {
 
-
-Element* LinkGrid(ElementMap& grid,
-                  const Point2i& min,
-                  const Point2i& max) {
-    for (auto y = min[1]; y <= max[1]; y++) {
-        for (auto x = min[0]; x <= max[0]; x++) {
-            Point2i pos(x, y);
-            if (x > min[0]) {
-                Point2i western(x - 1, y);
-                grid.at(pos)->Link(grid.at(western), Direction::WEST);
-            }
-            if (y > min[1]) {
-                Point2i northern(x , y - 1);
-                grid.at(pos)->Link(grid.at(northern), Direction::NORTH);
-            }
-        }
-    }
-    Element* center = grid.at((min + max) / 2);
-    return center;
-}
-
 Grid::Grid(int32_t chunkDrawDistance,
            Point2i chunkSize_,
            Point3f blockSize_):
@@ -32,14 +11,9 @@ Grid::Grid(int32_t chunkDrawDistance,
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
     heightNoise { },
-    center { nullptr },
+    centerPos(1337, 1337),
+    grid { },
     texture { "grass.bmp" } {
-}
-
-Element* Grid::GenerateElement(Point2i pos) {
-    Chunk chunk { pos, chunkSize, blockSize };
-    chunk.Generate(heightNoise, texture);
-    return new Element(std::move(chunk));
 }
 
 void Grid::SetCenter(Point3f worldPos) {
@@ -49,41 +23,48 @@ void Grid::SetCenter(Point3f worldPos) {
 }
 
 void Grid::SetCenter(Point2i gridPos) {
-    if (center == nullptr) {
-        ElementMap tmpGrid;
-        Point2i min (gridPos - size);
-        Point2i max (gridPos + size);
+    if (centerPos != gridPos) {
+        centerPos = gridPos;
+        UnloadOldChunks();
+        LoadNewChunks();
+    }
+}
 
-        for (auto y = min[1]; y <= max[1]; y++) {
-            for (auto x = min[0]; x <= max[0]; x++) {
-                Point2i currPos(x, y);
-                tmpGrid.insert(std::make_pair(currPos, GenerateElement(currPos)));
-            }
+void Grid::LoadNewChunks() {
+    for (auto y = -size[1]; y <= size[1]; y++) {
+        for (auto x = -size[0]; x <= size[0]; x++) {
+            Point2i pos(centerPos[0] + x,
+                        centerPos[1] + y);
+            if (grid.find(pos) == grid.end()) {
+                Chunk chunk { pos, chunkSize, blockSize };
+                chunk.Generate(heightNoise, texture);
+                grid.emplace(pos, std::move(chunk));
+            } 
         }
-        center = LinkGrid(tmpGrid, min, max);
-        assert(center->GetChunk().GetPosition() == gridPos);
+    }
+}
+
+void Grid::UnloadOldChunks() {
+    Point2i min(centerPos - size);
+    Point2i max(centerPos + size);
+    std::vector<Point2i> removePos;
+
+    for (auto chunkIter = grid.cbegin(); chunkIter != grid.end(); ++chunkIter) {
+        if (!chunkIter->first.InBoundaries(min, max)) {
+            removePos.emplace_back(chunkIter->first);
+        }
+    }
+    DEBUG("Unloading ", removePos.size(), " chunks");
+    while (!removePos.empty()) {
+        grid.erase(removePos.back());
+        removePos.pop_back();
     }
 }
 
 void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
 
-    for (auto currY = center; currY != nullptr; currY = currY->GetNeighbour(Direction::NORTH)) {
-        currY->GetChunk().DrawBlocks(camera, mesh);
-        for (auto currX = currY->GetNeighbour(Direction::EAST); currX != nullptr; currX = currX->GetNeighbour(Direction::EAST)) {
-            currX->GetChunk().DrawBlocks(camera, mesh);
-        }
-        for (auto currX = currY->GetNeighbour(Direction::WEST); currX != nullptr; currX = currX->GetNeighbour(Direction::WEST)) {
-            currX->GetChunk().DrawBlocks(camera, mesh);
-        }
-    }
-    for (auto currY = center->GetNeighbour(Direction::SOUTH); currY != nullptr; currY = currY->GetNeighbour(Direction::SOUTH)) {
-        currY->GetChunk().DrawBlocks(camera, mesh);
-        for (auto currX = currY->GetNeighbour(Direction::EAST); currX != nullptr; currX = currX->GetNeighbour(Direction::EAST)) {
-            currX->GetChunk().DrawBlocks(camera, mesh);
-        }
-        for (auto currX = currY->GetNeighbour(Direction::WEST); currX != nullptr; currX = currX->GetNeighbour(Direction::WEST)) {
-            currX->GetChunk().DrawBlocks(camera, mesh);
-        }
+    for (auto chunkIter = grid.cbegin(); chunkIter != grid.end(); ++chunkIter) {
+        chunkIter->second.DrawBlocks(camera, mesh);
     }
 }
 

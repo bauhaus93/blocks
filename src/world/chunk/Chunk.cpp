@@ -53,7 +53,7 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture) {
         Point3i gridPos(top[0], top[1], z);
         Position worldPos(origin[0] + top[0] * blockSize[0],
                           origin[1] + top[1] * blockSize[1],
-                          origin[2] + static_cast<int32_t>(z) * blockSize[2]);
+                          origin[2] + z * blockSize[2]);
         blocks.emplace(gridPos, Cube (worldPos, texture));
     }
 }
@@ -68,17 +68,17 @@ void Chunk::CreateRenderCandidates() {
         Point3i(0, 0, -1)
     } };
     const static Point3i boundaryMin(0, 0, 0);
-    const static Point3i boundaryMax(chunkSize[0], chunkSize[1], 1000);
+    const static Point3i boundaryMax(chunkSize[0] - 1, chunkSize[1] - 1, 1000);
 
     renderCandidates.clear();
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
-        auto& block = iter->second;
-        auto& blockPos = iter->first;
+        Cube& block = iter->second;
+        const Point3i& blockPos = iter->first;
         int neighbours = 0;
         for (int i = 0; i < 6; i++) {
-            auto neighbour = blockPos + offset[i];
-            if (!neighbour.InBoundary(boundaryMin, boundaryMax)) { // assumes block in next chunk is existing (must not be true),
-                neighbours++;                                      // TODO make better (-> center chunk must be updated)
+            Point3i neighbour = blockPos + offset[i];
+            if (!neighbour.InBoundaries(boundaryMin, boundaryMax)) {      // assumes block in next chunk is existing (must not be true),
+                neighbours++;                                           // TODO make better
             } else if (blocks.find(neighbour) != blocks.end()) {
                 neighbours++;
             } else {

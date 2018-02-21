@@ -17,7 +17,7 @@ World::~World() {
 }
 
 void World::Tick() {
-
+    grid.SetCenter(camera.GetPosition());
 }
 
 void World::Draw() const {

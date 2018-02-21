@@ -8,13 +8,12 @@
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 
-#include "Direction.hpp"
+#include "Chunk.hpp"
 #include "SimplexNoise.hpp"
-#include "Element.hpp"
 
 namespace mc::world::chunk {
 
-typedef std::map<Point2i, Element*> ElementMap;
+typedef std::map<Point2i, Chunk> ChunkMap;
 
 class Grid {
 
@@ -24,20 +23,21 @@ class Grid {
                          Point3f blockSize_);
 
     void            SetCenter(Point3f worldPos);
-    void            MoveCenter(Direction direction);
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
 
  private:
-     void           SetCenter(Point2i centerPos);
-     Element*       GenerateElement(Point2i pos);
+    void                SetCenter(Point2i centerPos);
+    void                LoadNewChunks();
+    void                UnloadOldChunks();
 
-     Point2i        size;
-     Point2i        chunkSize;
-     Point3f        blockSize;
-     SimplexNoise   heightNoise;
-     Element*       center;
-
-     Texture     	texture;
+    Point2i             size;
+    Point2i             chunkSize;
+    Point3f             blockSize;
+    SimplexNoise        heightNoise;
+    Point2i             centerPos;
+    ChunkMap            grid;
+    
+    Texture     	texture;
 };
 
 }   // namespace mc::world::chunk

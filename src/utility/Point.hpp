@@ -17,7 +17,7 @@ class Point {
  public:
                 template<typename... Args>
     explicit    Point(Args... args);
-    explicit    Point(std::initializer_list<T> l);
+    //explicit    Point(std::initializer_list<T> l);
                 Point(const Point<T, N>& other);
 
     Point<T, N>&    operator=(const Point<T, N>& other);
@@ -36,11 +36,14 @@ class Point {
     Point<T, N> operator/(T scalar) const;
 
     bool        operator<(const Point<T, N>& rhs) const;
+    bool        operator>(const Point<T, N>& rhs) const;
+    bool        operator>=(const Point<T, N>& rhs) const;
+    bool        operator<=(const Point<T, N>& rhs) const;
     bool        operator==(const Point<T, N>& rhs) const;
+    bool        operator!=(const Point<T, N>& rhs) const;
 
-    bool        InBoundary(const Point<T, N>& min,
-                           const Point<T, N>& max);
-
+    bool        InBoundaries(const Point<T, N>& min,
+                             const Point<T, N>& max) const;
  protected:
     std::array<T, N>    value;
 };
@@ -165,6 +168,42 @@ bool Point<T, N>::operator<(const Point<T, N>& rhs) const {
 }
 
 template<typename T, size_t N>
+bool Point<T, N>::operator>(const Point<T, N>& rhs) const {
+    for (decltype(N) i = 0; i < N; i++) {
+        if (value[i] > rhs.value[i]) {
+            return true;
+        } else if (value[i] < rhs.value[i]) {
+            return false;
+        }
+    }
+    return false;
+}
+
+template<typename T, size_t N>
+bool Point<T, N>::operator<=(const Point<T, N>& rhs) const {
+    for (decltype(N) i = 0; i < N; i++) {
+        if (value[i] <= rhs.value[i]) {
+            return true;
+        } else if (value[i] > rhs.value[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<typename T, size_t N>
+bool Point<T, N>::operator>=(const Point<T, N>& rhs) const {
+    for (decltype(N) i = 0; i < N; i++) {
+        if (value[i] >= rhs.value[i]) {
+            return true;
+        } else if (value[i] < rhs.value[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<typename T, size_t N>
 bool Point<T, N>::operator==(const Point<T, N>& rhs) const {
     for (decltype(N) i = 0; i < N; i++) {
         if (value[i] != rhs.value[i]) {
@@ -175,19 +214,22 @@ bool Point<T, N>::operator==(const Point<T, N>& rhs) const {
 }
 
 template<typename T, size_t N>
-bool Point<T, N>::InBoundary(const Point<T, N>& min,
-                             const Point<T, N>& max) {
+bool Point<T, N>::operator!=(const Point<T, N>& rhs) const {
+    return !(*this == rhs);
+}
 
+template<typename T, size_t N>
+bool Point<T, N>::InBoundaries(const Point<T, N>& min,
+                               const Point<T, N>& max) const {
     for (decltype(N) i = 0; i < N; i++) {
         if (value[i] < min[i]) {
             return false;
-        } else if (value[i] >= max[i]) {
+        } else if (value[i] > max[i]) {
             return false;
         }
     }
     return true;
 }
-
 template<typename T, size_t N>
 std::ostream& operator<<(std::ostream& os, const Point<T, N>& point) {
     os << point[0];
