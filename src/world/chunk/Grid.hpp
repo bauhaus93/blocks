@@ -19,7 +19,7 @@ typedef std::map<Point2i, Element*> ElementMap;
 class Grid {
 
  public:
-                    Grid(int32_t gridSize,
+                    Grid(int32_t chunkDrawDistance,
                          Point2i chunkSize_,
                          Point3f blockSize_);
 
@@ -31,7 +31,7 @@ class Grid {
      void           SetCenter(Point2i centerPos);
      Element*       GenerateElement(Point2i pos);
 
-     int32_t        size;
+     Point2i        size;
      Point2i        chunkSize;
      Point3f        blockSize;
      SimplexNoise   heightNoise;

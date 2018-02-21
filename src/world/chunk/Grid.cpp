@@ -25,20 +25,15 @@ Element* LinkGrid(ElementMap& grid,
     return center;
 }
 
-Grid::Grid(int32_t gridSize,
+Grid::Grid(int32_t chunkDrawDistance,
            Point2i chunkSize_,
            Point3f blockSize_):
-    size { gridSize },
+    size (chunkDrawDistance, chunkDrawDistance),
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
     heightNoise { },
     center { nullptr },
     texture { "grass.bmp" } {
-    if (size % 2 != 0) {
-        throw ApplicationError("Chunk grid size error",
-                                __FUNCTION__,
-                                "Grid size must be divisible by 2");
-    }
 }
 
 Element* Grid::GenerateElement(Point2i pos) {
@@ -56,9 +51,8 @@ void Grid::SetCenter(Point3f worldPos) {
 void Grid::SetCenter(Point2i gridPos) {
     if (center == nullptr) {
         ElementMap tmpGrid;
-        Point2i sizeHalf(size / 2, size / 2);
-        Point2i min (gridPos - sizeHalf);
-        Point2i max (gridPos + sizeHalf);
+        Point2i min (gridPos - size);
+        Point2i max (gridPos + size);
 
         for (auto y = min[1]; y <= max[1]; y++) {
             for (auto x = min[0]; x <= max[0]; x++) {
