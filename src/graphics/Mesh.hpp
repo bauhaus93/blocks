@@ -26,7 +26,9 @@ class Mesh {
     GLuint       vao;
     GLuint       vertexBuffer;
     GLuint       uvBuffer;
-    unsigned int vertexCount;
+    GLuint       normalBuffer;
+    GLuint       indexBuffer;
+    uint32_t     indexCount;
     glm::mat4    model;
 
 };

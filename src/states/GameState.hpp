@@ -42,14 +42,10 @@ class GameState {
 
     sf::Window&         window;
     sf::Time            delay;
+    sf::Time            lastTick;
     sf::Time            lastDelta;
     bool                leave;
     StateResult         result;
 };
-
-
-
-
-
 
 }       // namespace mc

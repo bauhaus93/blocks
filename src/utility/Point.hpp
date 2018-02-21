@@ -46,7 +46,7 @@ class Point {
 template<typename T, size_t N>
 template<typename... Args>
 Point<T, N>::Point(Args... args):
-    value { args... } {
+    value { { args... } } {
 }
 
 template<typename T, size_t N>

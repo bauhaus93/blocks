@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include <cassert>
 #include <regex>
 #include <iterator>
+#include <vector>
+#include <map>
 
 #include <glad/glad.h>
 
@@ -16,7 +19,23 @@
 namespace mc {
 
 void LoadMeshDataFromFile(const std::string& filename,
-                          std::vector<GLfloat>& vertices,
-                          std::vector<GLfloat>& uvs,
-                          std::vector<GLfloat>& normals);
+                          std::vector<glm::vec3>& vertices,
+                          std::vector<glm::vec2>& uvs,
+                          std::vector<glm::vec3>& normals,
+                          std::vector<uint32_t>& indices);
+
+
+struct VertexData {
+                VertexData(const glm::vec3& vertex_,
+                           const glm::vec2& uv_,
+                           const glm::vec3& normal_);
+
+    bool        operator<(const VertexData& other) const;
+
+    glm::vec3   vertex;
+    glm::vec2   uv;
+    glm::vec3   normal;
+
+};
+
 }    // namespace mc

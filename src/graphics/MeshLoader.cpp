@@ -10,10 +10,44 @@ int LoadIndices(const std::string& data,
                 std::vector<unsigned int>& uvIndices,
                 std::vector<unsigned int>& normalIndices);
 
+VertexData::VertexData(const glm::vec3& vertex_,
+                       const glm::vec2& uv_,
+                       const glm::vec3& normal_):
+    vertex { vertex_ },
+    uv { uv_ },
+    normal { normal_ } {
+}
+
+bool VertexData::operator<(const VertexData& other) const {
+    for (int i = 0; i < 3; i++) {
+        if (vertex[i] < other.vertex[i]) {
+            return true;
+        } else if (vertex[i] > other.vertex[i]) {
+            return false;
+        }
+    }
+    for (int i = 0; i < 2; i++) {
+        if (uv[i] < other.uv[i]) {
+            return true;
+        } else if (uv[i] > other.uv[i]) {
+            return false;
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        if (normal[i] < other.normal[i]) {
+            return true;
+        } else if (normal[i] > other.normal[i]) {
+            return false;
+        }
+    }
+    return false;
+}
+
 void LoadMeshDataFromFile(const std::string& filename,
-                          std::vector<GLfloat>& vertices,
-                          std::vector<GLfloat>& uvs,
-                          std::vector<GLfloat>& normals) {
+                          std::vector<glm::vec3>& vertices,
+                          std::vector<glm::vec2>& uvs,
+                          std::vector<glm::vec3>& normals,
+                          std::vector<uint32_t>& indices) {
     DEBUG("Loading mesh data from file \"", filename, "\"");
 
     std::string data = ReadFile(filename);
@@ -28,24 +62,32 @@ void LoadMeshDataFromFile(const std::string& filename,
     std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
     int count = LoadIndices(data, vertexIndices, uvIndices, normalIndices);
     TRACE("Read ", count, " faces");
+    assert(vertexIndices.size() == uvIndices.size());
+    assert(uvIndices.size() == normalIndices.size());
 
-    for (auto index: vertexIndices) {
-        auto& vertex = verticesTmp[index - 1];
-        vertices.push_back(vertex[0]);
-        vertices.push_back(vertex[1]);
-        vertices.push_back(vertex[2]);
+    std::map<VertexData, uint32_t> indexedVertices;
+    for (auto i = 0; i < vertexIndices.size(); i++) {
+        auto& vertex = verticesTmp[vertexIndices[i] - 1];
+        auto& uv = uvsTmp[uvIndices[i] - 1];
+        auto& normal = normalsTmp[normalIndices[i] - 1];
+        VertexData newVertex(vertex, uv, normal);
+
+        auto foundVertex = indexedVertices.find(newVertex);
+        if (foundVertex != indexedVertices.end()) {
+            TRACE("Adding already indexed vertex");
+            indices.push_back(foundVertex->second);
+        } else {
+            TRACE("Adding new vertex");
+            vertices.push_back(newVertex.vertex);
+            uvs.push_back(newVertex.uv);
+            normals.push_back(newVertex.normal);
+            uint32_t index = static_cast<uint32_t>(vertices.size() - 1);
+            indices.push_back(index);
+            indexedVertices.emplace(newVertex, index);
+        }
     }
-    for (auto index: uvIndices) {
-        auto& uv = uvsTmp[index - 1];
-        uvs.push_back(uv[0]);
-        uvs.push_back(uv[1]);
-    }
-    for (auto index: normalIndices) {
-        auto& normal = normalsTmp[index - 1];
-        normals.push_back(normal[0]);
-        normals.push_back(normal[1]);
-        normals.push_back(normal[2]);
-    }
+
+
     DEBUG("Loaded mesh data");
 }
 

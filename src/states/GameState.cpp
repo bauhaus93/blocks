@@ -20,12 +20,20 @@ void GameState::SetResultAndLeave(bool pop, State next) {
 
 StateResult GameState::Run() {
     sf::Clock clock;
-    leave = false;
+    sf::Time tickLogTime(sf::milliseconds(0));
 
+    leave = false;
     while (!leave) {
+        clock.restart();
         Tick();
+        lastTick = clock.restart();
+        lastDelta = lastTick + delay;
         sf::sleep(delay);
-        lastDelta = clock.restart();
+        tickLogTime += lastDelta;
+        if (tickLogTime.asMilliseconds() >= 1000) {
+            DEBUG("Last tick: ", lastTick.asMilliseconds(), "ms");
+            tickLogTime = sf::milliseconds(0);
+        }
     }
     return result;
 }
