@@ -67,6 +67,8 @@ void Chunk::CreateRenderCandidates() {
         Point3i(0, 0, 1),
         Point3i(0, 0, -1)
     } };
+    const static Point3i boundaryMin(0, 0, 0);
+    const static Point3i boundaryMax(chunkSize[0], chunkSize[1], 1000);
 
     renderCandidates.clear();
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
@@ -74,7 +76,10 @@ void Chunk::CreateRenderCandidates() {
         auto& blockPos = iter->first;
         int neighbours = 0;
         for (int i = 0; i < 6; i++) {
-            if (blocks.find(blockPos + offset[i]) != blocks.end()) {
+            auto neighbour = blockPos + offset[i];
+            if (!neighbour.InBoundary(boundaryMin, boundaryMax)) { // assumes block in next chunk is existing (must not be true),
+                neighbours++;                                      // TODO make better (-> center chunk must be updated)
+            } else if (blocks.find(neighbour) != blocks.end()) {
                 neighbours++;
             } else {
                 break;

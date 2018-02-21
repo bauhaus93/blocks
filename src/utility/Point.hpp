@@ -38,6 +38,9 @@ class Point {
     bool        operator<(const Point<T, N>& rhs) const;
     bool        operator==(const Point<T, N>& rhs) const;
 
+    bool        InBoundary(const Point<T, N>& min,
+                           const Point<T, N>& max);
+
  protected:
     std::array<T, N>    value;
 };
@@ -165,6 +168,20 @@ template<typename T, size_t N>
 bool Point<T, N>::operator==(const Point<T, N>& rhs) const {
     for (decltype(N) i = 0; i < N; i++) {
         if (value[i] != rhs.value[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<typename T, size_t N>
+bool Point<T, N>::InBoundary(const Point<T, N>& min,
+                             const Point<T, N>& max) {
+
+    for (decltype(N) i = 0; i < N; i++) {
+        if (value[i] < min[i]) {
+            return false;
+        } else if (value[i] >= max[i]) {
             return false;
         }
     }
