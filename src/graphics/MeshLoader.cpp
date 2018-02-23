@@ -66,7 +66,7 @@ void LoadMeshDataFromFile(const std::string& filename,
     assert(uvIndices.size() == normalIndices.size());
 
     std::map<VertexData, uint32_t> indexedVertices;
-    for (auto i = 0; i < vertexIndices.size(); i++) {
+    for ( size_t i = 0; i < vertexIndices.size(); i++) {
         auto& vertex = verticesTmp[vertexIndices[i] - 1];
         auto& uv = uvsTmp[uvIndices[i] - 1];
         auto& normal = normalsTmp[normalIndices[i] - 1];

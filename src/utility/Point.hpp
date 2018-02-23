@@ -230,6 +230,7 @@ bool Point<T, N>::InBoundaries(const Point<T, N>& min,
     }
     return true;
 }
+
 template<typename T, size_t N>
 std::ostream& operator<<(std::ostream& os, const Point<T, N>& point) {
     os << point[0];

@@ -8,3 +8,4 @@ add_sources(
 )
 
 add_subdirectory(chunk)
+add_subdirectory(octree)
