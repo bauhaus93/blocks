@@ -15,7 +15,7 @@ Logger& GetGlobalLogger();
 bool GlobalLoggerActive();
 void DestroyGlobalLogger();
 
-#define LOG_LEVEL TRACE
+#define LOG_LEVEL DEBUG
 
 #if LOG_LEVEL == TRACE
 #define TRACE(args...) mc::log::GetGlobalLogger().Trace(args)

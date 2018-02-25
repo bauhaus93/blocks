@@ -4,8 +4,8 @@
 
 namespace mc::world::chunk {
 
-Chunk::Chunk(const Point2i& chunkPos_,
-             const Point2i& chunkSize_,
+Chunk::Chunk(const Point3i& chunkPos_,
+             const Point3i& chunkSize_,
              const Point3f& blockSize_):
     chunkPos { chunkPos_ },
     chunkSize { chunkSize_ },
@@ -37,7 +37,10 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
                                                                   chunkPos[1] * chunkSize[1] + y,
                                                                   6, 0.1, 0.025)) / 2.0;
             int32_t height = static_cast<int32_t>(MIN_HEIGHT + HEIGHT_VARIATION * normalizedNoise);
-            GenerateColumn(Point3i(x, y, height), texture);
+            height -= chunkPos[2];
+            if (height > 0) {
+                GenerateColumn(Point3i(x, y, height), texture);
+            }
         }
     }
     CreateRenderCandidates();

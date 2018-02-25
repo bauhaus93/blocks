@@ -30,20 +30,20 @@ using Map3D = std::map<Point3i, T>;
 
 class Chunk {
  public:
-            Chunk(const Point2i& chunkPos_,
-                  const Point2i& chunkSize_,
+            Chunk(const Point3i& chunkPos_,
+                  const Point3i& chunkSize_,
                   const Point3f& blockSize_);
             Chunk(Chunk&& other);
 
     void            Generate(const SimplexNoise& noise, const Texture& texture);
-    const Point2i&  GetPosition() const { return chunkPos; }
+    const Point3i&  GetPosition() const { return chunkPos; }
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
  private:
     void    GenerateColumn(Point3i top, const Texture& texture);
     void    CreateRenderCandidates();
 
-    const Point2i   chunkPos;
-    const Point2i   chunkSize;
+    const Point3i   chunkPos;
+    const Point3i   chunkSize;
     const Point3f   blockSize;
     const Position  origin;
     Map3D<Cube>     blocks;

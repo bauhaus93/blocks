@@ -25,7 +25,7 @@ class World {
 
  public:
 
-                World(Point2i chunkSize, Point3f blockSize);
+                World(Point3i chunkSize, Point3f blockSize);
                 ~World();
     Camera&     GetCamera() { return camera; }
 

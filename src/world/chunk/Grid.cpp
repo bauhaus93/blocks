@@ -5,24 +5,25 @@
 namespace mc::world::chunk {
 
 Grid::Grid(int32_t chunkDrawDistance,
-           Point2i chunkSize_,
+           Point3i chunkSize_,
            Point3f blockSize_):
     size (chunkDrawDistance, chunkDrawDistance),
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
     heightNoise { },
-    centerPos(1337, 1337),
+    centerPos(1337, 1337, 1337),
     grid { },
     texture { "grass.bmp" } {
 }
 
 void Grid::SetCenter(Point3f worldPos) {
-    Point2i gridPos(static_cast<int32_t>(worldPos[0] / chunkSize[0] / blockSize[0]),
-                    static_cast<int32_t>(worldPos[1] / chunkSize[1] / blockSize[1]));
+    Point3i gridPos(static_cast<int32_t>(worldPos[0] / chunkSize[0] / blockSize[0]),
+                    static_cast<int32_t>(worldPos[1] / chunkSize[1] / blockSize[1]),
+                    static_cast<int32_t>(worldPos[2] / chunkSize[2] / blockSize[2]));
     SetCenter(gridPos);
 }
 
-void Grid::SetCenter(Point2i gridPos) {
+void Grid::SetCenter(Point3i gridPos) {
     if (centerPos != gridPos) {
         DEBUG("Changing center chunk, ", centerPos, "-> ", gridPos);
         centerPos = gridPos;
@@ -32,23 +33,25 @@ void Grid::SetCenter(Point2i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
-    for (auto y = -size[1]; y <= size[1]; y++) {
-        for (auto x = -size[0]; x <= size[0]; x++) {
-            Point2i pos(centerPos[0] + x,
-                        centerPos[1] + y);
-            if (grid.find(pos) == grid.end()) {
-                Chunk chunk { pos, chunkSize, blockSize };
-                chunk.Generate(heightNoise, texture);
-                grid.emplace(pos, std::move(chunk));
-            } 
+    for (auto z = -size[2]; z <= size[2]; z++) {
+        for (auto y = -size[1]; y <= size[1]; y++) {
+            for (auto x = -size[0]; x <= size[0]; x++) {
+                //Point3i offset(x, y, z);
+                Point3i pos = centerPos + Point3i(x, y, z);
+                if (grid.find(pos) == grid.end()) {
+                    Chunk chunk { pos, chunkSize, blockSize };
+                    chunk.Generate(heightNoise, texture);
+                    grid.emplace(pos, std::move(chunk));
+                }
+            }
         }
     }
 }
 
 void Grid::UnloadOldChunks() {
-    Point2i min(centerPos - size);
-    Point2i max(centerPos + size);
-    std::vector<Point2i> removePos;
+    Point3i min(centerPos - size);
+    Point3i max(centerPos + size);
+    std::vector<Point3i> removePos;
 
     for (auto chunkIter = grid.cbegin(); chunkIter != grid.end(); ++chunkIter) {
         if (!chunkIter->first.InBoundaries(min, max)) {
