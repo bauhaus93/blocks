@@ -26,7 +26,7 @@ bool BelowMinSize(const Point3<T>& size, const Point3<T>& minSize);
 template<typename T>
 class Octree {
 
-    const Point3<T> MIN_SIZE = Point3<T>(8, 8, 8);
+    const Point3<T>     MIN_SIZE = Point3<T>(1, 1, 1);
 
  public:
                         Octree(Point3<T> min_,

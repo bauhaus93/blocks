@@ -18,6 +18,8 @@ World::World(Point2i chunkSize, Point3f blockSize):
     test.QueueElement(Point3i(20, 30, 40));
     test.QueueElement(Point3i(30, 10, 62));
     test.QueueElement(Point3i(10, 10, 10));
+    test.QueueElement(Point3i(1, 1, 1));
+    test.QueueElement(Point3i(0, 0, 0));
     test.InsertQueuedElements();
     INFO(test);
 }
