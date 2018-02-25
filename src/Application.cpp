@@ -21,8 +21,9 @@ Application::Application(unsigned int winX, unsigned int winY):
     window.setMouseCursorVisible(false);
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
 }
 
 Application::~Application() {
