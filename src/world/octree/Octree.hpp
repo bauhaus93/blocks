@@ -56,8 +56,8 @@ Octree<T>::Octree(Point3<T> min_,
                   Point3<T> max_):
     min { min_ },
     max { max_ },
-    children { nullptr, nullptr, nullptr, nullptr,
-               nullptr, nullptr, nullptr, nullptr } {
+    children { { nullptr, nullptr, nullptr, nullptr,
+               nullptr, nullptr, nullptr, nullptr } } {
     TRACE("New octree, min = ", min, ", max = ", max);
 }
 

@@ -24,6 +24,7 @@ void Grid::SetCenter(Point3f worldPos) {
 
 void Grid::SetCenter(Point2i gridPos) {
     if (centerPos != gridPos) {
+        DEBUG("Changing center chunk, ", centerPos, "-> ", gridPos);
         centerPos = gridPos;
         UnloadOldChunks();
         LoadNewChunks();
