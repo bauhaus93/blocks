@@ -6,9 +6,7 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "Position.hpp"
-#include "Rotation.hpp"
-
+#include "utility/PointTransformation.hpp"
 
 namespace mc::world {
 
@@ -16,24 +14,24 @@ class Entity {
 
  public:
 
-                    Entity(Position position_, Rotation rotation_);
+                    Entity(Point3f position_, Point3f rotation_);
                     Entity(const Entity& other);
     virtual         ~Entity() = default;
 
-    Entity&         operator=(const Entity& lhs);
+    Entity&         operator=(const Entity& rhs);
 
-    virtual void    Move(const Position& offset);
-    virtual void    Rotate(const Rotation& offset);
+    virtual void    Move(const Point3f& offset);
+    virtual void    Rotate(const Point3f& offset);
 
-    const Position& GetPosition() const { return position; }
-    const Rotation& GetRotation() const { return rotation; }
+    const Point3f&  GetPosition() const { return position; }
+    const Point3f& GetRotation() const { return rotation; }
 
  protected:
 
      void           UpdateModel();
 
-     Position       position;
-     Rotation       rotation;
+     Point3f        position;
+     Point3f        rotation;
      glm::mat4      model;
 
 };

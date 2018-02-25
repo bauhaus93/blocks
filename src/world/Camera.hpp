@@ -12,20 +12,20 @@
 #include "logger/GlobalLogger.hpp"
 #include "graphics/ShaderProgram.hpp"
 
+#include "utility/Point3.hpp"
+#include "utility/PointTransformation.hpp"
 #include "Entity.hpp"
-#include "Position.hpp"
-#include "Rotation.hpp"
 
 namespace mc::world {
 
 class Camera: public Entity {
 
  public:
-                    Camera(const Position& position_, const Rotation& rotation_);
+                    Camera(const Point3f& position_, const Point3f& rotation_);
 
     void            LoadMVPMatrix(const glm::mat4& model) const;
-    void            Move(const Position& offset) override;
-    void            Rotate(const Rotation& offset) override;
+    void            Move(const Point3f& offset) override;
+    void            Rotate(const Point3f& offset) override;
 
  private:
 

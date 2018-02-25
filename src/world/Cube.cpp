@@ -5,8 +5,8 @@
 namespace mc::world {
 
 
-Cube::Cube(const Position& position_, const Texture& texture_):
-    Entity(position_, Rotation(0, 0, 0)),
+Cube::Cube(const Point3f& position_, const Texture& texture_):
+    Entity(position_, Point3f(0.0f, 0.0f, 0.0f)),
     texture { texture_ } {
 
 }

@@ -3,8 +3,6 @@ add_sources(
   Entity.cpp
   Camera.cpp
   Cube.cpp
-  Position.cpp
-  Rotation.cpp
 )
 
 add_subdirectory(chunk)

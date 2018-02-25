@@ -17,9 +17,7 @@ Grid::Grid(int32_t chunkDrawDistance,
 }
 
 void Grid::SetCenter(Point3f worldPos) {
-    Point3i gridPos(static_cast<int32_t>(worldPos[0] / chunkSize[0] / blockSize[0]),
-                    static_cast<int32_t>(worldPos[1] / chunkSize[1] / blockSize[1]),
-                    static_cast<int32_t>(worldPos[2] / chunkSize[2] / blockSize[2]));
+    Point3i gridPos(worldPos / chunkSize / blockSize);
     SetCenter(gridPos);
 }
 

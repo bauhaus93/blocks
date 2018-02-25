@@ -57,31 +57,29 @@ void WorldState::HandleMouseMovement() {
         float d = lastDelta.asMilliseconds() / 1000.0f;
         diffX *= 0.025 * d;
         diffY *= 0.025 * d;
-        world::Rotation offset { diffX, -diffY, 0.0f };
+        Point3f offset(diffX, -diffY, 0.0f);
         world.GetCamera().Rotate(offset);
     }
 }
 
 void WorldState::HandleKeys() {
+    glm::vec3 dir = CreateDirection(world.GetCamera().GetRotation());
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        auto dir = world.GetCamera().GetRotation().CreateDirection();
-        world::Position offset { dir[0], dir[1], dir[2] };
+        Point3f offset(dir[0], dir[1], dir[2]);
         world.GetCamera().Move(offset);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        auto dir = world.GetCamera().GetRotation().CreateDirection();
-        world::Position offset { -dir[0], -dir[1], -dir[2] };
+        Point3f offset(-dir[0], -dir[1], -dir[2]);
         world.GetCamera().Move(offset);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {  //right is maybe left?!
-        auto dir = world.GetCamera().GetRotation().CreateDirection();
-        auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
-        world::Position offset { right[0], right[1], right[2] };
+        glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
+        Point3f offset { right[0], right[1], right[2] };
         world.GetCamera().Move(offset);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        auto dir = world.GetCamera().GetRotation().CreateDirection();
-        auto right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
-        world::Position offset { -right[0], -right[1], -right[2] };
+        glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
+        Point3f offset { -right[0], -right[1], -right[2] };
         world.GetCamera().Move(offset);
     }
 }

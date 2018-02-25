@@ -6,11 +6,10 @@
 
 #include "graphics/Mesh.hpp"
 #include "graphics/Texture.hpp"
+#include "utility/Point3.hpp"
 
 #include "Entity.hpp"
 #include "Camera.hpp"
-#include "Position.hpp"
-#include "Rotation.hpp"
 
 namespace mc::world {
 
@@ -18,7 +17,7 @@ class Cube: public Entity {
 
  public:
 
-                Cube(const Position& position_,
+                Cube(const Point3f& position_,
                      const Texture& texture_);
     void        Draw(const Camera& camera, const Mesh& mesh) const;
 

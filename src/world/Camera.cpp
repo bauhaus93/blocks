@@ -6,11 +6,11 @@ namespace mc::world {
 
 ShaderProgram LoadShader();
 
-Camera::Camera(const Position& position_, const Rotation& rotation_):
+Camera::Camera(const Point3f& position_, const Point3f& rotation_):
     Entity(position_, rotation_),
     shader { LoadShader() },
     view { glm::lookAt(
-                    position_.GetVec(),
+                    CreateVec(position),
                     glm::vec3 { 0, 0, 0 },
                     glm::vec3 { 0, 0, 1 }) },
     projection { glm::perspective(
@@ -25,30 +25,45 @@ void Camera::LoadMVPMatrix(const glm::mat4& model) const {
     shader.SetMVPMatrix(mvp);
 }
 
-
 void Camera::UpdateView() {
-    auto direction = rotation.CreateDirection();
+    auto direction = CreateDirection(rotation);
 
-    TRACE("direction: ", direction[0], "/", direction[1], "/", direction[2]);
+    TRACE("camera direction: ", direction[0], "/", direction[1], "/", direction[2]);
+    glm::vec3 posVec = CreateVec(position);
     view = glm::lookAt(
-        position.GetVec(),
-        position.GetVec() + direction,
+        posVec,
+        posVec + direction,
         glm::vec3(0, 0, 1)      //we want z to be up
     );
 }
 
-void Camera::Move(const Position& offset) {
+void Camera::Move(const Point3f& offset) {
     Entity::Move(offset);
     UpdateView();
 }
 
-
 //TODO investigate why angle PI causes jumps in view
 //for now, just don't set the view y angle to exact PI/0
-void Camera::Rotate(const Rotation& offset) {
-    rotation.Rotate(offset,
-        Rotation(-2.0f * M_PI, 0.001f, 0.0f),
-        Rotation(2.0f * M_PI, M_PI - 0.001, 0.0f));
+void Camera::Rotate(const Point3f& offset) {
+    constexpr float DOUBLE_PI = 2 * M_PI;
+    constexpr float MIN_Y = 0.001f;
+    constexpr float MAX_Y = M_PI - MIN_Y;
+
+    rotation += offset;
+    
+    if (rotation[1] < MIN_Y) {
+        rotation[1] = MIN_Y;
+    } else if (rotation[1] > MAX_Y) {
+        rotation[1] = MAX_Y;
+    }
+
+    for (uint8_t i = 0; i < 3; i++) {
+        if (rotation[i] < 0) {
+            rotation[i] += DOUBLE_PI;
+        } else if (rotation[i] > DOUBLE_PI) {
+            rotation[i] -= DOUBLE_PI;
+        }
+    }
     UpdateView();
 }
 

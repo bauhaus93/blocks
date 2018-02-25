@@ -10,9 +10,7 @@ Chunk::Chunk(const Point3i& chunkPos_,
     chunkPos { chunkPos_ },
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
-    origin { chunkPos[0] * blockSize[0] * chunkSize[0],
-             chunkPos[1] * blockSize[1] * chunkSize[1],
-             0.0f },
+    origin { chunkPos * blockSize },
     blocks { },
     renderCandidates { } {
 }
@@ -52,12 +50,11 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
 
 
 void Chunk::GenerateColumn(Point3i top, const Texture& texture) {
-    for (int32_t z = top[2]; z  >= 0; z--) {
-        Point3i gridPos(top[0], top[1], z);
-        Position worldPos(origin[0] + top[0] * blockSize[0],
-                          origin[1] + top[1] * blockSize[1],
-                          origin[2] + z * blockSize[2]);
-        blocks.emplace(gridPos, Cube (worldPos, texture));
+    while (top[2] > 0) {
+        Point3f localPos = Point3f(top) * blockSize;
+        Point3f worldPos = origin + localPos;
+        blocks.emplace(localPos, Cube (worldPos, texture));
+        top[2] = top[2] - 1;
     }
 }
 
@@ -71,10 +68,13 @@ void Chunk::CreateRenderCandidates() {
         Point3i(0, 0, -1)
     } };
     const static Point3i boundaryMin(0, 0, 0);
-    const static Point3i boundaryMax(chunkSize[0] - 1, chunkSize[1] - 1, 1000);
+    const static Point3i boundaryMax = chunkSize - 1;
 
     renderCandidates.clear();
-    for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
+    for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {    //TODO currently disabled
+        renderCandidates.emplace_back(iter->second);
+        continue;
+
         Cube& block = iter->second;
         const Point3i& blockPos = iter->first;
         int neighbours = 0;

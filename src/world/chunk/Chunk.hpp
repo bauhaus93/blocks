@@ -14,7 +14,6 @@
 #include "utility/Point3.hpp"
 #include "graphics/Texture.hpp"
 #include "graphics/Mesh.hpp"
-#include "world/Position.hpp"
 #include "world/Cube.hpp"
 #include "world/Camera.hpp"
 
@@ -45,7 +44,7 @@ class Chunk {
     const Point3i   chunkPos;
     const Point3i   chunkSize;
     const Point3f   blockSize;
-    const Position  origin;
+    const Point3f   origin;
     Map3D<Cube>     blocks;
     VecRef<Cube>    renderCandidates;
 };

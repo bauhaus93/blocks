@@ -4,7 +4,7 @@
 
 namespace mc::world {
 
-Entity::Entity(Position position_, Rotation rotation_):
+Entity::Entity(Point3f position_, Point3f rotation_):
     position { position_ },
     rotation { rotation_ },
     model { glm::mat4(1.0f) } {
@@ -17,24 +17,34 @@ Entity::Entity(const Entity& other):
     model { other.model } {
 }
 
-Entity& Entity::operator=(const Entity& lhs) {
-    position = lhs.position;
-    rotation = lhs.rotation;
-    model = lhs.model;
+Entity& Entity::operator=(const Entity& rhs) {
+    position = rhs.position;
+    rotation = rhs.rotation;
+    model = rhs.model;
     return *this;
 }
 
 void Entity::UpdateModel() {
-    model = position.CreateMatrix() * rotation.CreateMatrix()  * glm::mat4(1.0f);
+    model = CreateTranslationMatrix(position) *
+            CreateRotationMatrix(rotation) *
+            glm::mat4(1.0f);
 }
 
-void Entity::Move(const Position& offset) {
-    position.Move(offset);
+void Entity::Move(const Point3f& offset) {
+    position += offset;
     UpdateModel();
 }
 
-void Entity::Rotate(const Rotation& offset) {
-    rotation.Rotate(offset);
+void Entity::Rotate(const Point3f& offset) {
+    constexpr float DOUBLE_PI = 2 * M_PI;
+    rotation += offset;
+    for (uint8_t i = 0; i < 3; i++) {
+        if (rotation[i] < 0) {
+            rotation[i] += DOUBLE_PI;
+        } else if (rotation[i] > DOUBLE_PI) {
+            rotation[i] -= DOUBLE_PI;
+        }
+    }
     UpdateModel();
 }
 

@@ -15,8 +15,6 @@
 #include "chunk/Grid.hpp"
 
 #include "Camera.hpp"
-#include "Position.hpp"
-#include "Rotation.hpp"
 #include "octree/Octree.hpp"
 
 namespace mc::world {

@@ -8,7 +8,7 @@
 #include <SFML/System.hpp>
 
 #include "world/World.hpp"
-#include "world/Rotation.hpp"
+#include "utility/Point3.hpp"
 
 #include "GameState.hpp"
 
