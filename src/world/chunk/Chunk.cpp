@@ -10,7 +10,7 @@ Chunk::Chunk(const Point3i& chunkPos_,
     chunkPos { chunkPos_ },
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
-    origin { chunkPos * chunkSize },
+    origin { chunkPos * chunkSize * blockSize },
     blocks { },
     renderCandidates { } {
     DEBUG("New Chunk: chunk pos = ", chunkPos, ", origin = ", origin);
