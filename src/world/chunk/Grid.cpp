@@ -7,7 +7,7 @@ namespace mc::world::chunk {
 Grid::Grid(int32_t chunkDrawDistance,
            Point3i chunkSize_,
            Point3f blockSize_):
-    size (chunkDrawDistance, chunkDrawDistance),
+    gridSize { Point3i(chunkDrawDistance) },
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
     heightNoise { },
@@ -31,9 +31,9 @@ void Grid::SetCenter(Point3i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
-    for (auto z = -size[2]; z <= size[2]; z++) {
-        for (auto y = -size[1]; y <= size[1]; y++) {
-            for (auto x = -size[0]; x <= size[0]; x++) {
+    for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
+        for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
+            for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
                 //Point3i offset(x, y, z);
                 Point3i pos = centerPos + Point3i(x, y, z);
                 if (grid.find(pos) == grid.end()) {
@@ -47,8 +47,8 @@ void Grid::LoadNewChunks() {
 }
 
 void Grid::UnloadOldChunks() {
-    Point3i min(centerPos - size);
-    Point3i max(centerPos + size);
+    Point3i min(centerPos - gridSize);
+    Point3i max(centerPos + gridSize);
     std::vector<Point3i> removePos;
 
     for (auto chunkIter = grid.cbegin(); chunkIter != grid.end(); ++chunkIter) {

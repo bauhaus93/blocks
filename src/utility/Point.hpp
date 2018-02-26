@@ -17,6 +17,7 @@ class Point {
  public:
                 template<typename... Args>
     explicit    Point(Args... args);
+    explicit    Point(T value_);
     //explicit    Point(std::initializer_list<T> l);
                 Point(const Point<T, N>& other);
 
@@ -57,6 +58,13 @@ template<typename T, uint8_t N>
 template<typename... Args>
 Point<T, N>::Point(Args... args):
     value { { args... } } {
+}
+
+template<typename T, uint8_t N>
+Point<T, N>::Point(T value_) {
+    for (decltype(N) i = 0; i < N; i++) {
+        value[i] = value_;
+    }
 }
 
 template<typename T, uint8_t N>

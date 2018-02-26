@@ -30,7 +30,7 @@ class Grid {
     void                LoadNewChunks();
     void                UnloadOldChunks();
 
-    Point3i             size;
+    Point3i             gridSize;
     Point3i             chunkSize;
     Point3f             blockSize;
     SimplexNoise        heightNoise;

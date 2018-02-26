@@ -10,9 +10,10 @@ Chunk::Chunk(const Point3i& chunkPos_,
     chunkPos { chunkPos_ },
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
-    origin { chunkPos * blockSize },
+    origin { chunkPos * chunkSize },
     blocks { },
     renderCandidates { } {
+    DEBUG("New Chunk: chunk pos = ", chunkPos, ", origin = ", origin);
 }
 
 Chunk::Chunk(Chunk&& other):
@@ -35,7 +36,11 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
                                                                   chunkPos[1] * chunkSize[1] + y,
                                                                   6, 0.1, 0.025)) / 2.0;
             int32_t height = static_cast<int32_t>(MIN_HEIGHT + HEIGHT_VARIATION * normalizedNoise);
-            height -= chunkPos[2];
+            if (origin[2] < 0.0f) {
+                height = chunkSize[2];
+            } else {
+                height -= origin[2];
+            }
             if (height > 0) {
                 GenerateColumn(Point3i(x, y, height), texture);
             }

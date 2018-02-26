@@ -8,14 +8,14 @@
 #include "Logger.hpp"
 #include "LogLevel.hpp"
 
+#define LOG_LEVEL DEBUG
+
 namespace mc::log {
 
 void CreateGlobalLogger(std::ostream& output);
 Logger& GetGlobalLogger();
 bool GlobalLoggerActive();
 void DestroyGlobalLogger();
-
-#define LOG_LEVEL DEBUG
 
 #if LOG_LEVEL == TRACE
 #define TRACE(args...) mc::log::GetGlobalLogger().Trace(args)
