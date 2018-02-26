@@ -13,8 +13,6 @@
 
 namespace mc::world::chunk {
 
-typedef std::map<Point3i, Chunk> ChunkMap;
-
 class Grid {
 
  public:
@@ -35,7 +33,7 @@ class Grid {
     Point3f             blockSize;
     SimplexNoise        heightNoise;
     Point3i             centerPos;
-    ChunkMap            grid;
+    Map3D<Chunk>        grid;
 
     Texture     	texture;
 };

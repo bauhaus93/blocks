@@ -10,13 +10,13 @@ int main(int argc, char** argv) {
     mc::log::CreateGlobalLogger(std::cout);
 
     try {
-        mc::Application app { 800, 600 };
+        mc::Application app { 1024, 768 };
         app.Run();
     }
     catch (const mc::ApplicationError& e) {
         ERROR(e.what());
     }
-    
+
     mc::log::DestroyGlobalLogger();
 
     return 0;

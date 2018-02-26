@@ -27,6 +27,9 @@ using VecRef = std::vector<std::reference_wrapper<T>>;
 template<typename T>
 using Map3D = std::map<Point3i, T>;
 
+template<typename T>
+using MapRef3D = std::map<Point3i, std::reference_wrapper<T>>;
+
 class Chunk {
  public:
             Chunk(const Point3i& chunkPos_,
@@ -39,7 +42,8 @@ class Chunk {
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
  private:
     void    GenerateColumn(Point3i top, const Texture& texture);
-    void    CreateRenderCandidates();
+    void    CreateNonBorderRenderCandidates();
+    void    CreateBorderRenderCandidates(const Map3D<Chunk>& chunks);
 
     const Point3i   chunkPos;
     const Point3i   chunkSize;
