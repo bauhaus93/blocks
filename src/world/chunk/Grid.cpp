@@ -44,6 +44,16 @@ void Grid::LoadNewChunks() {
             }
         }
     }
+
+    for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
+        for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
+            for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
+                Point3i pos = centerPos + Point3i(x, y, z);
+                grid.at(pos).CreateBorderRenderCandidates(grid);
+            }
+        }
+    }
+
 }
 
 void Grid::UnloadOldChunks() {

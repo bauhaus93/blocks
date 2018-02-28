@@ -39,11 +39,14 @@ class Chunk {
 
     void            Generate(const SimplexNoise& noise, const Texture& texture);
     const Point3i&  GetPosition() const { return chunkPos; }
+    bool            IsEmpty() const;
+    bool            BlockExists(const Point3i& blockPos) const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
+    void    CreateBorderRenderCandidates(const Map3D<Chunk>& chunks);
  private:
     void    GenerateColumn(Point3i top, const Texture& texture);
     void    CreateNonBorderRenderCandidates();
-    void    CreateBorderRenderCandidates(const Map3D<Chunk>& chunks);
+
 
     const Point3i   chunkPos;
     const Point3i   chunkSize;
@@ -51,6 +54,7 @@ class Chunk {
     const Point3f   origin;
     Map3D<Cube>     blocks;
     VecRef<Cube>    renderCandidates;
+    VecRef<Cube>    renderCandidatesBorder;
 };
 
 }       // namespace mc::world::chunk

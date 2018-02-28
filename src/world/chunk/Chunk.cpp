@@ -6,6 +6,7 @@ namespace mc::world::chunk {
 
 bool IsBorderBlock(const Point3i& blockPos, const Point3i& chunkSize);
 bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Cube>& blocks);
+uint8_t CountNeighbours(const Point3i& blockPos, const Map3D<Cube>& blocks);
 MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
                                                   const Map3D<Chunk>& chunks);
 
@@ -17,7 +18,8 @@ Chunk::Chunk(const Point3i& chunkPos_,
     blockSize { blockSize_ },
     origin { chunkPos * chunkSize * blockSize },
     blocks { },
-    renderCandidates { } {
+    renderCandidates { },
+    renderCandidatesBorder { } {
     DEBUG("New Chunk: chunk pos = ", chunkPos, ", origin = ", origin);
 }
 
@@ -27,7 +29,16 @@ Chunk::Chunk(Chunk&& other):
     blockSize { other.blockSize },
     origin { other.origin },
     blocks { std::move(other.blocks) },
-    renderCandidates { std::move(other.renderCandidates) } {
+    renderCandidates { std::move(other.renderCandidates) },
+    renderCandidatesBorder { std::move(other.renderCandidatesBorder) } {
+}
+
+bool Chunk::IsEmpty() const {
+    return blocks.size() == 0;
+}
+
+bool Chunk::BlockExists(const Point3i& blockPos) const {
+    return blocks.find(blockPos) != blocks.end();
 }
 
 void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
@@ -75,6 +86,7 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture) {
 }
 
 void Chunk::CreateNonBorderRenderCandidates() {
+    renderCandidates.clear();
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
         const Point3i& blockPos = iter->first;
         if (!IsBorderBlock(blockPos, chunkSize)) {
@@ -85,25 +97,60 @@ void Chunk::CreateNonBorderRenderCandidates() {
     }
 }
 
-
-
 void Chunk::CreateBorderRenderCandidates(const Map3D<Chunk>& chunks) {
+    renderCandidatesBorder.clear();
 
     MapRef3D<const Chunk> neighbours = CreateImmediateNeighbourMap(chunkPos, chunks);
 
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
         const Point3i& blockPos = iter->first;
         if (IsBorderBlock(blockPos, chunkSize)) {
-            //uint8_t neighbourCount = 0;
-            if (blockPos[0] == 0) {
+            uint8_t neighbourCount = CountNeighbours(blockPos, blocks);
 
+            for (uint8_t i = 0; i < 3; i++) {
+                if (blockPos[i] == 0 ) {
+                    Point3i neighbourOffset(0, 0, 0);
+                    neighbourOffset[i] = -1;
+                    auto neighbourChunk = neighbours.find(neighbourOffset);
+                    if (neighbourChunk != neighbours.end()) {
+                        Point3i neighbourBlockPos(blockPos);
+                        neighbourBlockPos[0] = chunkSize[0] - 1;
+                        if (neighbourChunk->second.get().BlockExists(neighbourBlockPos)) {
+                            neighbourCount++;
+                        } else {
+                            break;
+                        }
+                    }
+                } else if (blockPos[i] == chunkSize[i] - 1) {
+                    Point3i neighbourOffset(0, 0, 0);
+                    neighbourOffset[i] = 1;
+                    auto neighbourChunk = neighbours.find(neighbourOffset);
+                    if (neighbourChunk != neighbours.end()) {
+                        Point3i neighbourBlockPos(blockPos);
+                        neighbourBlockPos[0] = 0;
+                        if (neighbourChunk->second.get().BlockExists(neighbourBlockPos)) {
+                            neighbourCount++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (neighbourCount < 6) {
+                renderCandidatesBorder.emplace_back(iter->second);
             }
         }
     }
 }
 
+
+
 void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     for (auto iter = renderCandidates.begin(); iter != renderCandidates.end(); ++iter) {
+        iter->get().Draw(camera, mesh);
+    }
+    for (auto iter = renderCandidatesBorder.begin(); iter != renderCandidatesBorder.end(); ++iter) {
         iter->get().Draw(camera, mesh);
     }
 }
@@ -134,6 +181,21 @@ bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Cube>& blocks)
         }
     }
     return neighbours == 6;
+}
+
+uint8_t CountNeighbours(const Point3i& blockPos, const Map3D<Cube>& blocks) {
+    const static std::array<Point3i, 6> offset { {
+        Point3i(1, 0, 0),  Point3i(0, 1, 0),  Point3i(0, 0, 1),
+        Point3i(-1, 0, 0), Point3i(0, -1, 0), Point3i(0, 0, -1),
+    } };
+    uint8_t neighbours = 0;
+    for (uint8_t i = 0; i < 6; i++) {
+        Point3i neighbour = blockPos + offset[i];
+        if (blocks.find(neighbour) != blocks.end()) {
+            neighbours++;
+        }
+    }
+    return neighbours;
 }
 
 MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
