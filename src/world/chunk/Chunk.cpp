@@ -49,7 +49,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
             if (height >= chunkMinHeight && height < chunkMaxHeight) {
                 height -= chunkMinHeight;   // part air/underground col
             } else if (height >= chunkMaxHeight) {
-                height = chunkSize[2];      // full underground col
+                height = chunkSize[2] - 1;      // full underground col
             } else {
                 height = 0;                 // full air col
             }
@@ -67,7 +67,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
 
 
 void Chunk::GenerateColumn(Point3i top, const Texture& texture) {
-    while (top[2] > 0) {
+    while (top[2] >= 0) {
         Point3f worldPos = origin + top * blockSize;
         blocks.emplace(top, Cube (worldPos, texture));
         top[2] = top[2] - 1;
