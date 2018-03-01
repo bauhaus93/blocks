@@ -28,7 +28,8 @@ int GetLogLevelIndex(LogLevel logLevel) {
 
 Logger::Logger(std::ostream& out_, LogLevel logLevel_) :
     out { out_ },
-    logLevel { logLevel_ } {
+    logLevel { logLevel_ },
+    mutex { } {
 }
 
 }   // namespace mc::log

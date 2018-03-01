@@ -31,20 +31,44 @@ void Grid::SetCenter(Point3i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
+    constexpr uint8_t THREAD_COUNT = 10;
+    std::array<std::unique_ptr<ChunkLoader>, THREAD_COUNT> loaders;
+    uint8_t index = 0;
+
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
             for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
                 //Point3i offset(x, y, z);
                 Point3i pos = centerPos + Point3i(x, y, z);
                 if (grid.find(pos) == grid.end()) {
-                    Chunk chunk { pos, chunkSize, blockSize };
-                    chunk.Generate(heightNoise, texture);
-                    grid.emplace(pos, std::move(chunk));
+                    if (loaders[index] == nullptr) {
+                        std::unique_ptr<ChunkLoader> loader = std::make_unique<ChunkLoader>(
+                            pos, chunkSize, blockSize, heightNoise, texture
+                        );
+                        loaders[index] = std::move(loader);
+                    } else {
+                        loaders[index]->Wait();
+                        Chunk chunk = loaders[index]->GetChunk();
+                        grid.emplace(chunk.GetPosition(), std::move(chunk));
+
+                        std::unique_ptr<ChunkLoader> loader = std::make_unique<ChunkLoader>(
+                            pos, chunkSize, blockSize, heightNoise, texture
+                        );
+                        loaders[index] = std::move(loader);
+                        index = (index + 1) % THREAD_COUNT;
+                    }
                 }
             }
         }
     }
-
+    for (uint8_t i = 0; i < THREAD_COUNT; i++) {
+        loaders[i]->Wait();
+        if (!loaders[i]->AlreadyRetrieved()) {
+            Chunk chunk = loaders[i]->GetChunk();
+            grid.emplace(chunk.GetPosition(), std::move(chunk));
+        }
+    }
+    /*
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
             for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
@@ -52,8 +76,7 @@ void Grid::LoadNewChunks() {
                 grid.at(pos).CreateBorderRenderCandidates(grid);
             }
         }
-    }
-
+    }*/
 }
 
 void Grid::UnloadOldChunks() {

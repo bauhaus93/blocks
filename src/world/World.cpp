@@ -7,7 +7,7 @@ namespace mc::world {
 World::World(Point3i chunkSize, Point3f blockSize):
     camera { Point3f(4.0f, 4.0f, 0.0f), Point3f(0.0f, 0.0f, 0.0f) },
     block { "cube.obj" },
-    grid { 1, chunkSize, blockSize } {
+    grid { 3, chunkSize, blockSize } {
     INFO("Creating world");
     grid.SetCenter(camera.GetPosition());
 }
@@ -17,7 +17,7 @@ World::~World() {
 }
 
 void World::Tick() {
-    //grid.SetCenter(camera.GetPosition());
+    grid.SetCenter(camera.GetPosition());
 }
 
 void World::Draw() const {

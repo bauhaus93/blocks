@@ -42,7 +42,7 @@ class Chunk {
     bool            IsEmpty() const;
     bool            BlockExists(const Point3i& blockPos) const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
-    void    CreateBorderRenderCandidates(const Map3D<Chunk>& chunks);
+    void            CreateBorderRenderCandidates(const Map3D<Chunk>& chunks);
  private:
     void    GenerateColumn(Point3i top, const Texture& texture);
     void    CreateNonBorderRenderCandidates();

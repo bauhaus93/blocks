@@ -3,6 +3,7 @@
 #pragma once
 
 #include <iostream>
+#include <mutex>
 #include <iomanip>
 #include <ctime>
 
@@ -28,6 +29,7 @@ class Logger {
  private:
         std::ostream&   out;
         LogLevel        logLevel;
+        std::mutex      mutex;
 
         template<typename T, typename... Args>
         void            Write(LogLevel msgLevel, const T& value, const Args&... args);
@@ -45,32 +47,47 @@ int         GetLogLevelIndex(LogLevel logLevel);
 
 template<typename... Args>
 void Logger::Trace(const Args&... args) {
-    if (GetLogLevelIndex(LogLevel::TRACE) >= GetLogLevelIndex(logLevel))
+    if (GetLogLevelIndex(LogLevel::TRACE) >= GetLogLevelIndex(logLevel)) {
+        mutex.lock();
         Write(LogLevel::TRACE, args...);
+        mutex.unlock();
+    }
 }
 
 template<typename... Args>
 void Logger::Debug(const Args&... args) {
-    if (GetLogLevelIndex(LogLevel::DEBUG) >= GetLogLevelIndex(logLevel))
+    if (GetLogLevelIndex(LogLevel::DEBUG) >= GetLogLevelIndex(logLevel)) {
+        mutex.lock();
         Write(LogLevel::DEBUG, args...);
+        mutex.unlock();
+    }
 }
 
 template<typename... Args>
 void Logger::Info(const Args&... args) {
-    if (GetLogLevelIndex(LogLevel::INFO) >= GetLogLevelIndex(logLevel))
+    if (GetLogLevelIndex(LogLevel::INFO) >= GetLogLevelIndex(logLevel)) {
+        mutex.lock();
         Write(LogLevel::INFO, args...);
+        mutex.unlock();
+    }
 }
 
 template<typename... Args>
 void Logger::Warn(const Args&... args) {
-    if (GetLogLevelIndex(LogLevel::WARN) >= GetLogLevelIndex(logLevel))
+    if (GetLogLevelIndex(LogLevel::WARN) >= GetLogLevelIndex(logLevel)) {
+        mutex.lock();
         Write(LogLevel::WARN, args...);
+        mutex.unlock();
+    }
 }
 
 template<typename... Args>
 void Logger::Error(const Args&... args) {
-    if (GetLogLevelIndex(LogLevel::ERROR) >= GetLogLevelIndex(logLevel))
+    if (GetLogLevelIndex(LogLevel::ERROR) >= GetLogLevelIndex(logLevel)) {
+        mutex.lock();
         Write(LogLevel::ERROR, args...);
+        mutex.unlock();
+    }
 }
 
 template<typename T, typename... Args>
@@ -101,6 +118,7 @@ void Logger::WriteAppend(const T& value, const Args&... args) {
 template<typename T>
 void Logger::WriteAppend(const T& value) {
     out << value << "\n";
+
 }
 
 

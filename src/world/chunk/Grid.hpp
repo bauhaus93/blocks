@@ -3,12 +3,14 @@
 #pragma once
 
 #include <cassert>
+#include <memory>
 
 #include "ApplicationError.hpp"
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 
 #include "Chunk.hpp"
+#include "ChunkLoader.hpp"
 #include "SimplexNoise.hpp"
 
 namespace mc::world::chunk {

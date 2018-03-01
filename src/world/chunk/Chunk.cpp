@@ -24,7 +24,6 @@ Chunk::Chunk(const Point3i& chunkPos_,
     blocks { },
     renderCandidates { },
     renderCandidatesBorder { } {
-    DEBUG("New Chunk: chunk pos = ", chunkPos, ", origin = ", origin);
 }
 
 Chunk::Chunk(Chunk&& other):
@@ -74,7 +73,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
         }
     }
     CreateNonBorderRenderCandidates();
-    DEBUG("Generated chunk ", chunkPos,
+    TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms",
           ", blocks: ", blocks.size(),
           ", renderable blocks: ", renderCandidates.size());
@@ -101,8 +100,6 @@ void Chunk::CreateNonBorderRenderCandidates() {
     }
 }
 
-
-
 void Chunk::CreateBorderRenderCandidates(const Map3D<Chunk>& chunks) {
     renderCandidatesBorder.clear();
 
@@ -111,50 +108,15 @@ void Chunk::CreateBorderRenderCandidates(const Map3D<Chunk>& chunks) {
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
         const Point3i& blockPos = iter->first;
         if (IsBorderBlock(blockPos, chunkSize)) {
-            uint8_t neighbourCount = CountNeighbours(blockPos, blocks);
-
-            for (uint8_t i = 0; i < 3; i++) {
-                if (blockPos[i] == 0 ) {
-                    Point3i neighbourOffset(0, 0, 0);
-                    neighbourOffset[i] = -1;
-                    auto neighbourChunk = neighbours.find(neighbourOffset);
-                    if (neighbourChunk != neighbours.end()) {
-                        Point3i neighbourBlockPos(blockPos);
-                        neighbourBlockPos[i] = chunkSize[i] - 1;
-                        if (neighbourChunk->second.get().BlockExists(neighbourBlockPos)) {
-                            neighbourCount++;
-                        } else {
-                            break;
-                        }
-                    } else {
-                        neighbourCount++;   // neighbour chunk not yet loaded, assume it's a neighbour
-                    }
-                } else if (blockPos[i] == chunkSize[i] - 1) {
-                    Point3i neighbourOffset(0, 0, 0);
-                    neighbourOffset[i] = 1;
-                    auto neighbourChunk = neighbours.find(neighbourOffset);
-                    if (neighbourChunk != neighbours.end()) {
-                        Point3i neighbourBlockPos(blockPos);
-                        neighbourBlockPos[i] = 0;
-                        if (neighbourChunk->second.get().BlockExists(neighbourBlockPos)) {
-                            neighbourCount++;
-                        } else {
-                            break;
-                        }
-                    } else {
-                        neighbourCount++;   // neighbour chunk not yet loaded, assume it's a neighbour
-                    }
-                }
-            }
-
-            if (neighbourCount < 6) {
+            if (!IsCompletelyHiddenBorderBlock(blockPos,
+                                              blocks,
+                                              neighbours,
+                                              chunkSize)) {
                 renderCandidatesBorder.emplace_back(iter->second);
             }
         }
     }
 }
-
-
 
 void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     for (auto iter = renderCandidates.begin(); iter != renderCandidates.end(); ++iter) {
