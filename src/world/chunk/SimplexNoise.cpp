@@ -85,6 +85,7 @@ double SimplexNoise::GetNoise(double x, double y) const{
     // Work out the hashed gradient indices of the three simplex corners
     int ii = i & 0xFF;
     int jj = j & 0xFF;
+
     int gi0 = permutation.at(256 + ((ii + permutation.at(jj % 256)) % 256));
     int gi1 = permutation.at(256 + ((ii + i1 + permutation.at((jj + j1) % 256)) % 256));
     int gi2 = permutation.at(256 + ((ii + 1 + permutation.at((jj + 1) % 256)) % 256));

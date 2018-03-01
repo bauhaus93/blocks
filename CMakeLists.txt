@@ -20,6 +20,8 @@ set(EXECUTABLE_NAME "mc")
 add_executable(${EXECUTABLE_NAME} "")
 add_subdirectory(src)
 
+
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(COMPILE_FLAGS "-Wall -fmax-errors=1 -ggdb -Werror")
 	set(LINK_FLAGS "-Wall -fmax-errors=1 -ggdb -Werror -ldl")
@@ -43,6 +45,10 @@ include_directories(src)
 if (UNIX)
     include_directories(/usr/include /usr/local/include)
 endif (UNIX)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(mc Threads::Threads)
 
 find_package(SFML 2 REQUIRED network audio graphics window system)
 if (SFML_FOUND)

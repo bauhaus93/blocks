@@ -21,23 +21,25 @@ class Grid {
                     Grid(int32_t chunkDrawDistance,
                          Point3i chunkSize_,
                          Point3f blockSize_);
+                    ~Grid();
 
     void            SetCenter(Point3f worldPos);
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
+    void            UpdateChunks();
 
  private:
     void                SetCenter(Point3i centerPos);
     void                LoadNewChunks();
     void                UnloadOldChunks();
 
-    Point3i             gridSize;
+
     Point3i             chunkSize;
     Point3f             blockSize;
-    SimplexNoise        heightNoise;
+    Point3i             gridSize;
     Point3i             centerPos;
     Map3D<Chunk>        grid;
+    ChunkLoader         chunkLoader;
 
-    Texture     	texture;
 };
 
 }   // namespace mc::world::chunk

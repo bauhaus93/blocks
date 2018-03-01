@@ -7,13 +7,17 @@ namespace mc::world::chunk {
 Grid::Grid(int32_t chunkDrawDistance,
            Point3i chunkSize_,
            Point3f blockSize_):
-    gridSize { Point3i(chunkDrawDistance) },
     chunkSize { chunkSize_ },
     blockSize { blockSize_ },
-    heightNoise { },
+    gridSize { Point3i(chunkDrawDistance) },
     centerPos(1337, 1337, 1337),
     grid { },
-    texture { "grass.bmp" } {
+    chunkLoader { chunkSize, blockSize, 10 } {
+    chunkLoader.Start();
+}
+
+Grid::~Grid() {
+    chunkLoader.Stop();
 }
 
 void Grid::SetCenter(Point3f worldPos) {
@@ -31,9 +35,6 @@ void Grid::SetCenter(Point3i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
-    constexpr uint8_t THREAD_COUNT = 10;
-    std::array<std::unique_ptr<ChunkLoader>, THREAD_COUNT> loaders;
-    uint8_t index = 0;
 
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
@@ -41,33 +42,12 @@ void Grid::LoadNewChunks() {
                 //Point3i offset(x, y, z);
                 Point3i pos = centerPos + Point3i(x, y, z);
                 if (grid.find(pos) == grid.end()) {
-                    if (loaders[index] == nullptr) {
-                        std::unique_ptr<ChunkLoader> loader = std::make_unique<ChunkLoader>(
-                            pos, chunkSize, blockSize, heightNoise, texture
-                        );
-                        loaders[index] = std::move(loader);
-                    } else {
-                        loaders[index]->Wait();
-                        Chunk chunk = loaders[index]->GetChunk();
-                        grid.emplace(chunk.GetPosition(), std::move(chunk));
-
-                        std::unique_ptr<ChunkLoader> loader = std::make_unique<ChunkLoader>(
-                            pos, chunkSize, blockSize, heightNoise, texture
-                        );
-                        loaders[index] = std::move(loader);
-                        index = (index + 1) % THREAD_COUNT;
-                    }
+                    chunkLoader.RequestChunk(pos);
                 }
             }
         }
     }
-    for (uint8_t i = 0; i < THREAD_COUNT; i++) {
-        loaders[i]->Wait();
-        if (!loaders[i]->AlreadyRetrieved()) {
-            Chunk chunk = loaders[i]->GetChunk();
-            grid.emplace(chunk.GetPosition(), std::move(chunk));
-        }
-    }
+
     /*
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
@@ -93,6 +73,17 @@ void Grid::UnloadOldChunks() {
     while (!removePos.empty()) {
         grid.erase(removePos.back());
         removePos.pop_back();
+    }
+}
+
+void Grid::UpdateChunks() {
+    if (chunkLoader.HasFinishedChunks()) {
+        std::vector newChunks = chunkLoader.GetLoadedChunks();
+        while (!newChunks.empty()) {
+            grid.emplace(newChunks.back().GetPosition(),
+                         std::move(newChunks.back()));
+            newChunks.pop_back();
+        }
     }
 }
 

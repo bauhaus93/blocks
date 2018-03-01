@@ -1,4 +1,5 @@
 /* Copyright 2018 Jakob Fischer <JakobFischer93@gmail.com> */
+
 #pragma once
 
 #include <vector>
@@ -7,6 +8,9 @@
 #include <algorithm>
 #include <iostream>
 #include <cmath>
+#include <cassert>
+
+#include "logger/GlobalLogger.hpp"
 
 
 namespace mc::world::chunk {
@@ -17,6 +21,8 @@ class SimplexNoise {
  public:
                 SimplexNoise();
     explicit    SimplexNoise(uint32_t seed_);
+                SimplexNoise(const SimplexNoise& other) = delete;
+                SimplexNoise(SimplexNoise&& other) = delete;
                 ~SimplexNoise() = default;
 
     uint32_t    GetSeed() const;

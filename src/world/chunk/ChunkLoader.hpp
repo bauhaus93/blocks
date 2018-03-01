@@ -2,7 +2,13 @@
 
 #pragma once
 
-#include <SFML/System.hpp>
+#include <vector>
+#include <queue>
+#include <future>
+#include <thread>
+#include <atomic>
+#include <chrono>
+#include <cassert>
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
@@ -11,33 +17,45 @@
 #include "Chunk.hpp"
 #include "SimplexNoise.hpp"
 
+
+
 namespace mc::world::chunk {
 
-struct Arguments {
-    Chunk& chunk;
-    const SimplexNoise& heightNoise;
-    const Texture& texture;
-};
+typedef std::vector<std::unique_ptr<std::future<Chunk>>> ChunkFutureVec;
 
 class ChunkLoader {
 
  public:
-                    ChunkLoader(const Point3i& pos,
-                                const Point3i& chunkSize,
-                                const Point3i& blockSize,
-                                const SimplexNoise& heightNoise,
-                                const Texture& texture);
-                    ChunkLoader(const ChunkLoader& other) = delete;
-                    ChunkLoader(ChunkLoader&& other) = delete;
-    void            Wait();
-    bool            AlreadyRetrieved() const { return retrieved; }
-    Chunk&&         GetChunk();
+                ChunkLoader(const Point3i& chunkSize_,
+                            const Point3f& blockSize_,
+                            uint32_t maxThreads_);
+
+    void                Start();
+    void                Stop();
+    bool                IsRunning() const;
+    bool                HasFinishedChunks();
+    void                RequestChunk(const Point3i& chunkPos);
+    std::vector<Chunk>  GetLoadedChunks();
+
+
  private:
-     bool           finished;
-     bool           retrieved;
-     Chunk          chunk;
-     Arguments      args;
-     sf::Thread     thread;
+    void                    Loop();
+    void                    CheckFinishedFutures();
+    void                    AddFutures();
+
+    std::atomic<bool>       stop;
+    std::mutex              pendingMutex;
+    std::mutex              finishedMutex;
+    const Point3i           chunkSize;
+    const Point3f           blockSize;
+    const uint32_t          maxThreads;
+    const SimplexNoise      heightNoise;
+    const Texture           texture;
+    std::unique_ptr<std::thread> thread;
+    ChunkFutureVec          futures;
+    std::queue<Point3i>     pendingChunks;
+    std::vector<Chunk>      finishedChunks;
+    uint32_t                activeFutures;
 };
 
 }   // namespace mc::world::chunk
