@@ -19,7 +19,8 @@ class Block: public Entity {
     static constexpr float   SIZE = 2.0f;
 
                 Block(const Point3f& position_,
-                      const Texture& texture_);
+                      const Texture& texture_,
+                      uint8_t neighbourCount_);
                 Block(const Block& other);
     void        Draw(const Camera& camera, const Mesh& mesh) const;
     bool        IsHidden() const { return neighbourCount == 6; }

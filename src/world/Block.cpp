@@ -5,10 +5,10 @@
 namespace mc::world {
 
 
-Block::Block(const Point3f& position_, const Texture& texture_):
+Block::Block(const Point3f& position_, const Texture& texture_, uint8_t neighbourCount_):
     Entity(position_, Point3f(0.0f, 0.0f, 0.0f)),
     texture { texture_ },
-    neighbourCount { 0 } {
+    neighbourCount { neighbourCount_ } {
 }
 
 Block::Block(const Block& other):

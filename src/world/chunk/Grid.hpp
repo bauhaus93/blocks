@@ -18,7 +18,7 @@ namespace mc::world::chunk {
 class Grid {
 
  public:
-                    Grid(int32_t chunkDrawDistance);
+    explicit        Grid(int32_t chunkDrawDistance);
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);

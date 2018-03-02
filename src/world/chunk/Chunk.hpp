@@ -35,17 +35,16 @@ class Chunk {
  public:
      static constexpr int32_t   SIZE = 16;
 
-            Chunk(const Point3i& chunkPos_);
-            Chunk(Chunk&& other);
+    explicit        Chunk(const Point3i& chunkPos_);
+                    Chunk(Chunk&& other);
 
     void            Generate(const SimplexNoise& noise, const Texture& texture);
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            BlockExists(const Point3i& blockPos) const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
-    void            CreateBorderRenderCandidates(const Map3D<Chunk>& chunks);
  private:
-    void    GenerateColumn(Point3i top, const Texture& texture);
+    void    GenerateColumn(Point3i top, const Texture& texture, uint8_t neighbours);
     void    CreateNonBorderRenderCandidates();
 
 
@@ -53,7 +52,8 @@ class Chunk {
     const Point3f   origin;
     Map3D<Block>    blocks;
     VecRef<Block>   renderCandidates;
-    VecRef<Block>   renderCandidatesBorder;
 };
+
+typedef std::array<int32_t, Chunk::SIZE * Chunk::SIZE> HeightArray;
 
 }       // namespace mc::world::chunk

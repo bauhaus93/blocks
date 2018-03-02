@@ -7,7 +7,7 @@ namespace mc::world {
 World::World():
     camera { Point3f(4.0f, 4.0f, 0.0f), Point3f(0.0f, 0.0f, 0.0f) },
     block { "cube.obj" },
-    grid { 3 } {
+    grid { 1 } {
     INFO("Creating world");
     grid.SetCenter(camera.GetPosition());
 }
@@ -17,7 +17,7 @@ World::~World() {
 }
 
 void World::Tick() {
-    grid.SetCenter(camera.GetPosition());
+    //grid.SetCenter(camera.GetPosition());
     grid.UpdateChunks();
 }
 

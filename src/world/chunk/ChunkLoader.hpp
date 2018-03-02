@@ -26,7 +26,7 @@ typedef std::vector<std::unique_ptr<std::future<Chunk>>> ChunkFutureVec;
 class ChunkLoader {
 
  public:
-                ChunkLoader(uint32_t maxThreads_);
+    explicit            ChunkLoader(uint32_t maxThreads_);
 
     void                Start();
     void                Stop();
