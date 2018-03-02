@@ -13,11 +13,11 @@
 
 namespace mc::world {
 
-class Cube: public Entity {
+class Block: public Entity {
 
  public:
 
-                Cube(const Point3f& position_,
+                Block(const Point3f& position_,
                      const Texture& texture_);
     void        Draw(const Camera& camera, const Mesh& mesh) const;
 

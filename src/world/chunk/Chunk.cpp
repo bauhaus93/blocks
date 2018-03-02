@@ -5,12 +5,12 @@
 namespace mc::world::chunk {
 
 bool IsBorderBlock(const Point3i& blockPos, const Point3i& chunkSize);
-bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Cube>& blocks);
+bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Block>& blocks);
 uint8_t IsCompletelyHiddenBorderBlock(const Point3i& blockPos,
-                                      const Map3D<Cube>& blocks,
+                                      const Map3D<Block>& blocks,
                                       MapRef3D<const Chunk>& chunkNeighbours,
                                       const Point3i& chunkSize);
-uint8_t CountNeighbours(const Point3i& blockPos, const Map3D<Cube>& blocks);
+uint8_t CountNeighbours(const Point3i& blockPos, const Map3D<Block>& blocks);
 MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
                                                   const Map3D<Chunk>& chunks);
 
@@ -83,7 +83,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
 void Chunk::GenerateColumn(Point3i top, const Texture& texture) {
     while (top[2] >= 0) {
         Point3f worldPos = origin + top * blockSize;
-        blocks.emplace(top, Cube (worldPos, texture));
+        blocks.emplace(top, Block(worldPos, texture));
         top[2] = top[2] - 1;
     }
 }
@@ -138,7 +138,7 @@ bool IsBorderBlock(const Point3i& blockPos, const Point3i& chunkSize) {
     return false;
 }
 
-bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Cube>& blocks) {
+bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Block>& blocks) {
     const static std::array<Point3i, 6> offset { {
         Point3i(1, 0, 0),  Point3i(0, 1, 0),  Point3i(0, 0, 1),
         Point3i(-1, 0, 0), Point3i(0, -1, 0), Point3i(0, 0, -1),
@@ -156,7 +156,7 @@ bool IsCompletelyHiddenBlock(const Point3i& blockPos, const Map3D<Cube>& blocks)
 }
 
 uint8_t IsCompletelyHiddenBorderBlock(const Point3i& blockPos,
-                                      const Map3D<Cube>& blocks,
+                                      const Map3D<Block>& blocks,
                                       MapRef3D<const Chunk>& chunkNeighbours,
                                       const Point3i& chunkSize) {
     uint8_t neighbourCount = CountNeighbours(blockPos, blocks);
@@ -192,7 +192,7 @@ uint8_t IsCompletelyHiddenBorderBlock(const Point3i& blockPos,
     return neighbourCount == 6;
 }
 
-uint8_t CountNeighbours(const Point3i& blockPos, const Map3D<Cube>& blocks) {
+uint8_t CountNeighbours(const Point3i& blockPos, const Map3D<Block>& blocks) {
     const static std::array<Point3i, 6> offset { {
         Point3i(1, 0, 0),  Point3i(0, 1, 0),  Point3i(0, 0, 1),
         Point3i(-1, 0, 0), Point3i(0, -1, 0), Point3i(0, 0, -1),

@@ -14,7 +14,7 @@
 #include "utility/Point3.hpp"
 #include "graphics/Texture.hpp"
 #include "graphics/Mesh.hpp"
-#include "world/Cube.hpp"
+#include "world/Block.hpp"
 #include "world/Camera.hpp"
 
 #include "SimplexNoise.hpp"
@@ -52,9 +52,9 @@ class Chunk {
     const Point3i   chunkSize;
     const Point3f   blockSize;
     const Point3f   origin;
-    Map3D<Cube>     blocks;
-    VecRef<Cube>    renderCandidates;
-    VecRef<Cube>    renderCandidatesBorder;
+    Map3D<Block>     blocks;
+    VecRef<Block>    renderCandidates;
+    VecRef<Block>    renderCandidatesBorder;
 };
 
 }       // namespace mc::world::chunk
