@@ -31,10 +31,11 @@ template<typename T>
 using MapRef3D = std::map<Point3i, std::reference_wrapper<T>>;
 
 class Chunk {
+
  public:
-            Chunk(const Point3i& chunkPos_,
-                  const Point3i& chunkSize_,
-                  const Point3f& blockSize_);
+     static constexpr int32_t   SIZE = 16;
+
+            Chunk(const Point3i& chunkPos_);
             Chunk(Chunk&& other);
 
     void            Generate(const SimplexNoise& noise, const Texture& texture);
@@ -49,12 +50,10 @@ class Chunk {
 
 
     const Point3i   chunkPos;
-    const Point3i   chunkSize;
-    const Point3f   blockSize;
     const Point3f   origin;
-    Map3D<Block>     blocks;
-    VecRef<Block>    renderCandidates;
-    VecRef<Block>    renderCandidatesBorder;
+    Map3D<Block>    blocks;
+    VecRef<Block>   renderCandidates;
+    VecRef<Block>   renderCandidatesBorder;
 };
 
 }       // namespace mc::world::chunk

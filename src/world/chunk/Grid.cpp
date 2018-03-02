@@ -4,15 +4,11 @@
 
 namespace mc::world::chunk {
 
-Grid::Grid(int32_t chunkDrawDistance,
-           Point3i chunkSize_,
-           Point3f blockSize_):
-    chunkSize { chunkSize_ },
-    blockSize { blockSize_ },
+Grid::Grid(int32_t chunkDrawDistance):
     gridSize { Point3i(chunkDrawDistance) },
     centerPos(1337, 1337, 1337),
     grid { },
-    chunkLoader { chunkSize, blockSize, 10 } {
+    chunkLoader { 10 } {
     chunkLoader.Start();
 }
 
@@ -21,7 +17,7 @@ Grid::~Grid() {
 }
 
 void Grid::SetCenter(Point3f worldPos) {
-    Point3i gridPos(worldPos / chunkSize / blockSize);
+    Point3i gridPos(worldPos / Chunk::SIZE / Block::SIZE);
     SetCenter(gridPos);
 }
 
@@ -77,7 +73,7 @@ void Grid::UnloadOldChunks() {
 }
 
 void Grid::UpdateChunks() {
-    if (chunkLoader.HasFinishedChunks()) {
+    if (chunkLoader.HasLoadedChunks()) {
         std::vector newChunks = chunkLoader.GetLoadedChunks();
         while (!newChunks.empty()) {
             grid.emplace(newChunks.back().GetPosition(),
@@ -88,7 +84,6 @@ void Grid::UpdateChunks() {
 }
 
 void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
-
     for (auto chunkIter = grid.cbegin(); chunkIter != grid.end(); ++chunkIter) {
         chunkIter->second.DrawBlocks(camera, mesh);
     }

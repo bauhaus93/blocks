@@ -18,9 +18,7 @@ namespace mc::world::chunk {
 class Grid {
 
  public:
-                    Grid(int32_t chunkDrawDistance,
-                         Point3i chunkSize_,
-                         Point3f blockSize_);
+                    Grid(int32_t chunkDrawDistance);
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);
@@ -32,9 +30,6 @@ class Grid {
     void                LoadNewChunks();
     void                UnloadOldChunks();
 
-
-    Point3i             chunkSize;
-    Point3f             blockSize;
     Point3i             gridSize;
     Point3i             centerPos;
     Map3D<Chunk>        grid;

@@ -5,19 +5,13 @@
 namespace mc::world::chunk {
 
 Chunk CreateChunk(Point3i pos,
-                  const Point3i& chunkSize,
-                  const Point3f& blockSize,
                   const SimplexNoise& heightNoise,
                   const Texture& texture);
 
-ChunkLoader::ChunkLoader(const Point3i& chunkSize_,
-                         const Point3f& blockSize_,
-                         uint32_t maxThreads_):
+ChunkLoader::ChunkLoader(uint32_t maxThreads_):
     stop { false },
     pendingMutex { },
     finishedMutex { },
-    chunkSize(chunkSize_),
-    blockSize(blockSize_),
     maxThreads { maxThreads_ },
     heightNoise { },
     texture { "grass.bmp" },
@@ -33,7 +27,7 @@ bool ChunkLoader::IsRunning() const {
     return thread != nullptr;
 }
 
-bool ChunkLoader::HasFinishedChunks() {
+bool ChunkLoader::HasLoadedChunks() {
     bool retVal;
     finishedMutex.lock();
     retVal = !finishedChunks.empty();
@@ -108,8 +102,6 @@ void ChunkLoader::AddFutures() {
         std::unique_ptr<std::future<Chunk>> fut = std::make_unique<std::future<Chunk>>(
             std::async(CreateChunk,
                        chunkPos,
-                       std::cref(chunkSize),
-                       std::cref(blockSize),
                        std::cref(heightNoise),
                        std::cref(texture)));
         pendingChunks.pop();
@@ -135,11 +127,9 @@ void ChunkLoader::AddFutures() {
 }
 
 Chunk CreateChunk(Point3i pos,
-                  const Point3i& chunkSize,
-                  const Point3f& blockSize,
                   const SimplexNoise& heightNoise,
                   const Texture& texture) {
-    Chunk chunk { pos, chunkSize, blockSize };
+    Chunk chunk { pos };
     chunk.Generate(heightNoise, texture);
     return chunk;
 }

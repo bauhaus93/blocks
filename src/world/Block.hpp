@@ -16,14 +16,20 @@ namespace mc::world {
 class Block: public Entity {
 
  public:
+    static constexpr float   SIZE = 2.0f;
 
                 Block(const Point3f& position_,
-                     const Texture& texture_);
+                      const Texture& texture_);
+                Block(const Block& other);
     void        Draw(const Camera& camera, const Mesh& mesh) const;
+    bool        IsHidden() const { return neighbourCount == 6; }
+    void        IncreaseNeighbourCount(uint8_t amount);
+    void        DecreaseNeighbourCount(uint8_t amount);
 
  private:
 
      const Texture&   texture;
+     uint8_t          neighbourCount;
 
 };
 

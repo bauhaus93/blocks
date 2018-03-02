@@ -26,14 +26,12 @@ typedef std::vector<std::unique_ptr<std::future<Chunk>>> ChunkFutureVec;
 class ChunkLoader {
 
  public:
-                ChunkLoader(const Point3i& chunkSize_,
-                            const Point3f& blockSize_,
-                            uint32_t maxThreads_);
+                ChunkLoader(uint32_t maxThreads_);
 
     void                Start();
     void                Stop();
     bool                IsRunning() const;
-    bool                HasFinishedChunks();
+    bool                HasLoadedChunks();
     void                RequestChunk(const Point3i& chunkPos);
     std::vector<Chunk>  GetLoadedChunks();
 
@@ -46,8 +44,6 @@ class ChunkLoader {
     std::atomic<bool>       stop;
     std::mutex              pendingMutex;
     std::mutex              finishedMutex;
-    const Point3i           chunkSize;
-    const Point3f           blockSize;
     const uint32_t          maxThreads;
     const SimplexNoise      heightNoise;
     const Texture           texture;

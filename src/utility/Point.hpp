@@ -38,6 +38,7 @@ class Point {
     Point<T, N> operator/(const Point<T, N>& rhs) const;
 
     Point<T, N> operator-(T scalar) const;
+    Point<T, N> operator*(T scalar) const;
     Point<T, N> operator/(T scalar) const;
 
     bool        operator<(const Point<T, N>& rhs) const;
@@ -171,6 +172,15 @@ Point<T, N> Point<T, N>::operator-(T scalar) const {
     Point<T, N> result = *this;
     for (decltype(N) i = 0; i < N; i++) {
         result[i] -= scalar;
+    }
+    return result;
+}
+
+template<typename T, uint8_t N>
+Point<T, N> Point<T, N>::operator*(T scalar) const {
+    Point<T, N> result = *this;
+    for (decltype(N) i = 0; i < N; i++) {
+        result[i] *= scalar;
     }
     return result;
 }

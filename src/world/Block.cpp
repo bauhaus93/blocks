@@ -7,7 +7,14 @@ namespace mc::world {
 
 Block::Block(const Point3f& position_, const Texture& texture_):
     Entity(position_, Point3f(0.0f, 0.0f, 0.0f)),
-    texture { texture_ } {
+    texture { texture_ },
+    neighbourCount { 0 } {
+}
+
+Block::Block(const Block& other):
+    Entity(other),
+    texture { other.texture },
+    neighbourCount { other.neighbourCount } {
 }
 
 void Block::Draw(const Camera& camera, const Mesh& mesh) const {
@@ -16,6 +23,15 @@ void Block::Draw(const Camera& camera, const Mesh& mesh) const {
     mesh.Draw();
 }
 
+void Block::IncreaseNeighbourCount(uint8_t amount) {
+    neighbourCount += amount;
+    assert(neighbourCount <= 6);
+}
+
+void Block::DecreaseNeighbourCount(uint8_t amount) {
+    assert(amount <= neighbourCount);
+    neighbourCount -= amount;
+}
 
 
 }   // namespace mc::world
