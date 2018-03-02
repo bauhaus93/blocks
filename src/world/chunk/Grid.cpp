@@ -73,13 +73,8 @@ void Grid::UnloadOldChunks() {
 }
 
 void Grid::UpdateChunks() {
-<<<<<<< HEAD
     if (chunkLoader.HasLoadedChunks()) {
         std::vector<Chunk> newChunks = chunkLoader.GetLoadedChunks();
-=======
-    if (chunkLoader.HasFinishedChunks()) {
-        std::vector<Chunk> newChunks = chunkLoader.GetLoadedChunks();
->>>>>>> cf957fab42f7fba027cc9e27e5611cd257b01e0f
         while (!newChunks.empty()) {
             grid.emplace(newChunks.back().GetPosition(),
                          std::move(newChunks.back()));
