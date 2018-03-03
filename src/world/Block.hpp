@@ -7,6 +7,7 @@
 #include "graphics/Mesh.hpp"
 #include "graphics/Texture.hpp"
 #include "utility/Point3.hpp"
+#include "logger/GlobalLogger.hpp"
 
 #include "Entity.hpp"
 #include "Camera.hpp"
@@ -29,7 +30,6 @@ class Block: public Entity {
     uint8_t     GetNeighbourCount() const { return neighbourCount; }
 
  private:
-
      const Texture&   texture;
      uint8_t          neighbourCount;
 

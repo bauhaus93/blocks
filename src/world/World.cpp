@@ -17,7 +17,7 @@ World::~World() {
 }
 
 void World::Tick() {
-    //grid.SetCenter(camera.GetPosition());
+    grid.SetCenter(camera.GetPosition());
     grid.UpdateChunks();
 }
 

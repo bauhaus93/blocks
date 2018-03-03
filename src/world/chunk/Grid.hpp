@@ -5,6 +5,7 @@
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 #include "ApplicationError.hpp"
 #include "utility/Point2.hpp"
