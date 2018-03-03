@@ -17,8 +17,6 @@
 #include "Chunk.hpp"
 #include "SimplexNoise.hpp"
 
-
-
 namespace mc::world::chunk {
 
 typedef std::vector<std::unique_ptr<std::future<Chunk>>> ChunkFutureVec;

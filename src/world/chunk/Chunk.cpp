@@ -4,8 +4,6 @@
 
 namespace mc::world::chunk {
 
-MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
-                                                  const Map3D<Chunk>& chunks);
 void CalculateHeights(HeightArray& height,
                     const Point3i chunkPos,
                     const SimplexNoise& heightNoise);
@@ -13,7 +11,7 @@ void CalculateHeights(HeightArray& height,
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * Chunk::SIZE * Block::SIZE },
-    neighbourCheck { 0 },
+    neighbourChecked { 0 },
     blocks { },
     renderCandidates { } {
 }
@@ -21,13 +19,17 @@ Chunk::Chunk(const Point3i& chunkPos_):
 Chunk::Chunk(Chunk&& other):
     chunkPos { other.chunkPos },
     origin { other.origin },
-    neighbourCheck { other.neighbourCheck },
+    neighbourChecked { other.neighbourChecked },
     blocks { std::move(other.blocks) },
     renderCandidates { std::move(other.renderCandidates) } {
 }
 
 bool Chunk::IsEmpty() const {
     return blocks.size() == 0;
+}
+
+bool Chunk::IsFull() const {
+    return blocks.size() == Chunk::SIZE * Chunk::SIZE;
 }
 
 bool Chunk::BlockExists(const Point3i& blockPos) const {
@@ -47,8 +49,8 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
     int32_t* currHeight = &relativeHeight[0];
     for (auto y = 0; y < Chunk::SIZE; y++) {
         for (auto x = 0; x < Chunk::SIZE; x++) {
-            //border blocks neigbours in other chunk are considered having SIZE
-            //so this blocks are prefered to be hidden
+            //border column neigbours in other chunks are considered having SIZE height
+            //assuming they're full of blocks -> false positives occur (visible blocks classified invisible)
             std::array<int32_t, 4> neighbourHeight = { Chunk::SIZE,
                                                        Chunk::SIZE,
                                                        Chunk::SIZE,
@@ -109,23 +111,7 @@ void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     }
 }
 
-MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
-                                                  const Map3D<Chunk>& chunks) {
-    const static std::array<Point3i, 6> offset { {
-      Point3i(1, 0, 0),  Point3i(0, 1, 0),  Point3i(0, 0, 1),
-      Point3i(-1, 0, 0), Point3i(0, -1, 0), Point3i(0, 0, -1),
-    } };
-    MapRef3D<const Chunk> neighbours;
 
-    for (uint8_t i = 0; i < 6; i++) {
-        Point3i neighbourPos = chunkPos + offset[i];
-        auto find = chunks.find(neighbourPos);
-        if (find != chunks.end()) {
-            neighbours.emplace(offset[i], find->second);
-        }
-    }
-    return neighbours;
-}
 
 void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
