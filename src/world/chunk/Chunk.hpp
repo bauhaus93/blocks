@@ -44,14 +44,16 @@ class Chunk {
     bool            BlockExists(const Point3i& blockPos) const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
  private:
-    void    GenerateColumn(Point3i top, const Texture& texture, uint8_t neighbours);
+    void    GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight);
     void    CreateNonBorderRenderCandidates();
 
 
     const Point3i   chunkPos;
     const Point3f   origin;
+    uint8_t         neighbourCheck;
     Map3D<Block>    blocks;
     VecRef<Block>   renderCandidates;
+
 };
 
 typedef std::array<int32_t, Chunk::SIZE * Chunk::SIZE> HeightArray;

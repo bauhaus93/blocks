@@ -13,6 +13,7 @@ void CalculateHeights(HeightArray& height,
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * Chunk::SIZE * Block::SIZE },
+    neighbourCheck { 0 },
     blocks { },
     renderCandidates { } {
 }
@@ -20,6 +21,7 @@ Chunk::Chunk(const Point3i& chunkPos_):
 Chunk::Chunk(Chunk&& other):
     chunkPos { other.chunkPos },
     origin { other.origin },
+    neighbourCheck { other.neighbourCheck },
     blocks { std::move(other.blocks) },
     renderCandidates { std::move(other.renderCandidates) } {
 }
@@ -45,21 +47,26 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
     int32_t* currHeight = &relativeHeight[0];
     for (auto y = 0; y < Chunk::SIZE; y++) {
         for (auto x = 0; x < Chunk::SIZE; x++) {
-            uint8_t columnNeighbours = 0;
-
-            if (x > 0 && *(currHeight - 1) >= *currHeight) {
-                columnNeighbours++;
+            //border blocks neigbours in other chunk are considered having SIZE
+            //so this blocks are prefered to be hidden
+            std::array<int32_t, 4> neighbourHeight = { Chunk::SIZE,
+                                                       Chunk::SIZE,
+                                                       Chunk::SIZE,
+                                                       Chunk::SIZE
+                                                     };
+            if (x > 0) {
+                neighbourHeight[0] = *(currHeight - 1);
             }
-            if (y > 0 && *(currHeight - Chunk::SIZE) >= *currHeight) {
-                columnNeighbours++;
+            if (y > 0) {
+                neighbourHeight[1] = *(currHeight - Chunk::SIZE);
             }
-            if (x + 1 < Chunk::SIZE && *(currHeight + 1) >= *currHeight) {
-                columnNeighbours++;
+            if (x + 1 < Chunk::SIZE) {
+                neighbourHeight[2] = *(currHeight + 1);
             }
-            if (y + 1 < Chunk::SIZE && *(currHeight + Chunk::SIZE) >= *currHeight) {
-                columnNeighbours++;
+            if (y + 1 < Chunk::SIZE) {
+                neighbourHeight[3] = *(currHeight + Chunk::SIZE);
             }
-            GenerateColumn(Point3i(x, y, *currHeight), texture, columnNeighbours);
+            GenerateColumn(Point3i(x, y, *currHeight), texture, neighbourHeight);
             currHeight++;
         }
     }
@@ -71,21 +78,27 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
 }
 
 
-void Chunk::GenerateColumn(Point3i top, const Texture& texture, uint8_t neighbours) {
+void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight) {
     Point3i curr(top);
+
     while (curr[2] >= 0) {
         Point3f worldPos = origin + curr * Block::SIZE;
-        if (curr[2] == top[2] || curr[2] == 1) {
-            auto pair = blocks.emplace(curr, Block(worldPos, texture, neighbours + 1));
-            if (neighbours + 1 < 6) {
-                renderCandidates.emplace_back(pair.first->second);
-            }
+        uint8_t neighbours = 0;
+        if (curr[2] == top[2] && top[2] != Chunk::SIZE - 1) {
+            neighbours += 1;
         } else {
-            auto pair = blocks.emplace(curr, Block(worldPos, texture, neighbours + 2));
-            if (neighbours + 2 < 6) {
-                renderCandidates.emplace_back(pair.first->second);
+            neighbours += 2;
+        }
+        for (auto nHeight : neighbourHeight) {
+            if (curr[2] <= nHeight) {
+                neighbours++;
             }
         }
+        auto pair = blocks.emplace(curr, Block(worldPos, texture, neighbours));
+        if (neighbours < 6) {
+            renderCandidates.emplace_back(pair.first->second);
+        }
+
         curr[2] = curr[2] - 1;
     }
 }
