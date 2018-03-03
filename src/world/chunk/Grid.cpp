@@ -80,9 +80,30 @@ void Grid::UpdateChunks() {
 }
 
 void Grid::CheckBorders() {
-    /*for(auto chunk: uncheckedBorders) {
+    VecRef<Chunk> checkedChunks;
 
-    }*/
+    for(auto chunkRef: uncheckedBorders) {
+        Chunk& chunk = chunkRef.get();
+        MapRef3D<const Chunk> neighbours = CreateImmediateNeighbourMap(chunk.GetPosition(), grid);
+        uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();
+        for (uint8_t i = 0; i < 6; i++) {
+            if ((1 >> i) & checkedNeighbours == 0) {
+                Point3i offset(0);
+                offset[i % 3] = 1;
+                if (i < 3) {
+                    offset *= -1;
+                }
+                auto find = neighbours.find(offset);
+                if (find != neighbours.end()) {
+                    auto mask = find->second.get().GetSingleBorderMask(i);
+                    chunk.CheckNeighbour(i, mask);
+                }
+            }
+        }
+        if (chunk.GetCheckedNeighbours() == 0x3F) {   //111111b
+            checkedChunks.emplace(chunk);
+        }
+    }
 }
 
 

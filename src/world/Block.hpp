@@ -23,9 +23,10 @@ class Block: public Entity {
                       uint8_t neighbourCount_);
                 Block(const Block& other);
     void        Draw(const Camera& camera, const Mesh& mesh) const;
-    bool        IsHidden() const { return neighbourCount == 6; }
+    //bool        IsHidden() const { return neighbourCount == 6; }
     void        IncreaseNeighbourCount(uint8_t amount);
     void        DecreaseNeighbourCount(uint8_t amount);
+    uint8_t     GetNeighbourCount() const { return neighbourCount; }
 
  private:
 

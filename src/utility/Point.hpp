@@ -41,6 +41,8 @@ class Point {
     Point<T, N> operator*(T scalar) const;
     Point<T, N> operator/(T scalar) const;
 
+    Point<T, N>&    operator*=(T scalar);
+
     bool        operator<(const Point<T, N>& rhs) const;
     bool        operator>(const Point<T, N>& rhs) const;
     bool        operator>=(const Point<T, N>& rhs) const;
@@ -192,6 +194,14 @@ Point<T, N> Point<T, N>::operator/(T scalar) const {
         result[i] /= scalar;
     }
     return result;
+}
+
+template<typename T, uint8_t N>
+Point<T, N>& Point<T, N>::operator*=(T scalar) {
+    for (decltype(N) i = 0; i < N; i++) {
+        value[i] *= scalar;
+    }
+    return *this;
 }
 
 template<typename T, uint8_t N>

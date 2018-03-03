@@ -7,11 +7,13 @@ namespace mc::world::chunk {
 void CalculateHeights(HeightArray& height,
                     const Point3i chunkPos,
                     const SimplexNoise& heightNoise);
+//bool IsBorderBlock(const Point3i& blockPos);
 
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * Chunk::SIZE * Block::SIZE },
-    neighbourChecked { 0 },
+    checkedNeighbours { 0 },
+    borderMask { },
     blocks { },
     renderCandidates { } {
 }
@@ -19,7 +21,8 @@ Chunk::Chunk(const Point3i& chunkPos_):
 Chunk::Chunk(Chunk&& other):
     chunkPos { other.chunkPos },
     origin { other.origin },
-    neighbourChecked { other.neighbourChecked },
+    checkedNeighbours { other.checkedNeighbours },
+    borderMask { std::move(other.borderMask) },
     blocks { std::move(other.blocks) },
     renderCandidates { std::move(other.renderCandidates) } {
 }
@@ -101,7 +104,56 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32
             renderCandidates.emplace_back(pair.first->second);
         }
 
+        SetNeighbourMask(curr);
+
         curr[2] = curr[2] - 1;
+    }
+}
+
+
+void Chunk::SetNeighbourMask(const Point3i& blockPos) {
+    for (uint8_t i = 0; i < 3; i++) {
+        if (blockPos[i] == 0) {
+            borderMask[i].set(blockPos[(i + 1) % 3] * Chunk::SIZE + blockPos[(i + 2) % 3], 1);
+        } else if (blockPos[i] == Chunk::SIZE - 1) {
+            borderMask[3 + i].set(blockPos[(i + 1) % 3] * Chunk::SIZE + blockPos[(i + 2) % 3], 1);
+        }
+    }
+}
+
+const Chunk::SingleBorderMask& Chunk::GetSingleBorderMask(uint8_t index) const {
+    assert(index < 6);
+    return borderMask[index];
+}
+
+void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
+    assert(index < 6);
+    if (checkedNeighbours & (1 >> index)) {
+        WARN("Wanted to recheck already checked border");
+        return;
+    }
+    checkedNeighbours |= (1 >> index);
+    uint8_t firstIndex = ((index % 3) + 1) % 3;
+    uint8_t secondIndex = ((index % 3) + 2) % 3;
+    Point3i pos(0);
+    if (index >= 3) {
+        pos[index % 3] = Chunk::SIZE - 1;
+    }
+
+    for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
+        Point3i pos = iter->first;
+        for (uint8_t i = 0; i < 3; i++) {
+            if ((i == index  && pos[i] == 0) ||
+                (index >= 3 && i == index % 3 && pos[i] == Chunk::SIZE - 1)) {
+                if (!mask[pos[firstIndex] * Chunk::SIZE + pos[secondIndex]]) {
+                    Block& block = iter->second;
+                    block.DecreaseNeighbourCount(1);
+                    if (block.GetNeighbourCount() == 5) {       //this block was previously assumed to be hidden
+                        renderCandidates.emplace_back(block);   //but was visible instead, now add to render canditates
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -110,8 +162,6 @@ void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
         iter->get().Draw(camera, mesh);
     }
 }
-
-
 
 void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
@@ -143,5 +193,15 @@ void CalculateHeights(HeightArray& height,
         }
     }
 }
+
+/*bool IsBorderBlock(const Point3i& blockPos) {
+    for(uint8_t i = 0; i < 3; i++) {
+        if (blockPos[i] == 0 || blockPos[i] == Chunk::SIZE - 1) {
+            return true;
+        }
+    }
+    return false;
+}*/
+
 
 }       // namespace mc::world::chunk
