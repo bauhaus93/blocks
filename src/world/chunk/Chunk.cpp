@@ -127,9 +127,10 @@ const Chunk::SingleBorderMask& Chunk::GetSingleBorderMask(uint8_t index) const {
 
 void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
     assert(index < 6);
+    assert(!IsEmpty());
     assert((checkedNeighbours & (1 << index)) == 0);
     checkedNeighbours |= (1 << index);
-    DEBUG("Chunk ", chunkPos, ", checked neigbours: ", static_cast<uint32_t>(checkedNeighbours));
+    //DEBUG("Chunk ", chunkPos, ", checked neigbours: ", static_cast<uint32_t>(checkedNeighbours));
     uint8_t firstIndex = ((index % 3) + 1) % 3;
     uint8_t secondIndex = ((index % 3) + 2) % 3;
     Point3i pos(0);
@@ -138,14 +139,11 @@ void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
     }
 
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
-        Point3i pos = iter->first;
+        Point3i pos(iter->first);
         for (uint8_t i = 0; i < 3; i++) {
             if ((i == index  && pos[i] == 0) ||
                 (index >= 3 && i == (index % 3) && pos[i] == Chunk::SIZE - 1)) {
-                //DEBUG("index = ", static_cast<uint32_t>(index), ", first = ", static_cast<uint32_t>(firstIndex), ", second = ", static_cast<uint32_t>(secondIndex));
-                //DEBUG("Check block ", iter->first);
                 if (!mask[pos[firstIndex] * Chunk::SIZE + pos[secondIndex]]) {
-                    //DEBUG("Decrease neighbour count of ", iter->first);
                     Block& block = iter->second;
                     block.DecreaseNeighbourCount(1);
                     if (block.GetNeighbourCount() == 5) {       //this block was previously assumed to be hidden

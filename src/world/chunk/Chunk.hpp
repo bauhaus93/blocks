@@ -5,6 +5,7 @@
 #include <memory>
 #include <cstdint>
 #include <bitset>
+#include <functional>
 
 #include <SFML/System.hpp>
 
@@ -32,6 +33,7 @@ class Chunk {
      typedef std::array<SingleBorderMask, 6> BorderMask;
 
     explicit        Chunk(const Point3i& chunkPos_);
+                    Chunk(const Chunk& other) = delete;
                     Chunk(Chunk&& other);
 
     void            Generate(const SimplexNoise& noise, const Texture& texture);

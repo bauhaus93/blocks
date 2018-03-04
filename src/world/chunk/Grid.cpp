@@ -58,6 +58,19 @@ void Grid::UnloadOldChunks() {
         }
     }
     DEBUG("Unloading ", removePos.size(), " chunks");
+    uncheckedBorders.erase(std::remove_if(
+                            uncheckedBorders.begin(),
+                            uncheckedBorders.end(),
+                            [&removePos](const std::reference_wrapper<Chunk>& c) {
+                                const Point3i& pos = c.get().GetPosition();
+                                for (auto& rPos : removePos) {
+                                    if (pos == rPos) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                           ), uncheckedBorders.end());
     while (!removePos.empty()) {
         grid.erase(removePos.back());
         removePos.pop_back();
@@ -73,7 +86,7 @@ void Grid::UpdateChunks() {
             newChunks.pop_back();
             assert(pair.second == true);   // element was newly inserted
             if (!pair.first->second.IsEmpty()) {
-
+                INFO("INSERTED ", pair.first->second.GetPosition(), " to unchecked borders");
                 uncheckedBorders.emplace_back(pair.first->second);
             }
         }
@@ -82,10 +95,12 @@ void Grid::UpdateChunks() {
 }
 
 void Grid::CheckBorders() {
-    DEBUG("Checking unchecked chunk borders, ", uncheckedBorders.size(), " chunks left");
+    //DEBUG("Checking unchecked chunk borders, ", uncheckedBorders.size(), " chunks left");
     bool changedOne = false;
     for(auto chunkRef: uncheckedBorders) {
         Chunk& chunk = chunkRef.get();
+        //INFO("I'm chunk ", chunk.GetPosition());
+        assert(!chunk.IsEmpty());
         MapRef3D<const Chunk> neighbours = CreateImmediateNeighbourMap(chunk.GetPosition(), grid);
         uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();
         for (uint8_t i = 0; i < 6; i++) {
@@ -114,7 +129,6 @@ void Grid::CheckBorders() {
                                     return c.get().GetCheckedNeighbours() == 0x3F;
                                 }
                                ), uncheckedBorders.end());
-        DEBUG("IN after: ", uncheckedBorders.size());
     }
 }
 
