@@ -76,7 +76,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
         }
     }
 
-    DEBUG("Generated chunk ", chunkPos,
+    TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms",
           ", blocks: ", blocks.size(),
           ", renderable blocks: ", renderCandidates.size());
@@ -147,6 +147,7 @@ void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
                     Block& block = iter->second;
                     block.DecreaseNeighbourCount(1);
                     if (block.GetNeighbourCount() == 5) {       //this block was previously assumed to be hidden
+                        TRACE("Block ", iter->first, " from Chunk ", GetPosition(), " was made visible due to neighbour checking");
                         renderCandidates.emplace_back(block);   //but was visible instead, now add to render candidates
                     }
                 }

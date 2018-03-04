@@ -34,6 +34,7 @@ void Grid::SetCenter(Point3i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
+    uint32_t newCount = 0;
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
             for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
@@ -41,10 +42,12 @@ void Grid::LoadNewChunks() {
                 Point3i pos = centerPos + Point3i(x, y, z);
                 if (grid.find(pos) == grid.end()) {
                     chunkLoader.RequestChunk(pos);
+                    newCount++;
                 }
             }
         }
     }
+    DEBUG("Requested ", newCount, " chunks for loading");
 }
 
 void Grid::UnloadOldChunks() {
@@ -80,6 +83,7 @@ void Grid::UnloadOldChunks() {
 void Grid::UpdateChunks() {
     if (chunkLoader.HasLoadedChunks()) {
         std::vector<Chunk> newChunks = chunkLoader.GetLoadedChunks();
+        TRACE("Loaded ", newChunks.size(), " new chunks");
         while (!newChunks.empty()) {
             auto pair = grid.emplace(newChunks.back().GetPosition(),
                             std::move(newChunks.back()));
@@ -110,7 +114,8 @@ void Grid::CheckBorders() {
                 }
                 auto find = neighbours.find(offset);
                 if (find != neighbours.end()) {
-                    auto mask = find->second.get().GetSingleBorderMask(i);
+                    //must pass the opposite mask of the neighbour for checking
+                    auto mask = find->second.get().GetSingleBorderMask((i + 3) % 6);
                     chunk.CheckNeighbour(i, mask);
                     changedOne = true;
                 }

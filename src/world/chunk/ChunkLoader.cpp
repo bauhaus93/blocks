@@ -39,7 +39,7 @@ void ChunkLoader::RequestChunk(const Point3i& chunkPos) {
     activeMutex.lock();
     if (std::find(activeChunks.begin(), activeChunks.end(), chunkPos) != activeChunks.end()) {
         activeMutex.unlock();
-        DEBUG("Wanted to request chunk which is currently under generation, skipping");
+        TRACE("Requested chunk ", chunkPos, " for loading, but is currently being loaded");
         return;
     }
     activeMutex.unlock();
@@ -79,7 +79,7 @@ void ChunkLoader::Loop() {
         CheckFinishedFutures();
         AddFutures();
         if (activeFutures == maxThreads) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
