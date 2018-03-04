@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 
+#include "logger/GlobalLogger.hpp"
 #include "utility/Point3.hpp"
 
 namespace mc::world {
@@ -15,13 +16,18 @@ template<typename T>
 class Octree;
 
 template<typename T>
-using OctreeArray = std::array<std::unique_ptr<Octree<T>>, 8>;
+using OctreePtr = std::unique_ptr<Octree<T>>;
+
+template<typename T>
+using OctreeArray = std::array<OctreePtr<T>, 8>;
 
 template<typename T>
 using Point3Vec = std::vector<Point3<T>>;
 
 template<typename T>
 bool BelowMinSize(const Point3<T>& size, const Point3<T>& minSize);
+
+typedef OctreePtr<int32_t> OctreePtrI;
 
 template<typename T>
 class Octree {

@@ -11,6 +11,7 @@ Grid::Grid(int32_t chunkDrawDistance):
     gridSize { Point3i(chunkDrawDistance) },
     centerPos(1337, 1337, 1337),
     grid { },
+    chunkTree { nullptr },
     chunkLoader { 10 } {
     chunkLoader.Start();
 }
@@ -33,12 +34,19 @@ void Grid::SetCenter(Point3i gridPos) {
     }
 }
 
+uint32_t Grid::GetVisibleBlocksCount() const {
+    uint32_t c = 0;
+    for (const auto& chunk: grid) {
+        c += chunk.second.GetVisibleBlocksCount();
+    }
+    return c;
+}
+
 void Grid::LoadNewChunks() {
     uint32_t newCount = 0;
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
             for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
-                //Point3i offset(x, y, z);
                 Point3i pos = centerPos + Point3i(x, y, z);
                 if (grid.find(pos) == grid.end()) {
                     chunkLoader.RequestChunk(pos);
@@ -93,15 +101,14 @@ void Grid::UpdateChunks() {
             }
         }
         CheckBorders();
+        DEBUG("Visible blocks count: ", GetVisibleBlocksCount());
     }
 }
 
 void Grid::CheckBorders() {
-    //DEBUG("Checking unchecked chunk borders, ", uncheckedBorders.size(), " chunks left");
     bool changedOne = false;
     for(auto chunkRef: uncheckedBorders) {
         Chunk& chunk = chunkRef.get();
-        //INFO("I'm chunk ", chunk.GetPosition());
         assert(!chunk.IsEmpty());
         MapRef3D<const Chunk> neighbours = CreateImmediateNeighbourMap(chunk.GetPosition(), grid);
         uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();

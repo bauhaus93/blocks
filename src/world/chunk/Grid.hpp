@@ -11,6 +11,7 @@
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
+#include "world/octree/Octree.hpp"
 
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
@@ -25,8 +26,10 @@ class Grid {
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);
+    uint32_t        GetVisibleBlocksCount() const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
     void            UpdateChunks();
+
 
  private:
     void            SetCenter(Point3i centerPos);
@@ -38,6 +41,7 @@ class Grid {
     Point3i             centerPos;
     VecRef<Chunk>       uncheckedBorders;
     Map3D<Chunk>        grid;
+    OctreePtrI          chunkTree;
     ChunkLoader         chunkLoader;
 
 };

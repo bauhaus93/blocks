@@ -15,7 +15,7 @@ Chunk::Chunk(const Point3i& chunkPos_):
     checkedNeighbours { 0 },
     borderMask { },
     blocks { },
-    renderCandidates { } {
+    visibleBlocks { } {
 }
 
 Chunk::Chunk(Chunk&& other):
@@ -24,7 +24,7 @@ Chunk::Chunk(Chunk&& other):
     checkedNeighbours { other.checkedNeighbours },
     borderMask { std::move(other.borderMask) },
     blocks { std::move(other.blocks) },
-    renderCandidates { std::move(other.renderCandidates) } {
+    visibleBlocks { std::move(other.visibleBlocks) } {
 }
 
 bool Chunk::IsEmpty() const {
@@ -79,7 +79,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
     TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms",
           ", blocks: ", blocks.size(),
-          ", renderable blocks: ", renderCandidates.size());
+          ", visible blocks: ", visibleBlocks.size());
 }
 
 
@@ -101,7 +101,7 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32
         }
         auto pair = blocks.emplace(curr, Block(worldPos, texture, neighbours));
         if (neighbours < 6) {
-            renderCandidates.emplace_back(pair.first->second);
+            visibleBlocks.emplace_back(pair.first->second);
         }
 
         SetNeighbourMask(curr);
@@ -148,7 +148,7 @@ void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
                     block.DecreaseNeighbourCount(1);
                     if (block.GetNeighbourCount() == 5) {       //this block was previously assumed to be hidden
                         TRACE("Block ", iter->first, " from Chunk ", GetPosition(), " was made visible due to neighbour checking");
-                        renderCandidates.emplace_back(block);   //but was visible instead, now add to render candidates
+                        visibleBlocks.emplace_back(block);   //but was visible instead, now add to render candidates
                     }
                 }
             }
@@ -157,7 +157,7 @@ void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
 }
 
 void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
-    for (auto iter = renderCandidates.begin(); iter != renderCandidates.end(); ++iter) {
+    for (auto iter = visibleBlocks.begin(); iter != visibleBlocks.end(); ++iter) {
         iter->get().Draw(camera, mesh);
     }
 }
