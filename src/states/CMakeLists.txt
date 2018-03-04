@@ -1,6 +1,10 @@
 add_sources(
+  StateStack.hpp
   StateStack.cpp
+  GameState.hpp
   GameState.cpp
+  WorldState.hpp
   WorldState.cpp
+  PauseState.hpp
   PauseState.cpp
 )

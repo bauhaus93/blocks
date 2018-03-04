@@ -12,6 +12,8 @@ macro(add_sources)
 	endforeach()
 endmacro()
 
+#set(CMAKE_CXX_STANDARD 17)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(EXECUTABLE_NAME "mc")
 
 add_executable(${EXECUTABLE_NAME} "")
@@ -36,22 +38,18 @@ get_property(SRCS TARGET ${EXECUTABLE_NAME} PROPERTY SRC_LIST)
 target_sources(${EXECUTABLE_NAME} PRIVATE ${SRCS})
 
 include_directories(src)
+
 if (UNIX)
     include_directories(/usr/include /usr/local/include)
 endif (UNIX)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(${EXECUTABLE_NAME} Threads::Threads)
 
-find_package(SFML 2 REQUIRED network audio graphics window system)
-if (SFML_FOUND)
-  include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-endif()
+find_package(SFML 2 REQUIRED COMPONENTS network audio graphics window system)
+include_directories(${SFML_INCLUDE_DIR})
+target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 find_package(OpenGL REQUIRED)
-if (OPENGL_FOUND)
-  include_directories(${OPENGL_INCLUDE_DIR})
-  target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})
-endif()
+include_directories(${OPENGL_INCLUDE_DIR})
+target_link_libraries(${EXECUTABLE_NAME} ${OPENGL_LIBRARIES})

@@ -1,6 +1,10 @@
 add_sources(
+  Chunk.hpp
   Chunk.cpp
+  ChunkLoader.hpp
   ChunkLoader.cpp
+  Grid.hpp
   Grid.cpp
+  SimplexNoise.hpp
   SimplexNoise.cpp
 )

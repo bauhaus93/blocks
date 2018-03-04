@@ -1,7 +1,10 @@
 add_sources(
   Main.cpp
+  Application.hpp
   Application.cpp
+  ApplicationError.hpp
   ApplicationError.cpp
+  FileNotFoundError.hpp
   FileNotFoundError.cpp
 )
 

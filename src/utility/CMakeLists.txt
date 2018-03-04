@@ -1,3 +1,9 @@
 add_sources(
+  FileRead.hpp
   FileRead.cpp
+  Defs.hpp
+  Point.hpp
+  Point2.hpp
+  Point3.hpp
+  PointTransformation.hpp
 )
