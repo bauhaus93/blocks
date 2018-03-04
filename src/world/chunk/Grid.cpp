@@ -84,9 +84,7 @@ void Grid::UpdateChunks() {
             auto pair = grid.emplace(newChunks.back().GetPosition(),
                             std::move(newChunks.back()));
             newChunks.pop_back();
-            assert(pair.second == true);   // element was newly inserted
             if (!pair.first->second.IsEmpty()) {
-                INFO("INSERTED ", pair.first->second.GetPosition(), " to unchecked borders");
                 uncheckedBorders.emplace_back(pair.first->second);
             }
         }
@@ -124,15 +122,11 @@ void Grid::CheckBorders() {
                                 uncheckedBorders.begin(),
                                 uncheckedBorders.end(),
                                 [](const std::reference_wrapper<Chunk>& c) {
-                                    if (c.get().GetCheckedNeighbours() == 0x3F)
-                                        INFO("Removing ", c.get().GetPosition());
                                     return c.get().GetCheckedNeighbours() == 0x3F;
                                 }
                                ), uncheckedBorders.end());
     }
 }
-
-
 
 void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     for (auto chunkIter = grid.cbegin(); chunkIter != grid.end(); ++chunkIter) {

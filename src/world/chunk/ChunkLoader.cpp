@@ -36,6 +36,14 @@ bool ChunkLoader::HasLoadedChunks() {
 }
 
 void ChunkLoader::RequestChunk(const Point3i& chunkPos) {
+    activeMutex.lock();
+    if (std::find(activeChunks.begin(), activeChunks.end(), chunkPos) != activeChunks.end()) {
+        activeMutex.unlock();
+        DEBUG("Wanted to request chunk which is currently under generation, skipping");
+        return;
+    }
+    activeMutex.unlock();
+
     pendingMutex.lock();
     pendingChunks.push(chunkPos);
     pendingMutex.unlock();
@@ -87,8 +95,16 @@ void ChunkLoader::CheckFinishedFutures() {
             if (futures[i]->wait_for(time) == std::future_status::ready) {
                 finishedMutex.lock();
                 finishedChunks.emplace_back(futures[i]->get());
-                finishedMutex.unlock();
+
                 futures[i] = nullptr;
+                activeMutex.lock();
+                auto foundElement = std::find(activeChunks.begin(),
+                                             activeChunks.end(),
+                                             finishedChunks.back().GetPosition());
+                assert(foundElement != activeChunks.end());
+                activeChunks.erase(foundElement);
+                activeMutex.unlock();
+                finishedMutex.unlock();
                 activeFutures--;
             }
         }
@@ -97,6 +113,7 @@ void ChunkLoader::CheckFinishedFutures() {
 
 void ChunkLoader::AddFutures() {
     pendingMutex.lock();
+    activeMutex.lock();
     while (!pendingChunks.empty() && activeFutures < maxThreads) {
         Point3i chunkPos = pendingChunks.front();
         std::unique_ptr<std::future<Chunk>> fut = std::make_unique<std::future<Chunk>>(
@@ -105,6 +122,7 @@ void ChunkLoader::AddFutures() {
                        std::cref(heightNoise),
                        std::cref(texture)));
         pendingChunks.pop();
+        activeChunks.push_back(chunkPos);
 
         if (futures.size() < maxThreads) {
             activeFutures++;
@@ -122,7 +140,7 @@ void ChunkLoader::AddFutures() {
             assert(added);
         }
     }
-
+    activeMutex.unlock();
     pendingMutex.unlock();
 }
 

@@ -9,6 +9,7 @@
 #include <atomic>
 #include <chrono>
 #include <cassert>
+#include <algorithm>
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
@@ -42,12 +43,14 @@ class ChunkLoader {
     std::atomic<bool>       stop;
     std::mutex              pendingMutex;
     std::mutex              finishedMutex;
+    std::mutex              activeMutex;
     const uint32_t          maxThreads;
     const SimplexNoise      heightNoise;
     const Texture           texture;
     std::unique_ptr<std::thread> thread;
     ChunkFutureVec          futures;
     std::queue<Point3i>     pendingChunks;
+    std::vector<Point3i>    activeChunks;
     std::vector<Chunk>      finishedChunks;
     uint32_t                activeFutures;
 };
