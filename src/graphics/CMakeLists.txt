@@ -1,5 +1,4 @@
 add_sources(
-  Glad.cpp
   OpenGLError.hpp
   OpenGLError.cpp
   Mesh.hpp
@@ -19,3 +18,4 @@ add_sources(
 )
 
 add_subdirectory(shader)
+add_subdirectory(glad)

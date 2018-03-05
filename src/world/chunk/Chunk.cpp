@@ -11,7 +11,7 @@ void CalculateHeights(HeightArray& height,
 
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
-    origin { chunkPos * Chunk::SIZE * Block::SIZE },
+    origin { chunkPos * static_cast<float>(Chunk::SIZE * Block::SIZE) },
     checkedNeighbours { 0 },
     borderMask { },
     blocks { },
@@ -87,7 +87,7 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32
     Point3i curr(top);
 
     while (curr[2] >= 0) {
-        Point3f worldPos = origin + curr * Block::SIZE;
+        Point3f worldPos = static_cast<int32_t>(origin) + curr * Block::SIZE;
         uint8_t neighbours = 0;
         if (curr[2] == top[2] && top[2] != Chunk::SIZE - 1) {
             neighbours += 1;
@@ -133,13 +133,13 @@ void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
     //DEBUG("Chunk ", chunkPos, ", checked neigbours: ", static_cast<uint32_t>(checkedNeighbours));
     uint8_t firstIndex = ((index % 3) + 1) % 3;
     uint8_t secondIndex = ((index % 3) + 2) % 3;
-    Point3i pos(0);
+    /*Point3i pos(0);
     if (index >= 3) {
         pos[index % 3] = Chunk::SIZE - 1;
-    }
+    }*/
 
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
-        Point3i pos(iter->first);
+        Point3i pos(iter->first);	//TODO check which variable is the needed one -> is overshadowing
         for (uint8_t i = 0; i < 3; i++) {
             if ((i == index  && pos[i] == 0) ||
                 (index >= 3 && i == (index % 3) && pos[i] == Chunk::SIZE - 1)) {

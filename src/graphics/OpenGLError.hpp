@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 
-#include <glad/glad.h>
+#include "glad/Glad.h"
 
 #include "ApplicationError.hpp"
 

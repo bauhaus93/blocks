@@ -34,8 +34,8 @@ void Grid::SetCenter(Point3i gridPos) {
     }
 }
 
-uint32_t Grid::GetVisibleBlocksCount() const {
-    uint32_t c = 0;
+size_t Grid::GetVisibleBlocksCount() const {
+	size_t c = 0;
     for (const auto& chunk: grid) {
         c += chunk.second.GetVisibleBlocksCount();
     }

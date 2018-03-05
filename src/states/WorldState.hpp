@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <glad/glad.h>
+#include "graphics/glad/Glad.h"
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/System.hpp>

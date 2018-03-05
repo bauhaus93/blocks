@@ -2,7 +2,9 @@
 
 #pragma once
 
-#include <glad/glad.h>
+#include <cmath>
+
+#include "graphics/glad/Glad.h"
 
 #include <glm/trigonometric.hpp>
 #include <glm/vec3.hpp>

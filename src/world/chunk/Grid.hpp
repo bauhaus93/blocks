@@ -26,7 +26,7 @@ class Grid {
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);
-    uint32_t        GetVisibleBlocksCount() const;
+	size_t			GetVisibleBlocksCount() const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
     void            UpdateChunks();
 

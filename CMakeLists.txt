@@ -25,7 +25,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wall -ferror-limit=1 -Werror)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-        target_compile_options(${EXECUTABLE_NAME} PRIVATE /W4 /MP)
+        target_compile_options(${EXECUTABLE_NAME} PRIVATE /W4 /MP /std:c++latest)
 endif()
 
 get_property(SRCS TARGET ${EXECUTABLE_NAME} PROPERTY SRC_LIST)
@@ -33,9 +33,9 @@ target_sources(${EXECUTABLE_NAME} PRIVATE ${SRCS})
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE src)
 
-if (UNIX)
-	target_include_directories(${EXECUTABLE_NAME} PRIVATE /usr/include /usr/local/include)
-endif (UNIX)
+#if (UNIX)
+#	target_include_directories(${EXECUTABLE_NAME} PRIVATE /usr/include /usr/local/include)
+#endif (UNIX)
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${CMAKE_DL_LIBS})
 
@@ -45,6 +45,9 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE Threads::Threads)
 find_package(SFML 2 REQUIRED COMPONENTS network audio graphics window system)
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+
+find_package(GLM REQUIRED)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GLM_INCLUDE_DIR})
 
 find_package(OpenGL REQUIRED)
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})

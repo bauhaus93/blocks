@@ -45,8 +45,8 @@ void WorldState::HandleEvents() {
 void WorldState::HandleMouseMovement() {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2u windowSize = window.getSize();
-    float winX = windowSize.x / 2;
-    float winY = windowSize.y / 2;
+    float winX = static_cast<float>(windowSize.x) / 2.0f;
+    float winY = static_cast<float>(windowSize.y) / 2.0f;
     sf::Mouse::setPosition(sf::Vector2i(windowSize.x / 2, windowSize.y / 2), window);
     float diffX = float(winX - mousePos.x);
     float diffY = float(winY - mousePos.y);
@@ -54,8 +54,8 @@ void WorldState::HandleMouseMovement() {
     if (abs(diffX) > std::numeric_limits<float>::epsilon() ||
         abs(diffY) > std::numeric_limits<float>::epsilon()) {
         float d = lastDelta.asMilliseconds() / 1000.0f;
-        diffX *= 0.025 * d;
-        diffY *= 0.025 * d;
+        diffX *= 0.025f * d;
+        diffY *= 0.025f * d;
         Point3f offset(diffX, -diffY, 0.0f);
         world.GetCamera().Rotate(offset);
     }

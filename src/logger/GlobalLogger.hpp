@@ -25,32 +25,32 @@ void DestroyGlobalLogger();
 #define TRACE(args...) mc::log::GetGlobalLogger().Trace(args)
 #define DEBUG(args...) mc::log::GetGlobalLogger().Debug(args)
 #define INFO(args...) mc::log::GetGlobalLogger().Info(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
+#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #elif LOG_LEVEL == DEBUG
 #define TRACE(args...)
 #define DEBUG(args...) mc::log::GetGlobalLogger().Debug(args)
 #define INFO(args...) mc::log::GetGlobalLogger().Info(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
+#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #elif LOG_LEVEL == INFO
 #define TRACE(args...)
 #define DEBUG(args...)
 #define INFO(args...) mc::log::GetGlobalLogger().Info(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
+#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #elif LOG_LEVEL == WARN
 #define TRACE(args...)
 #define DEBUG(args...)
 #define INFO(args...)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
+#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #elif LOG_LEVEL == ERROR
 #define TRACE(args...)
 #define DEBUG(args...)
 #define INFO(args...)
-#define ERROR(args...)
-#define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
+#define WARN(args...) 
+#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
 #endif
 
 }   // namespace mc::log

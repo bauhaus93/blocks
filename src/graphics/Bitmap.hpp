@@ -6,7 +6,7 @@
 #include <string>
 #include <fstream>
 
-#include <glad/glad.h>
+#include "glad/Glad.h"
 
 #include "logger/GlobalLogger.hpp"
 #include "ApplicationError.hpp"

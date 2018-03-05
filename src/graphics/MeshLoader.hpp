@@ -8,11 +8,10 @@
 #include <vector>
 #include <map>
 
-#include <glad/glad.h>
-
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "glad/Glad.h"
 #include "utility/FileRead.hpp"
 #include "logger/GlobalLogger.hpp"
 

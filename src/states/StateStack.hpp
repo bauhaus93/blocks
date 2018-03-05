@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-
 #include <vector>
 #include <memory>
+
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 
 #include "logger/GlobalLogger.hpp"
 #include "GameState.hpp"
