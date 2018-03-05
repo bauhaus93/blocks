@@ -8,7 +8,11 @@
 #include "Logger.hpp"
 #include "LogLevel.hpp"
 
+#ifdef NDEBUG
+#define LOG_LEVEL INFO
+#else
 #define LOG_LEVEL DEBUG
+#endif
 
 namespace mc::log {
 

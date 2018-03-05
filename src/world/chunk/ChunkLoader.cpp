@@ -14,7 +14,7 @@ ChunkLoader::ChunkLoader(uint32_t maxThreads_):
     finishedMutex { },
     maxThreads { maxThreads_ },
     heightNoise { },
-    texture { "grass.bmp" },
+    texture { "data/grass.bmp" },
     thread { nullptr },
     futures { },
     pendingChunks { },
@@ -128,12 +128,16 @@ void ChunkLoader::AddFutures() {
             activeFutures++;
             futures.emplace_back(std::move(fut));
         } else {
+            #ifndef NDEBUG
             bool added = false;
+            #endif
             for (uint32_t i = 0; i < futures.size(); i++) {
                 if (futures[i] == nullptr) {
                     activeFutures++;
                     futures[i] = std::move(fut);
+                    #ifndef NDEBUG
                     added = true;
+                    #endif
                     break;
                 }
             }
