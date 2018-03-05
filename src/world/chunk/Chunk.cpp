@@ -54,11 +54,11 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
         for (auto x = 0; x < Chunk::SIZE; x++) {
             //border column neigbours in other chunks are considered having SIZE height
             //assuming they're full of blocks -> false positives occur (visible blocks classified invisible)
-            std::array<int32_t, 4> neighbourHeight = { Chunk::SIZE,
+            std::array<int32_t, 4> neighbourHeight = { { Chunk::SIZE,
                                                        Chunk::SIZE,
                                                        Chunk::SIZE,
                                                        Chunk::SIZE
-                                                     };
+                                                     } };
             if (x > 0) {
                 neighbourHeight[0] = *(currHeight - 1);
             }
