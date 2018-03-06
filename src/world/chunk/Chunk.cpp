@@ -39,6 +39,14 @@ bool Chunk::BlockExists(const Point3i& blockPos) const {
     return blocks.find(blockPos) != blocks.end();
 }
 
+bool Chunk::operator<(const Chunk& rhs) const {
+    return GetPosition() < rhs.GetPosition();
+}
+
+bool Chunk::operator<(const Point3i& rhsChunkPos) const {
+    return GetPosition() < rhsChunkPos;
+}
+
 /* measurements:
     70-100 ms (full 4096 chunk): (OLD) Block visibility checked after generation is done (through map accesses), excluding border blocks
     ~60 ms    (full 4096): (CURRENT) Visibility saved in block, calculated during building (partly using raw pointers), includes border blocks, which need additionial checking

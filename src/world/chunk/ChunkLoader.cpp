@@ -49,11 +49,35 @@ void ChunkLoader::RequestChunk(const Point3i& chunkPos) {
     pendingMutex.unlock();
 }
 
+void ChunkLoader::RequestChunks(const std::set<Point3i>& requestedChunkPos) {
+    std::set<Point3i> handledUnion;
+    handledMutex.lock();
+    std::set_union(handledChunkPos.begin(),
+                   handledChunkPos.end(),
+                   requestedChunkPos.begin(),
+                   requestedChunkPos.end(),
+                   std::inserter(handledUnion, handledUnion.end())
+                   );
+    handledChunkPos.swap(handledUnion);
+    handledMutex.unlock();
+}
+
 std::vector<Chunk> ChunkLoader::GetLoadedChunks() {
     std::vector<Chunk> newChunks;
+    std::set<Point3i> handledDiff;
+    handledMutex.lock();
     finishedMutex.lock();
+    std::set_difference(handledChunkPos.begin(),
+                        handledChunkPos.end(),
+                        finishedChunks.begin(),
+                        finishedChunks.end(),
+                        std::insert(handledDiff, handledDiff.end())
+                        );
+    handledChunkPos.swap(handledDiff);
     newChunks.swap(finishedChunks);
     finishedMutex.unlock();
+    handledMutex.unlock();
+
     return newChunks;
 }
 

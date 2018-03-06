@@ -10,8 +10,8 @@ MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
 Grid::Grid(int32_t chunkDrawDistance):
     gridSize { Point3i(chunkDrawDistance) },
     centerPos(1337, 1337, 1337),
-    grid { },
-    chunkTree { nullptr },
+    chunkSet { },
+    chunkPosTree { nullptr },
     chunkLoader { 10 } {
     chunkLoader.Start();
 }
@@ -43,19 +43,29 @@ size_t Grid::GetVisibleBlocksCount() const {
 }
 
 void Grid::LoadNewChunks() {
-    uint32_t newCount = 0;
+    std::set<Point3i> neededChunkPos = CreateNeededChunkPosSet();
+    std::set<Point3i> diff;
+
+    std::set_difference(neededChunkPos.begin(),
+                        neededChunkPos.end(),
+                        loadedChunks.begin(),
+                        loadedChunks.end(),
+                        std::inserter(diff, diff.end()));
+    chunkLoader.RequestChunks(diff);
+    DEBUG("Requested ", diff.size(), " chunks for loading");
+}
+
+std::set<Point3i> Grid::CreateNeededChunkPosSet() const {
+    std::set<Point3i> neededPos;
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
             for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
                 Point3i pos = centerPos + Point3i(x, y, z);
-                if (grid.find(pos) == grid.end()) {
-                    chunkLoader.RequestChunk(pos);
-                    newCount++;
-                }
+                neededPos.insert(pos);
             }
         }
     }
-    DEBUG("Requested ", newCount, " chunks for loading");
+    return neededPos;
 }
 
 void Grid::UnloadOldChunks() {

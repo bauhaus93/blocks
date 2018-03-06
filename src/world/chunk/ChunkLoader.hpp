@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cassert>
 #include <algorithm>
+#include <set>
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
@@ -32,6 +33,7 @@ class ChunkLoader {
     bool                IsRunning() const;
     bool                HasLoadedChunks();
     void                RequestChunk(const Point3i& chunkPos);
+    void                RequestChunks(const std::set<Point3i>& requestedChunkPos);
     std::vector<Chunk>  GetLoadedChunks();
 
 
@@ -43,15 +45,14 @@ class ChunkLoader {
     std::atomic<bool>       stop;
     std::mutex              pendingMutex;
     std::mutex              finishedMutex;
-    std::mutex              activeMutex;
+    std::mutex              handledMutex;
     const uint32_t          maxThreads;
     const SimplexNoise      heightNoise;
     const Texture           texture;
     std::unique_ptr<std::thread> thread;
     ChunkFutureVec          futures;
-    std::queue<Point3i>     pendingChunks;
-    std::vector<Point3i>    activeChunks;
-    std::vector<Chunk>      finishedChunks;
+    std::set<Chunk>         finishedChunks;
+    std::set<Point3i>       handledChunkPos;
     uint32_t                activeFutures;
 };
 

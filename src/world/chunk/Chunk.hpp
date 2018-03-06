@@ -46,6 +46,8 @@ class Chunk {
     bool            BlockExists(const Point3i& blockPos) const;
     void            CheckNeighbour(uint8_t index, const SingleBorderMask& mask);
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
+    bool            operator<(const Chunk& rhs) const;
+    bool            operator<(const Point3i& rhsChunkPos) const;
 
  private:
     void    GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight);

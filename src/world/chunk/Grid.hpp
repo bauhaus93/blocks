@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <set>
 
 #include "ApplicationError.hpp"
 #include "utility/Point2.hpp"
@@ -36,12 +37,13 @@ class Grid {
     void            LoadNewChunks();
     void            UnloadOldChunks();
     void            CheckBorders();
+    std::set<Point3i> CreateNeededChunkPosSet() const;
 
     Point3i             gridSize;
     Point3i             centerPos;
     VecRef<Chunk>       uncheckedBorders;
-    Map3D<Chunk>        grid;
-    OctreePtrI          chunkTree;
+    std::set<Chunk>     loadedChunks;
+    OctreePtrI          chunkPosTree;
     ChunkLoader         chunkLoader;
 
 };

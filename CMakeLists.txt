@@ -18,7 +18,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(EXECUTABLE_NAME "mc")
 
 add_executable(${EXECUTABLE_NAME} "")
-add_subdirectory(src)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wall -fmax-errors=1 -Werror)
@@ -27,6 +26,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         target_compile_options(${EXECUTABLE_NAME} PRIVATE /W4 /MP /std:c++latest)
 endif()
+
+add_subdirectory(src)
 
 get_property(SRCS TARGET ${EXECUTABLE_NAME} PROPERTY SRC_LIST)
 target_sources(${EXECUTABLE_NAME} PRIVATE ${SRCS})
