@@ -101,7 +101,7 @@ void Grid::UpdateChunks() {
             }
         }
         CheckBorders();
-        DEBUG("Visible blocks count: ", GetVisibleBlocksCount());
+        TRACE("Visible blocks count: ", GetVisibleBlocksCount());
     }
 }
 
