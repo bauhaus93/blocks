@@ -32,7 +32,6 @@ class ChunkLoader {
     void                Stop();
     bool                IsRunning() const;
     bool                HasLoadedChunks();
-    void                RequestChunk(const Point3i& chunkPos);
     void                RequestChunks(const std::set<Point3i>& requestedChunkPos);
     std::vector<Chunk>  GetLoadedChunks();
 
@@ -43,9 +42,8 @@ class ChunkLoader {
     void                    AddFutures();
 
     std::atomic<bool>       stop;
-    std::mutex              pendingMutex;
-    std::mutex              finishedMutex;
     std::mutex              handledMutex;
+    std::mutex              finishedMutex;
     const uint32_t          maxThreads;
     const SimplexNoise      heightNoise;
     const Texture           texture;

@@ -35,20 +35,6 @@ bool ChunkLoader::HasLoadedChunks() {
     return retVal;
 }
 
-void ChunkLoader::RequestChunk(const Point3i& chunkPos) {
-    activeMutex.lock();
-    if (std::find(activeChunks.begin(), activeChunks.end(), chunkPos) != activeChunks.end()) {
-        activeMutex.unlock();
-        TRACE("Requested chunk ", chunkPos, " for loading, but is currently being loaded");
-        return;
-    }
-    activeMutex.unlock();
-
-    pendingMutex.lock();
-    pendingChunks.push(chunkPos);
-    pendingMutex.unlock();
-}
-
 void ChunkLoader::RequestChunks(const std::set<Point3i>& requestedChunkPos) {
     std::set<Point3i> handledUnion;
     handledMutex.lock();
@@ -71,7 +57,7 @@ std::vector<Chunk> ChunkLoader::GetLoadedChunks() {
                         handledChunkPos.end(),
                         finishedChunks.begin(),
                         finishedChunks.end(),
-                        std::insert(handledDiff, handledDiff.end())
+                        std::inserter(handledDiff, handledDiff.end())
                         );
     handledChunkPos.swap(handledDiff);
     newChunks.swap(finishedChunks);
@@ -86,12 +72,13 @@ void ChunkLoader::Start() {
         DEBUG("Starting ChunkLoader thread");
         thread = std::make_unique<std::thread>(&ChunkLoader::Loop, this);
     } else {
-        DEBUG("Wanted to start ChunkLoader thread, but was already running");
+        WARN("Wanted to start ChunkLoader thread, but was already running");
     }
 }
 
 void ChunkLoader::Stop() {
     DEBUG("Requesting ChunkLoader thread to stop");
+    assert(thread != nullptr);
     stop = true;
     thread->join();
     thread = nullptr;
@@ -99,6 +86,7 @@ void ChunkLoader::Stop() {
 
 void ChunkLoader::Loop() {
     DEBUG("ChunkLoader thread started");
+    stop = false;
     while (!stop) {
         CheckFinishedFutures();
         AddFutures();
@@ -109,7 +97,6 @@ void ChunkLoader::Loop() {
         }
     }
     DEBUG("ChunkLoader thread finished");
-    stop = false;
 }
 
 void ChunkLoader::CheckFinishedFutures() {
@@ -118,17 +105,9 @@ void ChunkLoader::CheckFinishedFutures() {
         if (futures[i] != nullptr) {
             if (futures[i]->wait_for(time) == std::future_status::ready) {
                 finishedMutex.lock();
-                finishedChunks.emplace_back(futures[i]->get());
-
-                futures[i] = nullptr;
-                activeMutex.lock();
-                auto foundElement = std::find(activeChunks.begin(),
-                                             activeChunks.end(),
-                                             finishedChunks.back().GetPosition());
-                assert(foundElement != activeChunks.end());
-                activeChunks.erase(foundElement);
-                activeMutex.unlock();
+                finishedChunks.insert(futures[i]->get());
                 finishedMutex.unlock();
+                futures[i] = nullptr;
                 activeFutures--;
             }
         }
@@ -136,40 +115,52 @@ void ChunkLoader::CheckFinishedFutures() {
 }
 
 void ChunkLoader::AddFutures() {
-    pendingMutex.lock();
-    activeMutex.lock();
-    while (!pendingChunks.empty() && activeFutures < maxThreads) {
-        Point3i chunkPos = pendingChunks.front();
-        std::unique_ptr<std::future<Chunk>> fut = std::make_unique<std::future<Chunk>>(
-            std::async(CreateChunk,
-                       chunkPos,
-                       std::cref(heightNoise),
-                       std::cref(texture)));
-        pendingChunks.pop();
-        activeChunks.push_back(chunkPos);
 
-        if (futures.size() < maxThreads) {
-            activeFutures++;
-            futures.emplace_back(std::move(fut));
-        } else {
-            #ifndef NDEBUG
-            bool added = false;
-            #endif
-            for (uint32_t i = 0; i < futures.size(); i++) {
-                if (futures[i] == nullptr) {
-                    activeFutures++;
-                    futures[i] = std::move(fut);
-                    #ifndef NDEBUG
-                    added = true;
-                    #endif
-                    break;
+    if (activeFutures < maxThreads) {
+        handledMutex.lock();
+        finishedMutex.lock();
+        std::set<Point3i> pending;
+
+        std::set_difference(handledChunkPos.begin(),
+                            handledChunkPos.end(),
+                            finishedChunks.begin(),
+                            finishedChunks.end(),
+                            std::inserter(pending, pending.end()));
+
+        finishedMutex.unlock();
+        handledMutex.unlock();
+        TRACE("Pending chunks for generation: ", pending.size());
+        for (auto pointIter = pending.begin();
+             pointIter != pending.end() && activeFutures < maxThreads;
+             ++pointIter) {
+            std::unique_ptr<std::future<Chunk>> fut =
+                std::make_unique<std::future<Chunk>>(std::async(
+                    CreateChunk,*pointIter,
+                    std::cref(heightNoise),
+                    std::cref(texture)));
+            if (futures.size() < maxThreads) {
+                activeFutures++;
+                futures.emplace_back(std::move(fut));
+            } else {
+                #ifndef NDEBUG
+                bool added = false;
+                #endif
+                for (auto futIter = futures.begin();
+                     futIter != futures.end();
+                     ++futIter) {
+                    if (*futIter== nullptr) {
+                        activeFutures++;
+                        *futIter = std::move(fut);
+                        #ifndef NDEBUG
+                        added = true;
+                        #endif
+                        break;
+                    }
                 }
+                assert(added);
             }
-            assert(added);
         }
     }
-    activeMutex.unlock();
-    pendingMutex.unlock();
 }
 
 Chunk CreateChunk(Point3i pos,

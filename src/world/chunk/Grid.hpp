@@ -37,7 +37,7 @@ class Grid {
     void            LoadNewChunks();
     void            UnloadOldChunks();
     void            CheckBorders();
-    std::set<Point3i> CreateNeededChunkPosSet() const;
+    std::set<Point3i> CreateVisibleChunkPosSet() const;
 
     Point3i             gridSize;
     Point3i             centerPos;

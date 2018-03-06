@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <set>
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point3.hpp"
@@ -23,6 +24,9 @@ using OctreeArray = std::array<OctreePtr<T>, 8>;
 
 template<typename T>
 using Point3Vec = std::vector<Point3<T>>;
+
+template<typename T>
+using Point3Set = std::set<Point3<T>>;
 
 template<typename T>
 bool BelowMinSize(const Point3<T>& size, const Point3<T>& minSize);
@@ -43,6 +47,7 @@ class Octree {
     const Point3<T>&    GetMax() const;
     const Point3Vec<T>& GetElements() const;
     void                QueueElement(Point3<T> element);
+    void                QueueElements(const std::set<Point3i>& newQueuedElements);
     void                InsertQueuedElements();
 
  private:
@@ -96,6 +101,13 @@ const Point3Vec<T>& Octree<T>::GetElements() const {
 template<typename T>
 void Octree<T>::QueueElement(Point3<T> element) {
     queuedElements.push_back(element);
+}
+
+template<typename T>
+void Octree<T>::QueueElements(const std::set<Point3i>& newQueuedElements) {
+    queuedElements.insert(queuedElements.end(),
+                          newQueuedElements.begin(),
+                          newQueuedElements.end());
 }
 
 template<typename T>

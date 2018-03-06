@@ -29,9 +29,19 @@ void Grid::SetCenter(Point3i gridPos) {
     if (centerPos != gridPos) {
         DEBUG("Changing center chunk, ", centerPos, "-> ", gridPos);
         centerPos = gridPos;
+        std::set<Point3i> visibleChunks = CreateVisibleChunkPosSet();
+        RebuildChunkPosTree(visibleChunks);
         UnloadOldChunks();
-        LoadNewChunks();
+        LoadNewChunks(visibleChunks);
     }
+}
+
+void Grid::RebuildChunkPosTree(const std::set<Point3i>& visibleChunks) {
+    const Point3i min(centerPos - gridSize);
+    const Point3i max(centerPos + gridSize);
+    chunkPosTree = std::make_unique<Octree<int32_t>>(min, max);
+    chunkPosTree.QueueElements(visibleChunks);
+    chunkPosTree.InsertQueuedElements();
 }
 
 size_t Grid::GetVisibleBlocksCount() const {
@@ -42,12 +52,11 @@ size_t Grid::GetVisibleBlocksCount() const {
     return c;
 }
 
-void Grid::LoadNewChunks() {
-    std::set<Point3i> neededChunkPos = CreateNeededChunkPosSet();
+void Grid::LoadNewChunks(const std::set<Point3i>& visibleChunks) {
     std::set<Point3i> diff;
 
-    std::set_difference(neededChunkPos.begin(),
-                        neededChunkPos.end(),
+    std::set_difference(visibleChunks.begin(),
+                        visibleChunks.end(),
                         loadedChunks.begin(),
                         loadedChunks.end(),
                         std::inserter(diff, diff.end()));
@@ -55,7 +64,7 @@ void Grid::LoadNewChunks() {
     DEBUG("Requested ", diff.size(), " chunks for loading");
 }
 
-std::set<Point3i> Grid::CreateNeededChunkPosSet() const {
+std::set<Point3i> Grid::CreateVisibleChunkPosSet() const {
     std::set<Point3i> neededPos;
     for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
