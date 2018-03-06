@@ -87,7 +87,7 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32
     Point3i curr(top);
 
     while (curr[2] >= 0) {
-        Point3f worldPos = static_cast<int32_t>(origin) + curr * Block::SIZE;
+        Point3f worldPos = origin + curr * Block::SIZE;
         uint8_t neighbours = 0;
         if (curr[2] == top[2] && top[2] != Chunk::SIZE - 1) {
             neighbours += 1;

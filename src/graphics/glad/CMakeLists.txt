@@ -1,5 +1,5 @@
 add_sources(
   Glad.h
-  Glad.c
+  Glad.cpp
   KhrPlatform.h
 )

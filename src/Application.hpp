@@ -6,11 +6,12 @@
 #include <memory>
 
 
+#include "graphics/glad/Glad.h"
+
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/System.hpp>
 
-#include "graphics/glad/Glad.h"
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
 #include "states/GameState.hpp"
