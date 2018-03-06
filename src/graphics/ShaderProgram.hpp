@@ -4,9 +4,9 @@
 
 #include <string>
 
-#include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 
+#include "glad/Glad.h"
 #include "utility/FileRead.hpp"
 
 #include "logger/GlobalLogger.hpp"

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <glad/glad.h>
+#include "glad/Glad.h"
 
 #include "MeshLoader.hpp"
 
@@ -24,7 +24,7 @@ class Mesh {
     GLuint       uvBuffer;
     GLuint       normalBuffer;
     GLuint       indexBuffer;
-    uint32_t     indexCount;
+    size_t	     indexCount;
 };
 
 }   // namespace mc
