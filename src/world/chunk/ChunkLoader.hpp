@@ -18,6 +18,7 @@
 #include "ApplicationError.hpp"
 #include "Chunk.hpp"
 #include "SimplexNoise.hpp"
+#include "PointChunkCmp.hpp"
 
 namespace mc::world::chunk {
 

@@ -10,14 +10,12 @@ Chunk CreateChunk(Point3i pos,
 
 ChunkLoader::ChunkLoader(uint32_t maxThreads_):
     stop { false },
-    pendingMutex { },
     finishedMutex { },
     maxThreads { maxThreads_ },
     heightNoise { },
     texture { "data/grass.bmp" },
     thread { nullptr },
     futures { },
-    pendingChunks { },
     finishedChunks { },
     activeFutures { 0 } {
     futures.reserve(maxThreads);
@@ -57,10 +55,12 @@ std::vector<Chunk> ChunkLoader::GetLoadedChunks() {
                         handledChunkPos.end(),
                         finishedChunks.begin(),
                         finishedChunks.end(),
-                        std::inserter(handledDiff, handledDiff.end())
-                        );
+                        std::inserter(handledDiff, handledDiff.end()),
+                        PointChunkCmp());
     handledChunkPos.swap(handledDiff);
-    newChunks.swap(finishedChunks);
+    for (auto iter = finishedChunks.begin(); iter != finishedChunks.end();) {
+        newChunks.push_back(std::move(finishedChunks.extract(iter++).value()));
+    }
     finishedMutex.unlock();
     handledMutex.unlock();
 
@@ -125,7 +125,8 @@ void ChunkLoader::AddFutures() {
                             handledChunkPos.end(),
                             finishedChunks.begin(),
                             finishedChunks.end(),
-                            std::inserter(pending, pending.end()));
+                            std::inserter(pending, pending.end()),
+                            PointChunkCmp());
 
         finishedMutex.unlock();
         handledMutex.unlock();

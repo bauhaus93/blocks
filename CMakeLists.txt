@@ -14,6 +14,7 @@ macro(add_sources)
 endmacro()
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(EXECUTABLE_NAME "mc")
 

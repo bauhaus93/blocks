@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/include",
+                "/usr/local/include",
+                "/usr/include/linux",
+                "/usr/include/c++/7.3.0",
+                "/usr/include/c++/7.3.0/x86_64-pc-linux-gnu",
+                "/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.0/include",
+                "${workspaceRoot}/src"
+            ],
+            "defines": [],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "/usr/include",
+                    "/usr/local/include",
+                    "/usr/include/linux",
+                    "/usr/include/c++/7.3.0",
+                    "/usr/include/c++/7.3.0/x86_64-pc-linux-gnu",
+                    "/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.0/include",
+                    "${workspaceRoot}/src"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "version": 3
+}

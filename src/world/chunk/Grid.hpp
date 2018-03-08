@@ -17,6 +17,7 @@
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
 #include "SimplexNoise.hpp"
+#include "PointChunkCmp.hpp"
 
 namespace mc::world::chunk {
 
@@ -27,22 +28,23 @@ class Grid {
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);
-	size_t			GetVisibleBlocksCount() const;
+	std::size_t		GetVisibleBlocksCount() const;
     void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
     void            UpdateChunks();
 
 
  private:
     void            SetCenter(Point3i centerPos);
-    void            LoadNewChunks();
-    void            UnloadOldChunks();
+    void            LoadNewChunks(const std::set<Point3i>& visibleChunks);
+    void            UnloadOldChunks(const std::set<Point3i>& visibleChunks);
     void            CheckBorders();
+    void            RebuildChunkPosTree(const std::set<Point3i>& visibleChunks);
     std::set<Point3i> CreateVisibleChunkPosSet() const;
 
     Point3i             gridSize;
     Point3i             centerPos;
-    VecRef<Chunk>       uncheckedBorders;
-    std::set<Chunk>     loadedChunks;
+    std::vector<Point3i>   uncheckedBorders;
+    std::map<Point3i, Chunk>     loadedChunks;
     OctreePtrI          chunkPosTree;
     ChunkLoader         chunkLoader;
 

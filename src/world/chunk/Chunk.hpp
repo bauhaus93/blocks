@@ -39,7 +39,7 @@ class Chunk {
     void            Generate(const SimplexNoise& noise, const Texture& texture);
     const Point3i&  GetPosition() const { return chunkPos; }
     uint8_t         GetCheckedNeighbours() const { return checkedNeighbours; }
-    size_t	        GetVisibleBlocksCount() const { return visibleBlocks.size(); }
+    std::size_t	    GetVisibleBlocksCount() const { return visibleBlocks.size(); }
     const SingleBorderMask& GetSingleBorderMask(uint8_t index) const;
     bool            IsEmpty() const;
     bool            IsFull() const;

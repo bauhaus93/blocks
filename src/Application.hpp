@@ -5,7 +5,6 @@
 #include <vector>
 #include <memory>
 
-
 #include "graphics/glad/Glad.h"
 
 #include <SFML/Window.hpp>

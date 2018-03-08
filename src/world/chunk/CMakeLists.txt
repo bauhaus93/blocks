@@ -7,4 +7,5 @@ add_sources(
   Grid.cpp
   SimplexNoise.hpp
   SimplexNoise.cpp
+  PointChunkCmp.hpp
 )
