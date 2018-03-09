@@ -5,6 +5,8 @@ add_sources(
   Entity.cpp
   Camera.hpp
   Camera.cpp
+  Frustum.hpp
+  Frustum.cpp
   Block.hpp
   Block.cpp
 )
