@@ -68,7 +68,10 @@ std::set<Point3i> Grid::CreateVisibleChunkPosSet() const {
         for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
             for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
                 Point3i pos = centerPos + Point3i(x, y, z);
-                neededPos.insert(pos);
+                if (pos[2] >= 0 && pos[2] < 5) {
+                    neededPos.insert(pos);
+                }
+
             }
         }
     }
