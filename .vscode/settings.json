@@ -1,7 +1,7 @@
 {
     "files.exclude": {
-        "**/*.gch": true,
-        "**/.git": true,
+        "*.gch": true,
+        "/.git": true,
     },
     "files.associations": {
         "mutex": "cpp",

@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <unordered_set>
 
 #include "ApplicationError.hpp"
 #include "utility/Point2.hpp"
@@ -41,12 +42,12 @@ class Grid {
     void            RebuildChunkPosTree(const std::set<Point3i>& visibleChunks);
     std::set<Point3i> CreateVisibleChunkPosSet() const;
 
-    Point3i             gridSize;
-    Point3i             centerPos;
-    std::vector<Point3i>   uncheckedBorders;
-    std::map<Point3i, Chunk>     loadedChunks;
-    OctreePtrI          chunkPosTree;
-    ChunkLoader         chunkLoader;
+    Point3i                     gridSize;
+    Point3i                     centerPos;
+    std::vector<Point3i>        uncheckedBorders;
+    std::vector<Chunk>          loadedChunks;
+    OctreePtrI                  chunkPosTree;
+    ChunkLoader                 chunkLoader;
 
 };
 

@@ -47,7 +47,7 @@ void Grid::RebuildChunkPosTree(const std::set<Point3i>& visibleChunks) {
 std::size_t Grid::GetVisibleBlocksCount() const {
 	std::size_t c = 0;
     for (const auto& chunk: loadedChunks) {
-        c += chunk.second.GetVisibleBlocksCount();
+        c += chunk.GetVisibleBlocksCount();
     }
     return c;
 }
@@ -79,42 +79,63 @@ std::set<Point3i> Grid::CreateVisibleChunkPosSet() const {
 }
 
 void Grid::UnloadOldChunks(const std::set<Point3i>& visibleChunks) {
-    std::map<Point3i, Chunk> keepChunks;
+    std::set<Point3i> loadedChunkPos;
+    std::set<Point3i> unloadChunkPos;
 
-    std::set_intersection(loadedChunks.begin(),
-                          loadedChunks.end(),
-                          visibleChunks.begin(),
-                          visibleChunks.end(),
-                          std::inserter(keepChunks, keepChunks.end()),
-                          PointChunkCmp());
-    loadedChunks.clear();
-    for (auto iter = keepChunks.begin(); iter != keepChunks.end();) {
-        loadedChunks.emplace(iter->first, std::move(iter->second));
-    } 
-    loadedChunks.swap(keepChunks);
-    DEBUG("Unloaded ", loadedChunks.size() - keepChunks.size(), " chunks");
+    std::for_each(loadedChunks.begin(),
+                  loadedChunks.end(),
+                  [&loadedChunkPos](const Chunk& c) {
+                      loadedChunkPos.insert(c.GetPosition());
+                  });
 
-    std::set<Point3i> keepBorders;
+    std::set_difference(loadedChunkPos.begin(),
+                        loadedChunkPos.end(),
+                        visibleChunks.begin(),
+                        visibleChunks.end(),
+                        std::inserter(unloadChunkPos, unloadChunkPos.end()));
 
-    std::set_intersection(uncheckedBorders.begin(),
-                          uncheckedBorders.end(),
-                          loadedChunks.begin(),
-                          loadedChunks.end(),
-                          std::inserter(keepBorders, keepBorders.end()),
-                          PointChunkCmp());
-    uncheckedBorders.clear();
-    for (auto iter = keepBorders.begin(); iter != keepBorders.end();) {
-        uncheckedBorders.push_back(std::move(keepBorders.extract(iter++).value()));
-    }
-    DEBUG("Removed ", uncheckedBorders.size() - keepBorders.size(), " chunks from unchecked borders list");
+    auto loadedBegin = std::lower_bound(loadedChunks.begin(),
+                                        loadedChunks.end(),
+                                        unloadChunkPos.begin());
+    auto loadedEnd = std::upper_bound(loadedBegin,
+                                      loadedChunks.end(),
+                                      --unloadChunkPos.end());
+    auto bordersBegin = std::lower_bound(uncheckedBorders.begin(),
+                                         uncheckedBorders.end(),
+                                         unloadChunkPos.begin());
+    auto bordersEnd = std::upper_bound(bordersBegin,
+                                       uncheckedBorders.end(),
+                                       --unloadChunkPos.end());
+    for (auto iter = unloadChunkPos.begin(); iter != unloadChunkPos.end(); ++iter) {
+        std::remove_if(loadedBegin,
+                       loadedEnd,
+                       [&iter, &loadedBegin](const Chunk& chunk) {
+                           if (chunk.GetPosition() == *iter) {
+                               ++loadedBegin;
+                               return true;
+                           }
+                       });
+        std::remove_if(bordersBegin,
+                       bordersEnd,
+                       [&iter, &bordersBegin](const Point3i& pos) {
+                           if (pos == *iter) {
+                               TRACE("Removed unchecked borders entry");
+                               ++bordersBegin;
+                               return true;
+                           }
+                       });
+     }
+
+    DEBUG("Unloaded ", unloadChunkPos.size(), " chunks");
 }
 
 void Grid::UpdateChunks() {
     if (chunkLoader.HasLoadedChunks()) {
         std::vector<Chunk> newChunks = chunkLoader.GetLoadedChunks();
-        for (auto iter = newChunks.begin(); iter != newChunks.end(); iter++) {
-            loadedChunks.emplace(iter->GetPosition(), std::move(*iter));
-        }
+        loadedChunks.insert(loadedChunks.end(),
+                            std::make_move_iterator(newChunks.begin()),
+                            std::make_move_iterator(newChunks.end()));
+        std::sort(loadedChunks.begin(), loadedChunks.end());
         TRACE("Loaded ", newChunks.size(), " new chunks");
         
         CheckBorders();
@@ -126,9 +147,13 @@ void Grid::CheckBorders() {
     std::vector<std::vector<mc::Point3i>::iterator> checkedBorders;
     
     for(auto borderIter = uncheckedBorders.begin(); borderIter != uncheckedBorders.end(); ++borderIter) {
-        auto chunkFind = loadedChunks.find(*borderIter);
+        auto chunkFind = std::find_if(loadedChunks.begin(),
+                                      loadedChunks.end(),
+                                      [&borderIter](const Chunk& c) {
+                                          return c.GetPosition() == *borderIter;
+                                      });
         assert(chunkFind != loadedChunks.end());
-        Chunk& chunk = chunkFind->second;
+        Chunk& chunk = *chunkFind;
         MapRef3D<const Chunk> neighbours = CreateImmediateNeighbourMap(chunk.GetPosition(), loadedChunks);
         uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();
         for (uint8_t i = 0; i < 6; i++) {
