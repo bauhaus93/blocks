@@ -35,6 +35,7 @@ class Chunk {
     explicit        Chunk(const Point3i& chunkPos_);
                     Chunk(const Chunk& other) = delete;
                     Chunk(Chunk&& other);
+    Chunk&          operator=(Chunk&& other);
 
     void            Generate(const SimplexNoise& noise, const Texture& texture);
     const Point3i&  GetPosition() const { return chunkPos; }
@@ -55,8 +56,8 @@ class Chunk {
     void    SetNeighbourMask(const Point3i& blockPos);
 
 
-    const Point3i   chunkPos;
-    const Point3f   origin;
+    Point3i         chunkPos;
+    Point3f         origin;
     uint8_t         checkedNeighbours;
     BorderMask      borderMask;
     Map3D<Block>    blocks;

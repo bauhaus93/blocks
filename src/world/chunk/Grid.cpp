@@ -4,9 +4,6 @@
 
 namespace mc::world::chunk {
 
-MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
-                                                  const Map3D<Chunk>& chunks);
-
 Grid::Grid(int32_t chunkDrawDistance):
     gridSize { Point3i(chunkDrawDistance) },
     centerPos(1337, 1337, 1337),
@@ -79,54 +76,16 @@ std::set<Point3i> Grid::CreateVisibleChunkPosSet() const {
 }
 
 void Grid::UnloadOldChunks(const std::set<Point3i>& visibleChunks) {
-    std::set<Point3i> loadedChunkPos;
-    std::set<Point3i> unloadChunkPos;
+    std::vector<Chunk> keepChunks;
 
-    std::for_each(loadedChunks.begin(),
-                  loadedChunks.end(),
-                  [&loadedChunkPos](const Chunk& c) {
-                      loadedChunkPos.insert(c.GetPosition());
-                  });
-
-    std::set_difference(loadedChunkPos.begin(),
-                        loadedChunkPos.end(),
+    std::set_intersection(std::make_move_iterator(loadedChunks.begin()),
+                        std::make_move_iterator(loadedChunks.end()),
                         visibleChunks.begin(),
                         visibleChunks.end(),
-                        std::inserter(unloadChunkPos, unloadChunkPos.end()));
-
-    auto loadedBegin = std::lower_bound(loadedChunks.begin(),
-                                        loadedChunks.end(),
-                                        unloadChunkPos.begin());
-    auto loadedEnd = std::upper_bound(loadedBegin,
-                                      loadedChunks.end(),
-                                      --unloadChunkPos.end());
-    auto bordersBegin = std::lower_bound(uncheckedBorders.begin(),
-                                         uncheckedBorders.end(),
-                                         unloadChunkPos.begin());
-    auto bordersEnd = std::upper_bound(bordersBegin,
-                                       uncheckedBorders.end(),
-                                       --unloadChunkPos.end());
-    for (auto iter = unloadChunkPos.begin(); iter != unloadChunkPos.end(); ++iter) {
-        std::remove_if(loadedBegin,
-                       loadedEnd,
-                       [&iter, &loadedBegin](const Chunk& chunk) {
-                           if (chunk.GetPosition() == *iter) {
-                               ++loadedBegin;
-                               return true;
-                           }
-                       });
-        std::remove_if(bordersBegin,
-                       bordersEnd,
-                       [&iter, &bordersBegin](const Point3i& pos) {
-                           if (pos == *iter) {
-                               TRACE("Removed unchecked borders entry");
-                               ++bordersBegin;
-                               return true;
-                           }
-                       });
-     }
-
-    DEBUG("Unloaded ", unloadChunkPos.size(), " chunks");
+                        std::inserter(keepChunks, keepChunks.end()),
+                        PointChunkCmp());
+    DEBUG("Unloading ", loadedChunks.size() - keepChunks.size(), " chunks");
+    loadedChunks.swap(keepChunks);
 }
 
 void Grid::UpdateChunks() {
@@ -139,71 +98,47 @@ void Grid::UpdateChunks() {
         TRACE("Loaded ", newChunks.size(), " new chunks");
         
         CheckBorders();
-        TRACE("Visible blocks count: ", GetVisibleBlocksCount());
+        TRACE("Currently loaded chunks: ", loadedChunks.size(), ", visible blocks: ", GetVisibleBlocksCount());
     }
 }
 
 void Grid::CheckBorders() {
     std::vector<std::vector<mc::Point3i>::iterator> checkedBorders;
     
-    for(auto borderIter = uncheckedBorders.begin(); borderIter != uncheckedBorders.end(); ++borderIter) {
-        auto chunkFind = std::find_if(loadedChunks.begin(),
-                                      loadedChunks.end(),
-                                      [&borderIter](const Chunk& c) {
-                                          return c.GetPosition() == *borderIter;
-                                      });
-        assert(chunkFind != loadedChunks.end());
-        Chunk& chunk = *chunkFind;
-        MapRef3D<const Chunk> neighbours = CreateImmediateNeighbourMap(chunk.GetPosition(), loadedChunks);
-        uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();
-        for (uint8_t i = 0; i < 6; i++) {
-            if (((1 << i) & checkedNeighbours) == 0) {
-                Point3i offset(0);
-                offset[i % 3] = 1;
-                if (i < 3) {
-                    offset *= -1;
+    for(auto& chunk : loadedChunks) {
+        if (!chunk.IsEmpty()) {
+            uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();
+            assert(checkedNeighbours <= 0x3F);
+            if (checkedNeighbours != 0x3F) {
+                for (uint8_t i = 0; i < 6; i++) {
+                    if (((1 << i) & checkedNeighbours) == 0) {
+                        Point3i offset(0);
+                        offset[i % 3] = 1;
+                        if (i < 3) {
+                            offset *= -1;
+                        }
+                        Point3i neighbourPos = chunk.GetPosition() + offset;
+                        auto neighbourFind = std::find_if(loadedChunks.begin(),
+                                                        loadedChunks.end(),
+                                                        [&neighbourPos](const Chunk& chunk) {
+                                                            return chunk.GetPosition() == neighbourPos;
+                                                        });
+                        if (neighbourFind != loadedChunks.end()) {
+                            //must pass the opposite mask of the neighbour for checking
+                            auto mask = neighbourFind->GetSingleBorderMask((i + 3) % 6);
+                            chunk.CheckNeighbour(i, mask);
+                        }
+                    }
                 }
-                auto find = neighbours.find(offset);
-                if (find != neighbours.end()) {
-                    //must pass the opposite mask of the neighbour for checking
-                    auto mask = find->second.get().GetSingleBorderMask((i + 3) % 6);
-                    chunk.CheckNeighbour(i, mask);
-                }
-
             }
         }
-        if (chunk.GetCheckedNeighbours() == 0x3F) {
-            checkedBorders.push_back(borderIter);
-        }
-    }
-    for (auto checked : checkedBorders) {
-        uncheckedBorders.erase(checked);
     }
 }
 
 void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     for (auto chunkIter = loadedChunks.cbegin(); chunkIter != loadedChunks.end(); ++chunkIter) {
-        chunkIter->second.DrawBlocks(camera, mesh);
+        chunkIter->DrawBlocks(camera, mesh);
     }
 }
-
-MapRef3D<const Chunk> CreateImmediateNeighbourMap(const Point3i& chunkPos,
-                                                  const Map3D<Chunk>& chunks) {
-    const static std::array<Point3i, 6> offset { {
-      Point3i(1, 0, 0),  Point3i(0, 1, 0),  Point3i(0, 0, 1),
-      Point3i(-1, 0, 0), Point3i(0, -1, 0), Point3i(0, 0, -1),
-    } };
-    MapRef3D<const Chunk> neighbours;
-
-    for (uint8_t i = 0; i < 6; i++) {
-        Point3i neighbourPos = chunkPos + offset[i];
-        auto find = chunks.find(neighbourPos);
-        if (find != chunks.end()) {
-            neighbours.emplace(offset[i], find->second);
-        }
-    }
-    return neighbours;
-}
-
 
 }   // namespace mc::world::chunk

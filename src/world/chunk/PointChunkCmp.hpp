@@ -8,14 +8,6 @@
 namespace mc::world::chunk {
 
 struct PointChunkCmp {
-    bool operator()(const Point3i& pos, std::pair<const Point3i, Chunk>& pair) const {
-        return pos < pair.first;
-    }
-
-    bool operator()(std::pair<const Point3i, Chunk>& pair, const Point3i& pos) const {
-        return pair.first < pos;
-    }
-
     bool operator()(const Point3i& pos, const Chunk& chunk) const {
         return pos < chunk.GetPosition();
     }

@@ -4,7 +4,7 @@
 
 namespace mc::world::chunk {
 
-void CalculateHeights(HeightArray& height,
+static void CalculateHeights(HeightArray& height,
                     const Point3i chunkPos,
                     const SimplexNoise& heightNoise);
 //bool IsBorderBlock(const Point3i& blockPos);
@@ -25,6 +25,16 @@ Chunk::Chunk(Chunk&& other):
     borderMask { std::move(other.borderMask) },
     blocks { std::move(other.blocks) },
     visibleBlocks { std::move(other.visibleBlocks) } {
+}
+
+Chunk& Chunk::operator=(Chunk&& other) {
+    chunkPos = other.chunkPos;
+    origin = other.origin;
+    checkedNeighbours = other.checkedNeighbours;
+    borderMask = std::move(other.borderMask);
+    blocks = std::move(other.blocks);
+    visibleBlocks = std::move(other.visibleBlocks);
+    return *this;
 }
 
 bool Chunk::IsEmpty() const {
@@ -170,7 +180,7 @@ void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     }
 }
 
-void CalculateHeights(HeightArray& height,
+static void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
                       const SimplexNoise& heightNoise) {
 

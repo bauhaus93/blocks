@@ -26,7 +26,7 @@ class Entity {
     virtual void    Rotate(const Point3f& offset);
 
     const Point3f&  GetPosition() const { return position; }
-    const Point3f& GetRotation() const { return rotation; }
+    const Point3f&  GetRotation() const { return rotation; }
 
  protected:
 

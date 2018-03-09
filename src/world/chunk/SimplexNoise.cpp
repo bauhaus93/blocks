@@ -20,7 +20,7 @@ static constexpr int gradients[][2] = { { 1, 1 }, { -1, 1 }, { 1, -1 },
                                         { 1, 0 }, { -1, 0 }, { 0, 1 },
                                         { 0, -1 }, { 0, 1 }, { 0, -1 } };
 
-double dot(int gradX, int gradY, double x, double y) {
+static double dot(int gradX, int gradY, double x, double y) {
   return gradX * x + gradY * y;
 }
 

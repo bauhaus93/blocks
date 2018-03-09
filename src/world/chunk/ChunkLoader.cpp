@@ -4,7 +4,7 @@
 
 namespace mc::world::chunk {
 
-Chunk CreateChunk(Point3i pos,
+static Chunk CreateChunk(Point3i pos,
                   const SimplexNoise& heightNoise,
                   const Texture& texture);
 
@@ -164,7 +164,7 @@ void ChunkLoader::AddFutures() {
     }
 }
 
-Chunk CreateChunk(Point3i pos,
+static Chunk CreateChunk(Point3i pos,
                   const SimplexNoise& heightNoise,
                   const Texture& texture) {
     Chunk chunk { pos };

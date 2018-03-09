@@ -44,7 +44,6 @@ class Grid {
 
     Point3i                     gridSize;
     Point3i                     centerPos;
-    std::vector<Point3i>        uncheckedBorders;
     std::vector<Chunk>          loadedChunks;
     OctreePtrI                  chunkPosTree;
     ChunkLoader                 chunkLoader;
