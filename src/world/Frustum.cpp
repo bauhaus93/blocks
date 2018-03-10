@@ -18,5 +18,25 @@ Frustum::Frustum(const glm::mat4& view, const glm::mat4& projection) {
     }
 }
 
+Intersection Frustum::Intersects(const BoundingBox& box) const {
+    const glm::vec3& center = box.GetCenter();
+    const glm::vec3& extent = box.GetExtent();
+
+    for (int i = 0; i < 6; i++) {
+        glm::vec3 point(center);
+        for (int j = 0; j < 3; j++) {
+            if (plane[i][j] < 0) {
+                point[i] += extent[i];
+            } else {
+                point[i] -= extent[i];
+            }
+        }
+        glm::vec3 normal(plane[0], plane[1], plane[2]);
+        auto distance = glm::dot(normal, point) + plane[3];
+           
+    }
+
+    
+}
 
 }   // namespace mc::world

@@ -7,6 +7,9 @@ add_sources(
   Camera.cpp
   Frustum.hpp
   Frustum.cpp
+  BoundingBox.hpp
+  BoundingBox.cpp
+  Intersection.hpp
   Block.hpp
   Block.cpp
 )
