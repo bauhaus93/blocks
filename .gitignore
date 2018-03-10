@@ -1,6 +1,7 @@
 build/
+release/
+debug/
 data/
 
 *.gch
 *.swp
-*.sublime*
