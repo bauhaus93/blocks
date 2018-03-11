@@ -45,12 +45,12 @@ find_package(Threads REQUIRED)
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE Threads::Threads)
 
 find_package(SFML 2 REQUIRED COMPONENTS network audio graphics window system)
-target_include_directories(${EXECUTABLE_NAME} PRIVATE ${SFML_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
-#find_package(GLM REQUIRED)
-#target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GLM_INCLUDE_DIR})
+find_package(GLM REQUIRED)
+target_include_directories(${EXECUTABLE_NAME} SYSTEM PRIVATE ${GLM_INCLUDE_DIR})
 
 find_package(OpenGL REQUIRED)
-target_include_directories(${EXECUTABLE_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME} SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${OPENGL_LIBRARIES})
