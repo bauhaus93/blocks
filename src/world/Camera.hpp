@@ -16,6 +16,7 @@
 
 #include "utility/Point3.hpp"
 #include "utility/PointTransformation.hpp"
+#include "Frustum.hpp"
 #include "Entity.hpp"
 
 namespace mc::world {
@@ -28,14 +29,16 @@ class Camera: public Entity {
     void            LoadMVPMatrix(const glm::mat4& model) const;
     void            Move(const Point3f& offset) override;
     void            Rotate(const Point3f& offset) override;
+    const Frustum&  GetFrustum() const { return frustum; }
 
  private:
 
     void            UpdateView();
 
-     ShaderProgram  shader;
-     glm::mat4      view;
-     glm::mat4      projection;
+    ShaderProgram  shader;
+    glm::mat4      view;
+    glm::mat4      projection;
+    Frustum        frustum;
 };
 
 }   // namespace mc::world

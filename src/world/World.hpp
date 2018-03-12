@@ -36,6 +36,8 @@ class World {
     Camera      camera;
     Mesh        block;
     chunk::Grid grid;
+    const Texture dummyText;
+    Block         dummyBlock;
 };
 
 }   // namespace mc::world::world

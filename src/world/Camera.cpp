@@ -17,7 +17,8 @@ Camera::Camera(const Point3f& position_, const Point3f& rotation_):
                             glm::radians(45.0f),
                             4.0f / 3.0f,
                             0.1f,
-                            500.0f) } {
+                            500.0f) },
+    frustum { view, projection } {
 }
 
 void Camera::LoadMVPMatrix(const glm::mat4& model) const {
@@ -35,6 +36,7 @@ void Camera::UpdateView() {
         posVec + direction,
         glm::vec3(0, 0, 1)      //we want z to be up
     );
+    frustum.Update(view, projection);
 }
 
 void Camera::Move(const Point3f& offset) {
