@@ -6,4 +6,5 @@ add_sources(
   Point2.hpp
   Point3.hpp
   PointTransformation.hpp
+  PointTransformation.cpp
 )

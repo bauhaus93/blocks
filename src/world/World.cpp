@@ -22,7 +22,7 @@ void World::Tick() {
     grid.SetCenter(camera.GetPosition());
     grid.UpdateChunks();
     auto frustum = camera.GetFrustum();
-    BoundingBox bb(Point3f(0.0f), Point3f(0.5f));
+    BoundingBox bb(Point3f(1.0f), Point3f(1.0f));
     auto intersection = frustum.Intersects(bb);
     switch (intersection) {
         case Intersection::INSIDE: INFO("INSIDE"); break;

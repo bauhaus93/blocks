@@ -8,6 +8,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "logger/GlobalLogger.hpp"
+#include "utility/PointTransformation.hpp"
 #include "Intersection.hpp"
 #include "BoundingBox.hpp"
 

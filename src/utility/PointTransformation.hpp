@@ -12,6 +12,8 @@
 
 namespace mc {
 
+glm::mat4 CreateTranslationMatrix(const glm::vec3& point);
+
 template<typename T>
 glm::vec3 CreateVec(const Point3<T>& point) {
     return glm::vec3(point[0], point[1], point[2]);
