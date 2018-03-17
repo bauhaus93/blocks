@@ -13,7 +13,7 @@
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
-#include "world/octree/Octree.hpp"
+#include "world/Octree.hpp"
 
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"

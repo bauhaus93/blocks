@@ -4,9 +4,9 @@
 
 namespace mc::world {
 
-BoundingBox::BoundingBox(Point3f center_, Point3f extent_):
-    center { CreateVec(center_) },
-    extent { CreateVec(extent_) } {
+BoundingBox::BoundingBox(Point3f min, Point3f max):
+    center { CreateVec((min + max) / 2.0f) },
+    extent { CreateVec((max - min) / 2.0f) } {
 }
 
 

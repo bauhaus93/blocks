@@ -30,6 +30,7 @@ void Frustum::UpdatePlanes() {
     }
 }
 
+//TODO refine: less vertices to check with n/p vertices, check for Intersection::PARTIAL
 Intersection Frustum::Intersects(const BoundingBox& box) const {
     const glm::vec3& center = box.GetCenter();
     const glm::vec3& extent = box.GetExtent();

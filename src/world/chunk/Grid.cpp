@@ -34,8 +34,8 @@ void Grid::SetCenter(Point3i gridPos) {
 }
 
 void Grid::RebuildChunkPosTree(const std::set<Point3i>& visibleChunks) {
-    const Point3i min(centerPos - gridSize);
-    const Point3i max(centerPos + gridSize);
+    Point3i min(centerPos - gridSize);
+    Point3i max(centerPos + gridSize);
     chunkPosTree = std::make_unique<Octree<int32_t>>(min, max);
     chunkPosTree->QueueElements(visibleChunks);
     chunkPosTree->InsertQueuedElements();
@@ -139,6 +139,13 @@ void Grid::CheckBorders() {
 }
 
 void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
+    static int i = 0;
+    if (i++ > 20) {
+        auto visibleChunkPos = chunkPosTree->GetPointsInFrustum(camera.GetFrustum());
+        INFO("Visible chunks: ", visibleChunkPos.size());
+        i = 0;
+    }
+
     for (auto chunkIter = loadedChunks.cbegin(); chunkIter != loadedChunks.end(); ++chunkIter) {
         chunkIter->DrawBlocks(camera, mesh);
     }

@@ -10,6 +10,8 @@
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point3.hpp"
+#include "Frustum.hpp"
+#include "Intersection.hpp"
 
 namespace mc::world {
 
@@ -50,10 +52,13 @@ class Octree {
     void                QueueElements(const std::set<Point3i>& newQueuedElements);
     void                InsertQueuedElements();
 
+    Point3Vec<T>        GetPointsInFrustum(const Frustum& frustum) const;
+
  private:
     void                CreateChildren();
     void                InsertOnTree();
     void                InsertOnSubtree();
+    void                GetPointsInFrustum(const Frustum& frustum, Point3Vec<T>& points) const;
 
     Point3<T>       min;
     Point3<T>       max;
@@ -62,6 +67,7 @@ class Octree {
     Point3Vec<T>    queuedElements;
 };
 
+
 template<typename T>
 Octree<T>::Octree(Point3<T> min_,
                   Point3<T> max_):
@@ -69,7 +75,6 @@ Octree<T>::Octree(Point3<T> min_,
     max { max_ },
     children { { nullptr, nullptr, nullptr, nullptr,
                nullptr, nullptr, nullptr, nullptr } } {
-    TRACE("New octree, min = ", min, ", max = ", max);
 }
 
 template<typename T>
@@ -96,6 +101,29 @@ const Point3<T>& Octree<T>::GetMax() const {
 template<typename T>
 const Point3Vec<T>& Octree<T>::GetElements() const {
     return elements;
+}
+
+template<typename T>
+Point3Vec<T> Octree<T>::GetPointsInFrustum(const Frustum& frustum) const {
+    Point3Vec<T> points;
+    GetPointsInFrustum(frustum, points);
+    return points;
+}
+
+template<typename T>
+void Octree<T>::GetPointsInFrustum(const Frustum& frustum, Point3Vec<T>& points) const {
+    BoundingBox bb(min, max);
+
+    switch(frustum.Intersects(bb)) {
+        case Intersection::INSIDE:
+            points.insert(points.end(), elements.begin(), elements.end());
+            break;
+        case Intersection::PARTIAL:
+            //TODO use PARTIAL!, call children
+            break;
+        case Intersection::OUTSIDE:
+            break;
+    }
 }
 
 template<typename T>

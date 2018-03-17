@@ -15,7 +15,6 @@
 #include "chunk/Grid.hpp"
 
 #include "Camera.hpp"
-#include "octree/Octree.hpp"
 
 namespace mc::world {
 

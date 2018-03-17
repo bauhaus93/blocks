@@ -10,7 +10,7 @@ namespace mc::world {
 
 class BoundingBox {
  public:
-                    BoundingBox(Point3f center_, Point3f extent_);
+                    BoundingBox(Point3f min, Point3f max);
     
     const glm::vec3&  GetCenter() const { return center; }
     const glm::vec3&  GetExtent() const { return extent; }

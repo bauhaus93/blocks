@@ -12,7 +12,7 @@ add_sources(
   Intersection.hpp
   Block.hpp
   Block.cpp
+  Octree.hpp
 )
 
 add_subdirectory(chunk)
-add_subdirectory(octree)
