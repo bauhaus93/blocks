@@ -142,7 +142,7 @@ void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     static int i = 0;
     if (i++ > 20) {
         auto visibleChunkPos = chunkPosTree->GetPointsInFrustum(camera.GetFrustum());
-        INFO("Visible chunks: ", visibleChunkPos.size());
+        INFO("Visible chunks: ", visibleChunkPos.size(), "/", loadedChunks.size());
         i = 0;
     }
 

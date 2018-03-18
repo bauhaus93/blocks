@@ -34,25 +34,35 @@ void Frustum::UpdatePlanes() {
 Intersection Frustum::Intersects(const BoundingBox& box) const {
     const glm::vec3& center = box.GetCenter();
     const glm::vec3& extent = box.GetExtent();
-
+    bool intersect = false;
     for (int i = 0; i < 6; i++) {
-        int outCount = 0;
-        for (int j = 0; j < 8; j++) {
-            glm::vec4 vertex(center, 1.0f);
-            for (int k = 0; k < 3; k++) {
-                if ((j & (k + 1)) == 0) {
-                    vertex[k] -= extent[k];
+        glm::vec3 normal(plane[i][0], plane[i][1], plane[i][2]);
+        glm::vec3 nVertex(center);
+        glm::vec3 pVertex(center);
+        for (int i = 0; i < 3; i++) {
+            if (normal[i] > 0) {
+                if (nVertex[i] > 0) {
+                    nVertex[i] -= extent[i];
                 } else {
-                    vertex[k] += extent[k];
+                    nVertex[i] += extent[i];
+                }
+            } else {
+                if (nVertex[i] > 0) {
+                    nVertex[i] += extent[i];
+                } else {
+                    nVertex[i] -= extent[i];
                 }
             }
-            if (glm::dot(plane[i], vertex) < 0.0f) {
-                outCount++;
-            }
-        }
-        if (outCount == 8) {
+
+        if (glm::dot(nVertex, normal) + plane[i][3] < 0) {
             return Intersection::OUTSIDE;
         }
+        if (glm::dot(pVertex, normal) + plane[i][3] < 0) {
+            intersect = true;
+        }
+    }
+    if (intersect) {
+        return Intersection::PARTIAL;
     }
     return Intersection::INSIDE;
 }
