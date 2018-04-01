@@ -53,6 +53,7 @@ Intersection Frustum::Intersects(const BoundingBox& box) const {
                     nVertex[i] -= extent[i];
                 }
             }
+        }
 
         if (glm::dot(nVertex, normal) + plane[i][3] < 0) {
             return Intersection::OUTSIDE;
