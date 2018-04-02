@@ -54,7 +54,7 @@ class Chunk {
     void    GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight);
     void    CreateNonBorderRenderCandidates();
     void    SetNeighbourMask(const Point3i& blockPos);
-
+    void    CreateMesh();
 
     Point3i         chunkPos;
     Point3f         origin;

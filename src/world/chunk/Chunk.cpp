@@ -174,6 +174,11 @@ void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
     }
 }
 
+
+void Chunk::CreateMesh() {
+    
+}
+
 void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
     for (auto iter = visibleBlocks.begin(); iter != visibleBlocks.end(); ++iter) {
         iter->get().Draw(camera, mesh);
@@ -210,15 +215,5 @@ static void CalculateHeights(HeightArray& height,
         }
     }
 }
-
-/*bool IsBorderBlock(const Point3i& blockPos) {
-    for(uint8_t i = 0; i < 3; i++) {
-        if (blockPos[i] == 0 || blockPos[i] == Chunk::SIZE - 1) {
-            return true;
-        }
-    }
-    return false;
-}*/
-
 
 }       // namespace mc::world::chunk
