@@ -7,7 +7,7 @@ namespace mc::world {
 World::World():
     camera { Point3f(4.0f, 4.0f, 0.0f), Point3f(0.0f, 0.0f, 0.0f) },
     block { "data/cube.obj" },
-    grid { 5 },
+    grid { 3 },
     dummyText { "data/grass.bmp" },
     dummyBlock { Point3f(0.0f), dummyText, 0} {
     INFO("Creating world");
@@ -21,7 +21,7 @@ World::~World() {
 void World::Tick() {
     grid.SetCenter(camera.GetPosition());
     grid.UpdateChunks();
-    auto frustum = camera.GetFrustum();
+    /*auto frustum = camera.GetFrustum();
     BoundingBox bb(Point3f(1.0f), Point3f(1.0f));
     auto intersection = frustum.Intersects(bb);
     switch (intersection) {
@@ -29,7 +29,7 @@ void World::Tick() {
         case Intersection::OUTSIDE: INFO("OUTSIDE"); break;
         case Intersection::PARTIAL: INFO("PARTIAL"); break;
         default:    assert(0);
-    }
+    }*/
 }
 
 void World::Draw() const {
@@ -38,8 +38,8 @@ void World::Draw() const {
 
 void World::DrawBlocks() const {
     block.Load();
-    dummyBlock.Draw(camera, block);
-    //grid.DrawBlocks(camera, block);
+    //dummyBlock.Draw(camera, block);
+    grid.DrawBlocks(camera, block);
     block.Unload();
 }
 

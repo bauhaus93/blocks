@@ -10,7 +10,7 @@
 #include <chrono>
 #include <cassert>
 #include <algorithm>
-#include <set>
+#include <list>
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
@@ -22,7 +22,7 @@
 
 namespace mc::world::chunk {
 
-typedef std::vector<std::unique_ptr<std::future<Chunk>>> ChunkFutureVec;
+typedef std::list<std::unique_ptr<std::future<Chunk>>> ChunkFutures;
 
 class ChunkLoader {
 
@@ -32,27 +32,26 @@ class ChunkLoader {
     void                Start();
     void                Stop();
     bool                IsRunning() const;
-    bool                HasLoadedChunks();
-    void                RequestChunks(const std::set<Point3i>& requestedChunkPos);
-    std::vector<Chunk>  GetLoadedChunks();
+    bool                HasFinishedChunks();
+    void                RequestChunks(const std::vector<Point3i>& requestedChunkPos);
+    std::vector<Chunk>  GetFinishedChunks();
 
 
  private:
     void                    Loop();
-    void                    CheckFinishedFutures();
-    void                    AddFutures();
+    void                    HandleFinishedThreads();
+    void                    CreateGenerationThreads();
 
     std::atomic<bool>       stop;
-    std::mutex              handledMutex;
+    std::mutex              pendingMutex;
     std::mutex              finishedMutex;
     const uint32_t          maxThreads;
     const SimplexNoise      heightNoise;
     const Texture           texture;
-    std::unique_ptr<std::thread> thread;
-    ChunkFutureVec          futures;
-    std::set<Chunk>         finishedChunks;
-    std::set<Point3i>       handledChunkPos;
-    uint32_t                activeFutures;
+    std::unique_ptr<std::thread> controlThread;
+    ChunkFutures            generationThreads;
+    std::vector<Chunk>      finishedChunks;
+    std::list<Point3i>      pendingChunkPos;
 };
 
 }   // namespace mc::world::chunk

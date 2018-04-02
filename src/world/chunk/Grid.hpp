@@ -36,16 +36,16 @@ class Grid {
 
  private:
     void            SetCenter(Point3i centerPos);
-    void            LoadNewChunks(const std::set<Point3i>& visibleChunks);
-    void            UnloadOldChunks(const std::set<Point3i>& visibleChunks);
+    void            LoadNewChunks(const std::vector<Point3i>& visibleChunks);
+    void            UnloadOldChunks(const std::vector<Point3i>& visibleChunks);
     void            CheckBorders();
-    void            RebuildChunkPosTree(const std::set<Point3i>& visibleChunks);
-    std::set<Point3i> CreateVisibleChunkPosSet() const;
+    //void            RebuildChunkPosTree(const std::vector<Point3i>& visibleChunks);
+    std::vector<Point3i> CreateVisibleChunkPosVec() const;
 
     Point3i                     gridSize;
     Point3i                     centerPos;
     std::vector<Chunk>          loadedChunks;
-    OctreePtrI                  chunkPosTree;
+    //OctreePtrI                  chunkPosTree;
     ChunkLoader                 chunkLoader;
 
 };
