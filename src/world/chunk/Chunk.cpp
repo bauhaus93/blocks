@@ -12,28 +12,25 @@ static void CalculateHeights(HeightArray& height,
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * static_cast<float>(Chunk::SIZE * Block::SIZE) },
-    checkedNeighbours { 0 },
-    borderMask { },
-    blocks { },
-    visibleBlocks { } {
+    checkedNeighbours { },
+    borderMasks { },
+    blocks { } {
 }
 
 Chunk::Chunk(Chunk&& other):
     chunkPos { other.chunkPos },
     origin { other.origin },
     checkedNeighbours { other.checkedNeighbours },
-    borderMask { std::move(other.borderMask) },
-    blocks { std::move(other.blocks) },
-    visibleBlocks { std::move(other.visibleBlocks) } {
+    borderMasks { std::move(other.borderMasks) },
+    blocks { std::move(other.blocks) } {
 }
 
 Chunk& Chunk::operator=(Chunk&& other) {
     chunkPos = other.chunkPos;
     origin = other.origin;
     checkedNeighbours = other.checkedNeighbours;
-    borderMask = std::move(other.borderMask);
+    borderMasks = std::move(other.borderMasks);
     blocks = std::move(other.blocks);
-    visibleBlocks = std::move(other.visibleBlocks);
     return *this;
 }
 
@@ -96,39 +93,40 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
 
     TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms",
-          ", blocks: ", blocks.size(),
-          ", visible blocks: ", visibleBlocks.size());
+          ", blocks: ", blocks.size());
 }
 
 
 void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight) {
     Point3i curr(top);
+    static Direction neighbours[] = { Direction::WEST,    // -x
+                                      Direction::NORTH,   // -y
+                                      Direction::EAST,    // +x
+                                      Direction::SOUTH }; // +y
 
     while (curr[2] >= 0) {
-        Point3f worldPos = origin + curr * Block::SIZE;
-        uint8_t neighbours = 0;
+        Block block;
+
         if (curr[2] == top[2] && top[2] != Chunk::SIZE - 1) {
-            neighbours += 1;
+            block.AddNeighbour(Direction::UP);
         } else {
-            neighbours += 2;
+            block.AddNeighbour(Direction::UP);
+            block.AddNeighbour(Direction::DOWN);
         }
-        for (auto nHeight : neighbourHeight) {
-            if (curr[2] <= nHeight) {
-                neighbours++;
+        for (auto i = 0; i < 4; i++) {
+            if (curr[2] <= neighbourHeight[i]) {
+                block.AddNeighbour(neighbours[i]);
             }
         }
-        auto pair = blocks.emplace(curr, Block(worldPos, texture, neighbours));
-        if (neighbours < 6) {
-            visibleBlocks.emplace_back(pair.first->second);
-        }
-
-        SetNeighbourMask(curr);
+        blocks.emplace(curr, std::move(block));
+        AddBorderMaskEntry(curr);
 
         curr[2] = curr[2] - 1;
     }
 }
 
-void Chunk::SetNeighbourMask(const Point3i& blockPos) {
+void Chunk::AddBorderMaskEntry(const Point3i& blockPos) {
+//TODO working here
     for (uint8_t i = 0; i < 3; i++) {
         if (blockPos[i] == 0) {
             borderMask[i].set(blockPos[(i + 1) % 3] * Chunk::SIZE + blockPos[(i + 2) % 3], 1);
@@ -138,36 +136,27 @@ void Chunk::SetNeighbourMask(const Point3i& blockPos) {
     }
 }
 
-const Chunk::SingleBorderMask& Chunk::GetSingleBorderMask(uint8_t index) const {
-    assert(index < 6);
-    return borderMask[index];
+const Chunk::SingleBorderMask& Chunk::GetSingleBorderMask(Direction dir) const {
+    return borderMask[GetIndex(dir)];
 }
 
-void Chunk::CheckNeighbour(uint8_t index, const SingleBorderMask& mask) {
-    assert(index < 6);
+void Chunk::CheckNeighbour(Direction dir, const SingleBorderMask& mask) {
     assert(!IsEmpty());
-    assert((checkedNeighbours & (1 << index)) == 0);
-    checkedNeighbours |= (1 << index);
-    //DEBUG("Chunk ", chunkPos, ", checked neigbours: ", static_cast<uint32_t>(checkedNeighbours));
-    uint8_t firstIndex = ((index % 3) + 1) % 3;
-    uint8_t secondIndex = ((index % 3) + 2) % 3;
-    /*Point3i pos(0);
-    if (index >= 3) {
-        pos[index % 3] = Chunk::SIZE - 1;
-    }*/
+    assert(!checkedNeighbours.Contains(dir));
+    checkedNeighbours.Add(dir);
+    
+    uint8_t neighbourIndex = GetIndex(dir);
+    uint8_t firstIndex = ((neighbourIndex % 3) + 1) % 3;
+    uint8_t secondIndex = ((neighbourIndex % 3) + 2) % 3;
 
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
-        Point3i pos(iter->first);	//TODO check which variable is the needed one -> is overshadowing
+        Point3i pos(iter->first);
         for (uint8_t i = 0; i < 3; i++) {
             if ((i == index  && pos[i] == 0) ||
                 (index >= 3 && i == (index % 3) && pos[i] == Chunk::SIZE - 1)) {
                 if (!mask[pos[firstIndex] * Chunk::SIZE + pos[secondIndex]]) {
                     Block& block = iter->second;
-                    block.DecreaseNeighbourCount(1);
-                    if (block.GetNeighbourCount() == 5) {       //this block was previously assumed to be hidden
-                        TRACE("Block ", iter->first, " from Chunk ", GetPosition(), " was made visible due to neighbour checking");
-                        visibleBlocks.emplace_back(block);   //but was visible instead, now add to render candidates
-                    }
+                    block.RemoveNeighbour(dir);
                 }
             }
         }
@@ -179,10 +168,8 @@ void Chunk::CreateMesh() {
     
 }
 
-void Chunk::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
-    for (auto iter = visibleBlocks.begin(); iter != visibleBlocks.end(); ++iter) {
-        iter->get().Draw(camera, mesh);
-    }
+void Chunk::Draw(const Camera& camera) const {
+    //TODO
 }
 
 static void CalculateHeights(HeightArray& height,

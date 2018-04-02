@@ -12,6 +12,10 @@ add_sources(
   Intersection.hpp
   Block.hpp
   Block.cpp
+  NeighbourMask.hpp
+  NeighbourMask.cpp
+  Direction.hpp
+  Direction.cpp
   Octree.hpp
 )
 

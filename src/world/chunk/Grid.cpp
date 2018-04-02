@@ -41,14 +41,6 @@ void Grid::SetCenter(Point3i gridPos) {
     chunkPosTree->InsertQueuedElements();
 }*/
 
-std::size_t Grid::GetVisibleBlocksCount() const {
-    std::size_t c = 0;
-    for (const auto& chunk: loadedChunks) {
-        c += chunk.GetVisibleBlocksCount();
-    }
-    return c;
-}
-
 bool PointIsChunkChunkPos(const Point3i& p, const Chunk& c) {
     return p == c.GetPosition();
 }
@@ -115,35 +107,28 @@ void Grid::UpdateChunks() {
         TRACE("Loaded ", newChunks.size(), " new chunks");
         
         CheckBorders();
-        TRACE("Currently loaded chunks: ", loadedChunks.size(), ", visible blocks: ", GetVisibleBlocksCount());
+        TRACE("Currently loaded chunks: ", loadedChunks.size());
     }
 }
 
 void Grid::CheckBorders() {
-    std::vector<std::vector<mc::Point3i>::iterator> checkedBorders;
     
     for(auto& chunk : loadedChunks) {
-        if (!chunk.IsEmpty()) {
-            uint8_t checkedNeighbours = chunk.GetCheckedNeighbours();
-            assert(checkedNeighbours <= 0x3F);
-            if (checkedNeighbours != 0x3F) {
-                for (uint8_t i = 0; i < 6; i++) {
-                    if (((1 << i) & checkedNeighbours) == 0) {
-                        Point3i offset(0);
-                        offset[i % 3] = 1;
-                        if (i < 3) {
-                            offset *= -1;
-                        }
-                        Point3i neighbourPos = chunk.GetPosition() + offset;
-                        auto neighbourFind = std::find_if(loadedChunks.begin(),
-                                                        loadedChunks.end(),
-                                                        [&neighbourPos](const Chunk& chunk) {
-                                                            return chunk.GetPosition() == neighbourPos;
-                                                        });
+        if (!chunk.IsEmpty() && !chunk.AllNeighboursChecked()) {
+            for (uint8_t i = 0; i < 6; i++) {
+                Direction dir = GetDirection(i);
+                if (!chunk.CheckedNeighbour(dir)) {
+                    Point3i offset = GetOffset(dir);
+                    Point3i neighbourPos = chunk.GetPosition() + offset;
+                    auto neighbourFind = std::find_if(loadedChunks.begin(),
+                                                      loadedChunks.end(),
+                                                      [&neighbourPos](const Chunk& chunk) {
+                                                          return chunk.GetPosition() == neighbourPos;
+                                                      });
                         if (neighbourFind != loadedChunks.end()) {
                             //must pass the opposite mask of the neighbour for checking
-                            auto mask = neighbourFind->GetSingleBorderMask((i + 3) % 6);
-                            chunk.CheckNeighbour(i, mask);
+                            auto mask = neighbourFind->GetSingleBorderMask(GetOpposite(dir));
+                            chunk.CheckNeighbour(dir, mask);
                         }
                     }
                 }
@@ -152,16 +137,9 @@ void Grid::CheckBorders() {
     }
 }
 
-void Grid::DrawBlocks(const Camera& camera, const Mesh& mesh) const {
-/*    static int i = 0;
-    if (i++ > 20) {
-        auto visibleChunkPos = chunkPosTree->GetPointsInFrustum(camera.GetFrustum());
-        INFO("Visible chunks: ", visibleChunkPos.size(), "/", loadedChunks.size());
-        i = 0;
-    }*/
-
+void Grid::Draw(const Camera& camera) const {
     for (auto chunkIter = loadedChunks.cbegin(); chunkIter != loadedChunks.end(); ++chunkIter) {
-        chunkIter->DrawBlocks(camera, mesh);
+        chunkIter->Draw(camera);
     }
 }
 

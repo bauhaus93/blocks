@@ -9,30 +9,23 @@
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
 
-#include "Entity.hpp"
 #include "Camera.hpp"
+#include "NeighbourMask.hpp"
+#include "Direction.hpp"
 
 namespace mc::world {
 
-class Block: public Entity {
+class Block {
 
  public:
-    static constexpr float   SIZE = 2.0f;
+    static constexpr float   SIZE = 1.0f;
 
-                Block(const Point3f& position_,
-                      const Texture& texture_,
-                      uint8_t neighbourCount_);
+                Block();
                 Block(const Block& other);
-    void        Draw(const Camera& camera, const Mesh& mesh) const;
-    //bool        IsHidden() const { return neighbourCount == 6; }
-    void        IncreaseNeighbourCount(uint8_t amount);
-    void        DecreaseNeighbourCount(uint8_t amount);
-    uint8_t     GetNeighbourCount() const { return neighbourCount; }
-
+    void        AddNeighbour(Direction dir);
+    void        RemoveNeighbour(Direction dir);
  private:
-     const Texture&   texture;
-     uint8_t          neighbourCount;
-
+    NeighbourMask       neighbours;
 };
 
 

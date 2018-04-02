@@ -30,13 +30,9 @@ class World {
     void        Draw() const;
 
  private:
-    void        DrawBlocks() const;
 
     Camera      camera;
-    Mesh        block;
     chunk::Grid grid;
-    const Texture dummyText;
-    Block         dummyBlock;
 };
 
 }   // namespace mc::world::world

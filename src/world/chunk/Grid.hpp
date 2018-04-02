@@ -29,10 +29,8 @@ class Grid {
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);
-	std::size_t		GetVisibleBlocksCount() const;
-    void            DrawBlocks(const Camera& camera, const Mesh& mesh) const;
+    void            Draw(const Camera& camera) const;
     void            UpdateChunks();
-
 
  private:
     void            SetCenter(Point3i centerPos);
