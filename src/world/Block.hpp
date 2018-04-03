@@ -24,6 +24,8 @@ class Block {
                 Block(const Block& other);
     void        AddNeighbour(Direction dir);
     void        RemoveNeighbour(Direction dir);
+    bool        IsVisible() const { return !neighbours.IsFull(); }
+    bool        HasNeighbour(Direction dir) const { return neighbours.Contains(dir); }
  private:
     NeighbourMask       neighbours;
 };

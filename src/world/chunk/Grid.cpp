@@ -106,13 +106,12 @@ void Grid::UpdateChunks() {
         std::sort(loadedChunks.begin(), loadedChunks.end());
         TRACE("Loaded ", newChunks.size(), " new chunks");
         
-        CheckBorders();
+        UpdateChunkBorders();
         TRACE("Currently loaded chunks: ", loadedChunks.size());
     }
 }
 
-void Grid::CheckBorders() {
-    
+void Grid::UpdateChunkBorders() { 
     for(auto& chunk : loadedChunks) {
         if (!chunk.IsEmpty() && !chunk.AllNeighboursChecked()) {
             for (uint8_t i = 0; i < 6; i++) {
@@ -125,11 +124,8 @@ void Grid::CheckBorders() {
                                                       [&neighbourPos](const Chunk& chunk) {
                                                           return chunk.GetPosition() == neighbourPos;
                                                       });
-                        if (neighbourFind != loadedChunks.end()) {
-                            //must pass the opposite mask of the neighbour for checking
-                            auto mask = neighbourFind->GetSingleBorderMask(GetOpposite(dir));
-                            chunk.CheckNeighbour(dir, mask);
-                        }
+                    if (neighbourFind != loadedChunks.end()) {
+                        chunk.UpdateBlockVisibility(dir, *neighbourFind);
                     }
                 }
             }

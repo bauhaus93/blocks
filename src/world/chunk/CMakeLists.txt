@@ -7,5 +7,8 @@ add_sources(
   Grid.cpp
   SimplexNoise.hpp
   SimplexNoise.cpp
+  CompositeMesh.hpp
+  CompositeMesh.cpp
   PointChunkCmp.hpp
 )
+

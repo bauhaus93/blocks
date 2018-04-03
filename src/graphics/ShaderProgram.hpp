@@ -33,12 +33,12 @@ class ShaderProgram {
     GLuint      vertexShader;
     GLuint      fragmentShader;
     GLint       mvpHandle;
-    GLint       uniformTexture;
+    //GLint       uniformTexture;
 
     void        LinkSetup();
     void        LinkCleanup();
     void        LoadMVPHandle();
-    void        LoadUniformTexture();
+    //void        LoadUniformTexture();
 
 };
 

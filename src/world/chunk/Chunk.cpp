@@ -12,25 +12,26 @@ static void CalculateHeights(HeightArray& height,
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * static_cast<float>(Chunk::SIZE * Block::SIZE) },
+    model {  CreateTranslationMatrix(origin) * glm::mat4(1.0f) },
     checkedNeighbours { },
-    borderMasks { },
-    blocks { } {
+    blocks { },
+    mesh { nullptr } {
 }
 
 Chunk::Chunk(Chunk&& other):
     chunkPos { other.chunkPos },
     origin { other.origin },
     checkedNeighbours { other.checkedNeighbours },
-    borderMasks { std::move(other.borderMasks) },
-    blocks { std::move(other.blocks) } {
+    blocks { std::move(other.blocks) },
+    mesh { std::move(other.mesh) } {
 }
 
 Chunk& Chunk::operator=(Chunk&& other) {
     chunkPos = other.chunkPos;
     origin = other.origin;
     checkedNeighbours = other.checkedNeighbours;
-    borderMasks = std::move(other.borderMasks);
     blocks = std::move(other.blocks);
+    mesh = std::move(other.mesh);
     return *this;
 }
 
@@ -90,6 +91,10 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
             currHeight++;
         }
     }
+   
+    if (!IsEmpty()) { 
+        CreateMesh();
+    }
 
     TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms",
@@ -119,57 +124,54 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32
             }
         }
         blocks.emplace(curr, std::move(block));
-        AddBorderMaskEntry(curr);
-
         curr[2] = curr[2] - 1;
     }
 }
 
-void Chunk::AddBorderMaskEntry(const Point3i& blockPos) {
-//TODO working here
-    for (uint8_t i = 0; i < 3; i++) {
-        if (blockPos[i] == 0) {
-            borderMask[i].set(blockPos[(i + 1) % 3] * Chunk::SIZE + blockPos[(i + 2) % 3], 1);
-        } else if (blockPos[i] == Chunk::SIZE - 1) {
-            borderMask[3 + i].set(blockPos[(i + 1) % 3] * Chunk::SIZE + blockPos[(i + 2) % 3], 1);
-        }
-    }
-}
 
-const Chunk::SingleBorderMask& Chunk::GetSingleBorderMask(Direction dir) const {
-    return borderMask[GetIndex(dir)];
-}
+//TODO finish, when chunk meshing is working
+void Chunk::UpdateBlockVisibility(Direction dir, Chunk& neighbour) {
+    /*
+    if (!IsEmpty()) {
+        Direction opp = GetOpposite(dir);
 
-void Chunk::CheckNeighbour(Direction dir, const SingleBorderMask& mask) {
-    assert(!IsEmpty());
-    assert(!checkedNeighbours.Contains(dir));
-    checkedNeighbours.Add(dir);
-    
-    uint8_t neighbourIndex = GetIndex(dir);
-    uint8_t firstIndex = ((neighbourIndex % 3) + 1) % 3;
-    uint8_t secondIndex = ((neighbourIndex % 3) + 2) % 3;
+        assert(!curr.CheckedNeighbours(dir));
+        assert(!neighbour.CheckedNeighbours(opp));
+        checkedNeighbours.Add(dir);
+        neighbour.checkedNeighbours.Add(opp);
 
-    for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
-        Point3i pos(iter->first);
-        for (uint8_t i = 0; i < 3; i++) {
-            if ((i == index  && pos[i] == 0) ||
-                (index >= 3 && i == (index % 3) && pos[i] == Chunk::SIZE - 1)) {
-                if (!mask[pos[firstIndex] * Chunk::SIZE + pos[secondIndex]]) {
-                    Block& block = iter->second;
-                    block.RemoveNeighbour(dir);
+        switch (dir) {
+            case Direction::NORTH:
+                for (auto i = 0; i < Chunk::SIZE; i++) {
+                    for (auto j = 0; j < Chunk::SIZE; j++) {
+                        Point3i localBlockPos(i, 0, j);
+                        Point3i neigbourBlockPos(i, Chunk:SIZE - 1, j);
+                        auto foundLocal = blocks.find(localBlockPos);
+                        auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
+                        if (foundLocal != blocks.end() &&
+                            foundNeighbour == blocks.end()) {
+                            foundLocal->second.RemoveNeighbour(dir);
+                        } else if (foundLocal == blocks.end() &&
+                            foundNeighbour != blocks.end()) {
+                            foundNeighbour->second.RemoveNeighbour(opp);
+                        }
+                        
+                    }
                 }
-            }
         }
-    }
+    } 
+    */
 }
-
 
 void Chunk::CreateMesh() {
-    
+    mesh = std::make_unique<mesh::Mesh>(CreateCompositeMesh(blocks));
 }
 
 void Chunk::Draw(const Camera& camera) const {
-    //TODO
+    if (mesh != nullptr) {
+        camera.LoadMVPMatrix(model);
+        mesh->Draw();
+    }
 }
 
 static void CalculateHeights(HeightArray& height,

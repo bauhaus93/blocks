@@ -1,0 +1,10 @@
+add_sources(
+    Mesh.hpp
+    Mesh.cpp
+    Quad.hpp
+    Quad.cpp
+    Triangle.hpp
+    Triangle.cpp
+    Vertex.hpp
+    Vertex.cpp
+)

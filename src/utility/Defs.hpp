@@ -6,6 +6,8 @@
 #include <map>
 #include <functional>
 
+#include "Point3.hpp"
+
 namespace mc {
 
 template<typename T>

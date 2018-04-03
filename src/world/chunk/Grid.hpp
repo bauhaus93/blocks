@@ -6,8 +6,6 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
-#include <set>
-#include <unordered_set>
 
 #include "ApplicationError.hpp"
 #include "utility/Point2.hpp"
@@ -36,7 +34,7 @@ class Grid {
     void            SetCenter(Point3i centerPos);
     void            LoadNewChunks(const std::vector<Point3i>& visibleChunks);
     void            UnloadOldChunks(const std::vector<Point3i>& visibleChunks);
-    void            CheckBorders();
+    void            UpdateChunkBorders();
     //void            RebuildChunkPosTree(const std::vector<Point3i>& visibleChunks);
     std::vector<Point3i> CreateVisibleChunkPosVec() const;
 

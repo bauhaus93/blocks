@@ -23,7 +23,8 @@ Application::Application(unsigned int winX, unsigned int winY):
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
+    //glFrontFace(GL_CCW); //default
+    //glCullFace(GL_BACK); //default
 }
 
 Application::~Application() {
