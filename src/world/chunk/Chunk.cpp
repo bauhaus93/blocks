@@ -21,6 +21,7 @@ Chunk::Chunk(const Point3i& chunkPos_):
 Chunk::Chunk(Chunk&& other):
     chunkPos { other.chunkPos },
     origin { other.origin },
+    model { std::move(other.model) },
     checkedNeighbours { other.checkedNeighbours },
     blocks { std::move(other.blocks) },
     mesh { std::move(other.mesh) } {
@@ -29,6 +30,7 @@ Chunk::Chunk(Chunk&& other):
 Chunk& Chunk::operator=(Chunk&& other) {
     chunkPos = other.chunkPos;
     origin = other.origin;
+    model = std::move(other.model);
     checkedNeighbours = other.checkedNeighbours;
     blocks = std::move(other.blocks);
     mesh = std::move(other.mesh);
