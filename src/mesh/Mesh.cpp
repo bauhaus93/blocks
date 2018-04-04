@@ -53,6 +53,23 @@ Mesh::Mesh(Mesh&& other):
     other.indexBuffer = 0;
 }
 
+Mesh& Mesh::operator=(Mesh&& other) {
+    assert(vao == 0);
+    assert(vertexBuffer == 0);
+    assert(normalBuffer == 0);
+    assert(indexBuffer == 0);
+    triangles = std::move(other.triangles);
+    vao = other.vao;
+    vertexBuffer = other.vertexBuffer;
+    indexBuffer = other.indexBuffer;
+    indexCount = other.indexCount;
+    other.vao = 0;
+    other.vertexBuffer = 0;
+    other.normalBuffer = 0;
+    other.indexBuffer = 0;
+    return *this; 
+}
+
 Mesh::~Mesh() {
     if (indexBuffer != 0) {
         glDeleteBuffers(1, &indexBuffer);
@@ -139,6 +156,7 @@ void Mesh::LoadVAO() {
 }
 
 void Mesh::Draw() const {
+    assert(vao != 0);
     glBindVertexArray(vao);
     glDrawElements(
         GL_TRIANGLES,

@@ -20,6 +20,7 @@ class Mesh {
                 ~Mesh();
     void        Draw() const;
 
+    Mesh&       operator=(Mesh&& other);
  private:
 
     void        LoadVBOs(const std::vector<glm::vec3>& vertices,
