@@ -9,7 +9,15 @@ Quad::Quad():
                Vertex { Point3f(0.0f), Point3f(0.0f) },
                Vertex { Point3f(0.0f), Point3f(0.0f) },
                Vertex { Point3f(0.0f), Point3f(0.0f) } } }  {
+}
 
+Quad::Quad(Quad&& other):
+    vertex { std::move(other.vertex) } {
+}
+
+Quad& Quad::operator=(Quad&& other) {
+    vertex = std::move(other.vertex);
+    return *this;
 }
 
 void Quad::SetVertex(uint8_t index, Vertex vert) {

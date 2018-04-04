@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 #include <glm/vec3.hpp>
 
@@ -17,10 +18,10 @@ class Mesh {
  public:
     explicit    Mesh(std::vector<Triangle> triangles_);
                 Mesh(Mesh&& other);
+    Mesh&       operator=(Mesh&& other);
                 ~Mesh();
     void        Draw() const;
 
-    Mesh&       operator=(Mesh&& other);
  private:
 
     void        LoadVBOs(const std::vector<glm::vec3>& vertices,

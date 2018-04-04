@@ -6,7 +6,7 @@ namespace mc::mesh {
 
 //TODO texture stuff
 Mesh::Mesh(std::vector<Triangle> triangles_):
-    triangles { triangles_ },
+    triangles { std::move(triangles_) },
     vao { 0 },
     vertexBuffer { 0 },
     //uvBuffer { 0 },
@@ -67,6 +67,10 @@ Mesh& Mesh::operator=(Mesh&& other) {
     other.vertexBuffer = 0;
     other.normalBuffer = 0;
     other.indexBuffer = 0;
+    assert(vao != 0);
+    assert(vertexBuffer != 0);
+    assert(normalBuffer != 0);
+    assert(indexBuffer != 0);
     return *this; 
 }
 
@@ -90,6 +94,7 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
                     const std::vector<uint32_t>& indices) {
     assert(vertexBuffer == 0);  //for now
     assert(normalBuffer == 0);  //will check later, what is needed
+    assert(indexBuffer == 0);
  
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
