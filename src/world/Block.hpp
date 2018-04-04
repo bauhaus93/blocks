@@ -18,7 +18,7 @@ namespace mc::world {
 class Block {
 
  public:
-    static constexpr float   SIZE = 1.0f;
+    static constexpr float   SIZE = 2.0f;
 
                 Block();
                 Block(const Block& other);

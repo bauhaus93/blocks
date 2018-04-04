@@ -35,6 +35,7 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
             }
         }
     }
+
     indexCount = indices.size();
     LoadVBOs(vertices, normals, indices);
     LoadVAO();
@@ -61,6 +62,7 @@ Mesh& Mesh::operator=(Mesh&& other) {
     triangles = std::move(other.triangles);
     vao = other.vao;
     vertexBuffer = other.vertexBuffer;
+    normalBuffer = other.normalBuffer;
     indexBuffer = other.indexBuffer;
     indexCount = other.indexCount;
     other.vao = 0;
@@ -95,7 +97,7 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
     assert(vertexBuffer == 0);  //for now
     assert(normalBuffer == 0);  //will check later, what is needed
     assert(indexBuffer == 0);
- 
+
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(
@@ -103,7 +105,7 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
         vertices.size() * sizeof(glm::vec3),
         vertices.data(),
         GL_STATIC_DRAW
-    );
+    );    
 
     glGenBuffers(1, &normalBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
@@ -122,6 +124,7 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
         indices.data(),
         GL_STATIC_DRAW
     );
+
 }
 
 void Mesh::LoadVAO() {

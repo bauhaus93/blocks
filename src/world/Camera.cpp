@@ -17,7 +17,7 @@ Camera::Camera(const Point3f& position_, const Point3f& rotation_):
                             glm::radians(90.0f),
                             4.0f / 3.0f,
                             1.0f,
-                            100.0f) },
+                            500.0f) },
     frustum { view, projection } {
 }
 

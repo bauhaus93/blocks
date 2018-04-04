@@ -7,17 +7,17 @@ namespace mc::world::chunk {
 static std::vector<mesh::Quad> CreateQuads(const Map3D<Block>& blocks);
 static std::vector<mesh::Triangle> CreateTriangles(std::vector<mesh::Quad> quads);
 
-mesh::Mesh CreateCompositeMesh(const Map3D<Block>& blocks) {
+std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const Map3D<Block>& blocks) {
     std::vector<mesh::Triangle> triangles = CreateTriangles(CreateQuads(blocks));
     TRACE("Created ", triangles.size(), " triangles for ", blocks.size(), " blocks");
-    return mesh::Mesh(std::move(triangles));
+    return std::make_unique<mesh::Mesh>(std::move(triangles));
 }
 
 static std::vector<mesh::Quad> CreateQuads(const Map3D<Block>& blocks) {
     std::vector<mesh::Quad> quads;
 
     for (auto iter = blocks.begin(); iter != blocks.end(); ++iter) {
-        const Point3f pos(iter->first);
+        const Point3f pos(iter->first * Block::SIZE);
         const Block& block = iter->second;
         
         if (block.IsVisible()) {

@@ -94,10 +94,6 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
         }
     }
    
-    if (!IsEmpty()) { 
-        CreateMesh();
-    }
-
     TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms",
           ", blocks: ", blocks.size());
@@ -166,7 +162,7 @@ void Chunk::UpdateBlockVisibility(Direction dir, Chunk& neighbour) {
 }
 
 void Chunk::CreateMesh() {
-    mesh = std::make_unique<mesh::Mesh>(CreateCompositeMesh(blocks));
+    mesh = CreateCompositeMesh(blocks);
 }
 
 void Chunk::Draw(const Camera& camera) const {

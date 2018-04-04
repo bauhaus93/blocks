@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "logger/GlobalLogger.hpp"
 #include "utility/Defs.hpp"
 #include "utility/Point3.hpp"
@@ -15,7 +17,7 @@
 
 namespace mc::world::chunk {
 
-mesh::Mesh CreateCompositeMesh(const Map3D<Block>& blocks);
+std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const Map3D<Block>& blocks);
 
 }       // namespace mc::world::chunk
 

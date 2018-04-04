@@ -100,6 +100,9 @@ void Grid::UnloadOldChunks(const std::vector<Point3i>& visibleChunks) {
 void Grid::UpdateChunks() {
     if (chunkLoader.HasFinishedChunks()) {
         std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
+        for (Chunk& chunk: newChunks) {
+            chunk.CreateMesh();
+        }
         loadedChunks.insert(loadedChunks.end(),
                             std::make_move_iterator(newChunks.begin()),
                             std::make_move_iterator(newChunks.end()));

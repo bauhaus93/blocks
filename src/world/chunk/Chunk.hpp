@@ -44,6 +44,7 @@ class Chunk {
     bool            AllNeighboursChecked() const { return checkedNeighbours.IsFull(); }
     bool            CheckedNeighbour(Direction dir) const { return checkedNeighbours.Contains(dir); }
     void            UpdateBlockVisibility(Direction dir, Chunk& neighbour);
+    void            CreateMesh();
     bool            operator<(const Chunk& rhs) const;
     bool            operator<(const Point3i& rhsChunkPos) const;
     void            Draw(const Camera& camera) const;
@@ -51,7 +52,7 @@ class Chunk {
  private:
     void    GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight);
     void    CreateNonBorderRenderCandidates();
-    void    CreateMesh();
+
 
     Point3i         chunkPos;
     Point3f         origin;
