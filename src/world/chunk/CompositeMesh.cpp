@@ -27,7 +27,7 @@ std::vector<mesh::Quad> CreateQuads(const Map3D<Block>& blocks) {
                 quad.SetVertex(0, mesh::Vertex(pos, normal));
                 quad.SetVertex(1, mesh::Vertex(pos + Point3f(Block::SIZE, 0.0f, 0.0f), normal));
                 quad.SetVertex(2, mesh::Vertex(pos + Point3f(Block::SIZE, 0.0f, Block::SIZE), normal));
-                quad.SetVertex(3, mesh::Vertex(pos + Point3f(0.0f, 0.0f, 1.0f), normal));
+                quad.SetVertex(3, mesh::Vertex(pos + Point3f(0.0f, 0.0f, Block::SIZE), normal));
                 quads.emplace_back(quad);
             }
             if (!block.HasNeighbour(Direction::EAST)) {
@@ -44,7 +44,7 @@ std::vector<mesh::Quad> CreateQuads(const Map3D<Block>& blocks) {
                 mesh::Quad quad;
                 quad.SetVertex(0, mesh::Vertex(pos + Point3f(Block::SIZE, Block::SIZE, 0.0f), normal));
                 quad.SetVertex(1, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, 0.0f), normal));
-                quad.SetVertex(1, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, Block::SIZE), normal));
+                quad.SetVertex(2, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, Block::SIZE), normal));
                 quad.SetVertex(3, mesh::Vertex(pos + Point3f(Block::SIZE, Block::SIZE, Block::SIZE), normal));
                 quads.emplace_back(quad);
             }
@@ -60,19 +60,19 @@ std::vector<mesh::Quad> CreateQuads(const Map3D<Block>& blocks) {
             if (!block.HasNeighbour(Direction::UP)) {
                 static const Point3f normal(0.0f, 0.0f, 1.0f);
                 mesh::Quad quad;
-                quad.SetVertex(0, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, Block::SIZE), normal));
-                quad.SetVertex(1, mesh::Vertex(pos + Point3f(0.0f, 0.0f, Block::SIZE), normal));
-                quad.SetVertex(2, mesh::Vertex(pos + Point3f(Block::SIZE, 0.0f, Block::SIZE), normal));
-                quad.SetVertex(3, mesh::Vertex(pos + Point3f(Block::SIZE, Block::SIZE, Block::SIZE), normal));
+                quad.SetVertex(0, mesh::Vertex(pos + Point3f(0.0f, 0.0f, Block::SIZE), normal));
+                quad.SetVertex(1, mesh::Vertex(pos + Point3f(Block::SIZE, 0.0f, Block::SIZE), normal));
+                quad.SetVertex(2, mesh::Vertex(pos + Point3f(Block::SIZE, Block::SIZE, Block::SIZE), normal));
+                quad.SetVertex(3, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, Block::SIZE), normal));
                 quads.emplace_back(quad);
             }
             if (!block.HasNeighbour(Direction::DOWN)) {
                 static const Point3f normal(0.0f, 0.0f, -1.0f);
                 mesh::Quad quad;
-                quad.SetVertex(0, mesh::Vertex(pos + Point3f(Block::SIZE, Block::SIZE, 0.0f), normal));
-                quad.SetVertex(1, mesh::Vertex(pos + Point3f(Block::SIZE, 0.0f, 0.0f), normal));
-                quad.SetVertex(2, mesh::Vertex(pos, normal));
-                quad.SetVertex(3, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, 0.0f), normal));
+                quad.SetVertex(0, mesh::Vertex(pos + Point3f(0.0f, Block::SIZE, 0.0f), normal));
+                quad.SetVertex(1, mesh::Vertex(pos + Point3f(Block::SIZE, Block::SIZE, 0.0f), normal));
+                quad.SetVertex(2, mesh::Vertex(pos + Point3f(Block::SIZE, 0.0f, 0.0f), normal));
+                quad.SetVertex(3, mesh::Vertex(pos, normal));
                 quads.emplace_back(quad);
             }
         }

@@ -115,7 +115,7 @@ void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32
         Block block;
 
         if (curr[2] == top[2] && top[2] != Chunk::SIZE - 1) {
-            block.AddNeighbour(Direction::UP);
+            block.AddNeighbour(Direction::DOWN);
         } else {
             block.AddNeighbour(Direction::UP);
             block.AddNeighbour(Direction::DOWN);
