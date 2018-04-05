@@ -7,9 +7,8 @@ namespace mc::world::chunk {
 Grid::Grid(int32_t chunkDrawDistance):
     gridSize { Point3i(chunkDrawDistance) },
     centerPos(1337, 1337, 1337),
-    loadedChunks { },
-    //chunkPosTree { nullptr },
-    chunkLoader { 10 } {
+    heightNoise { },
+    chunkLoader { 10, heightNoise } {
     chunkLoader.Start();
 }
 
@@ -26,109 +25,73 @@ void Grid::SetCenter(Point3i gridPos) {
     if (centerPos != gridPos) {
         DEBUG("Changing center chunk, ", centerPos, "-> ", gridPos);
         centerPos = gridPos;
-        std::vector<Point3i> visibleChunks = CreateVisibleChunkPosVec();
-        //RebuildChunkPosTree(visibleChunks);
-        UnloadOldChunks(visibleChunks);
-        LoadNewChunks(visibleChunks);
+        UnloadOldChunks();
+        LoadNewChunks();
     }
 }
 
-/*void Grid::RebuildChunkPosTree(const std::list<Point3i>& visibleChunks) {
-    Point3i min(centerPos - gridSize);
-    Point3i max(centerPos + gridSize);
-    chunkPosTree = std::make_unique<Octree<int32_t>>(min, max);
-    chunkPosTree->QueueElements(visibleChunks);
-    chunkPosTree->InsertQueuedElements();
-}*/
 
-bool PointIsChunkChunkPos(const Point3i& p, const Chunk& c) {
-    return p == c.GetPosition();
-}
+void Grid::LoadNewChunks() {
+    Point3i min = centerPos - gridSize;
+    Point3i max = centerPos + gridSize;
+    std::vector<Point3i> requestChunks;
 
-void Grid::LoadNewChunks(const std::vector<Point3i>& visibleChunks) {
-    std::vector<Point3i> loadChunks;
-
-    for (auto iter = visibleChunks.begin() ;
-        iter != visibleChunks.end(); ++iter) {
-        auto result = std::find_if(loadedChunks.begin(),
-                                   loadedChunks.end(),
-                                   [iter](const Chunk& c) {
-                                        return c.GetPosition() == *iter;
-                                   });
-        if (result == loadedChunks.end()) {
-            loadChunks.push_back(*iter);
-        }
-    }
-    DEBUG("Requesting ", loadChunks.size(), " chunks for loading");
-    chunkLoader.RequestChunks(loadChunks);
-}
-
-std::vector<Point3i> Grid::CreateVisibleChunkPosVec() const {
-    std::vector<Point3i> visiblePos;
-    for (auto z = -gridSize[2]; z <= gridSize[2]; z++) {
-        for (auto y = -gridSize[1]; y <= gridSize[1]; y++) {
-            for (auto x = -gridSize[0]; x <= gridSize[0]; x++) {
-                Point3i pos = centerPos + Point3i(x, y, z);
-                if (pos[2] >= 0 && pos[2] < 5) {
-                    visiblePos.push_back(pos);
+    for (auto y = min[1]; y < max[1]; y++) {
+        for (auto x = min[0]; x < max[0]; x++) {
+            int32_t maxZ = std::min(2 + CalculateHeight(Point2i(x, y) * Point2i(Chunk::SIZE), heightNoise) / Chunk::SIZE, max[2]);
+            for (auto z = min[2]; z < maxZ; z++) {
+                Point3i p(x, y, z);
+                if (loadedChunks.find(p) == loadedChunks.end()) {
+                    requestChunks.push_back(p);
                 }
             }
         }
     }
-    return visiblePos;
+
+    DEBUG("Requesting ", requestChunks.size(), " chunks for loading");
+    chunkLoader.RequestChunks(requestChunks);
 }
 
-void Grid::UnloadOldChunks(const std::vector<Point3i>& visibleChunks) {
-    std::vector<Chunk> keepChunks;
-    
-    for (auto iter = loadedChunks.begin() ;
-        iter != loadedChunks.end(); ++iter) {
-        auto result = std::find_if(visibleChunks.begin(),
-                                   visibleChunks.end(),
-                                   [iter](const Point3i& p) {
-                                        return p == iter->GetPosition();
-                                   });
-        if (result != visibleChunks.end()) {
-            keepChunks.push_back(std::move(*iter));
-        }
-    }   
+void Grid::UnloadOldChunks() {
+    Point3i min = centerPos - gridSize;
+    Point3i max = centerPos + gridSize;
+    uint32_t unloadCount = 0;
 
-    DEBUG("Unloading ", loadedChunks.size() - keepChunks.size(), " chunks");
-    loadedChunks.swap(keepChunks);
+    auto iter = loadedChunks.begin();
+    while (iter != loadedChunks.end()) {
+        if (!iter->first.InBoundaries(min, max)) {
+            loadedChunks.erase(iter++);
+            unloadCount++;
+        } else {
+            ++iter;
+        }
+    }
+
+    DEBUG("Unloading ", unloadCount, " chunks");
 }
 
 void Grid::UpdateChunks() {
     if (chunkLoader.HasFinishedChunks()) {
-        std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
-        for (Chunk& chunk: newChunks) {
-            chunk.CreateMesh();
-        }
-        loadedChunks.insert(loadedChunks.end(),
-                            std::make_move_iterator(newChunks.begin()),
+        std::map<Point3i, Chunk> newChunks = chunkLoader.GetFinishedChunks();
+        loadedChunks.insert(std::make_move_iterator(newChunks.begin()),
                             std::make_move_iterator(newChunks.end()));
-        std::sort(loadedChunks.begin(), loadedChunks.end());
-        TRACE("Loaded ", newChunks.size(), " new chunks");
-        
         UpdateChunkBorders();
         TRACE("Currently loaded chunks: ", loadedChunks.size());
     }
 }
 
 void Grid::UpdateChunkBorders() { 
-    for(auto& chunk : loadedChunks) {
+    for(auto& pair : loadedChunks) {
+        const Point3i& pos = pair.first;
+        Chunk& chunk = pair.second;
         if (!chunk.IsEmpty() && !chunk.AllNeighboursChecked()) {
             for (uint8_t i = 0; i < 6; i++) {
                 Direction dir = GetDirection(i);
                 if (!chunk.CheckedNeighbour(dir)) {
-                    Point3i offset = GetOffset(dir);
-                    Point3i neighbourPos = chunk.GetPosition() + offset;
-                    auto neighbourFind = std::find_if(loadedChunks.begin(),
-                                                      loadedChunks.end(),
-                                                      [&neighbourPos](const Chunk& chunk) {
-                                                          return chunk.GetPosition() == neighbourPos;
-                                                      });
+                    Point3i neighbourPos = pos + GetOffset(dir);
+                    auto neighbourFind = loadedChunks.find(neighbourPos);
                     if (neighbourFind != loadedChunks.end()) {
-                        chunk.UpdateBlockVisibility(dir, *neighbourFind);
+                        chunk.UpdateBlockVisibility(dir, neighbourFind->second);
                     }
                 }
             }
@@ -138,7 +101,7 @@ void Grid::UpdateChunkBorders() {
 
 void Grid::Draw(const Camera& camera) const {
     for (auto chunkIter = loadedChunks.cbegin(); chunkIter != loadedChunks.end(); ++chunkIter) {
-        chunkIter->Draw(camera);
+        chunkIter->second.Draw(camera);
     }
 }
 

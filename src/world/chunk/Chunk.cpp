@@ -61,7 +61,7 @@ bool Chunk::operator<(const Point3i& rhsChunkPos) const {
     70-100 ms (full 4096 chunk): (OLD) Block visibility checked after generation is done (through map accesses), excluding border blocks
     ~60 ms    (full 4096): (CURRENT) Visibility saved in block, calculated during building (partly using raw pointers), includes border blocks, which need additionial checking
 */
-void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
+void Chunk::Generate(const SimplexNoise& noise) {
     sf::Clock clock;
 
     HeightArray relativeHeight;
@@ -89,9 +89,13 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
             if (y + 1 < Chunk::SIZE) {
                 neighbourHeight[3] = *(currHeight + Chunk::SIZE);
             }
-            GenerateColumn(Point3i(x, y, *currHeight), texture, neighbourHeight);
+            GenerateColumn(Point3i(x, y, *currHeight), neighbourHeight);
             currHeight++;
         }
+    }
+
+    if (!IsEmpty()) {
+        CreateMesh();
     }
    
     TRACE("Generated chunk ", chunkPos,
@@ -100,7 +104,7 @@ void Chunk::Generate(const SimplexNoise& noise, const Texture& texture) {
 }
 
 
-void Chunk::GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight) {
+void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight) {
     Point3i curr(top);
     static Direction neighbours[] = { Direction::WEST,    // -x
                                       Direction::NORTH,   // -y
@@ -176,20 +180,17 @@ static void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
                       const SimplexNoise& heightNoise) {
 
-    constexpr double MIN_HEIGHT = 1.0;
-    constexpr double HEIGHT_VARIATION = 10.0;
+
     int32_t chunkMinHeight = chunkPos[2] * Chunk::SIZE;    //incl
     int32_t chunkMaxHeight = chunkMinHeight + Chunk::SIZE; //excl
     int32_t* currHeight = &height[0];
 
     for (auto y = 0; y < Chunk::SIZE; y++) {
         for (auto x = 0; x < Chunk::SIZE; x++) {
-            double normalizedNoise = (1.0 + heightNoise.GetOctavedNoise(
-                chunkPos[0] * Chunk::SIZE + x,
-                chunkPos[1] * Chunk::SIZE + y,
-                6, 0.1, 0.025)) / 2.0;
+            Point2i globalPos(chunkPos[0] * Chunk::SIZE + x,
+                            chunkPos[1] * Chunk::SIZE + y);
             //height given in global block granularity
-            *currHeight = static_cast<int32_t>(MIN_HEIGHT + HEIGHT_VARIATION * normalizedNoise);
+            *currHeight = CalculateHeight(globalPos, heightNoise);
 
             if (*currHeight >= chunkMinHeight && *currHeight < chunkMaxHeight) {
                 *currHeight -= chunkMinHeight;       // part air/underground col

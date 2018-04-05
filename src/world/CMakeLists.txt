@@ -16,6 +16,10 @@ add_sources(
   NeighbourMask.cpp
   Direction.hpp
   Direction.cpp
+  SimplexNoise.hpp
+  SimplexNoise.cpp
+  HeightCalculation.hpp
+  HeightCalculation.cpp
   Octree.hpp
 )
 

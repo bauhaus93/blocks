@@ -6,16 +6,18 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <array>
 
 #include "ApplicationError.hpp"
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
 #include "world/Octree.hpp"
+#include "world/SimplexNoise.hpp"
+#include "world/HeightCalculation.hpp"
 
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
-#include "SimplexNoise.hpp"
 #include "PointChunkCmp.hpp"
 
 namespace mc::world::chunk {
@@ -32,16 +34,16 @@ class Grid {
 
  private:
     void            SetCenter(Point3i centerPos);
-    void            LoadNewChunks(const std::vector<Point3i>& visibleChunks);
-    void            UnloadOldChunks(const std::vector<Point3i>& visibleChunks);
+    void            LoadNewChunks();
+    void            UnloadOldChunks();
     void            UpdateChunkBorders();
-    //void            RebuildChunkPosTree(const std::vector<Point3i>& visibleChunks);
     std::vector<Point3i> CreateVisibleChunkPosVec() const;
 
     Point3i                     gridSize;
     Point3i                     centerPos;
-    std::vector<Chunk>          loadedChunks;
-    //OctreePtrI                  chunkPosTree;
+    SimplexNoise                heightNoise;
+    std::map<Point3i, Chunk>    loadedChunks;
+    std::map<Point2i, int32_t>  heightEstaminations;
     ChunkLoader                 chunkLoader;
 
 };

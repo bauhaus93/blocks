@@ -5,16 +5,14 @@
 namespace mc::world::chunk {
 
 static Chunk CreateChunk(Point3i pos,
-                  const SimplexNoise& heightNoise,
-                  const Texture& texture);
+                  const SimplexNoise& heightNoise);
 
-ChunkLoader::ChunkLoader(uint32_t maxThreads_):
+ChunkLoader::ChunkLoader(uint32_t maxThreads_, const SimplexNoise& heightNoise_):
     stop { false },
     pendingMutex { },
     finishedMutex { },
     maxThreads { maxThreads_ },
-    heightNoise { },
-    texture { "data/grass.bmp" },
+    heightNoise { heightNoise_ },
     controlThread { nullptr },
     generationThreads { },
     finishedChunks { } {
@@ -39,14 +37,14 @@ void ChunkLoader::RequestChunks(const std::vector<Point3i>& requestedChunkPos) {
     pendingMutex.unlock();
 }
 
-std::vector<Chunk> ChunkLoader::GetFinishedChunks() {
-    std::vector<Chunk> retList;
+std::map<Point3i, Chunk> ChunkLoader::GetFinishedChunks() {
+    std::map<Point3i, Chunk> retMap;
     
     finishedMutex.lock();
-    retList.swap(finishedChunks);
+    retMap.swap(finishedChunks);
     finishedMutex.unlock();
 
-    return retList;
+    return retMap;
 }
 
 void ChunkLoader::Start() {
@@ -77,9 +75,11 @@ void ChunkLoader::Loop() {
         CreateGenerationThreads();
         TRACE("Active generation threads: ", generationThreads.size());
         if (generationThreads.size() == maxThreads) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
-        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        } else if (generationThreads.size() == 0) {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
     }
     DEBUG("ChunkLoader thread finished");
@@ -90,7 +90,8 @@ void ChunkLoader::HandleFinishedThreads() {
     while (iter != generationThreads.end()) {
         if (iter->get()->wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
             finishedMutex.lock();
-            finishedChunks.emplace_back(iter->get()->get());
+            Chunk chunk = iter->get()->get();
+            finishedChunks.emplace(chunk.GetPosition(), std::move(chunk));
             finishedMutex.unlock();
             iter = generationThreads.erase(iter); 
         } else {
@@ -108,7 +109,7 @@ void ChunkLoader::CreateGenerationThreads() {
         std::unique_ptr<std::future<Chunk>> fut =
             std::make_unique<std::future<Chunk>>(std::async(
                 CreateChunk,
-                *iter, std::cref(heightNoise), std::cref(texture)
+                *iter, std::cref(heightNoise)
             )
         );
         generationThreads.push_back(std::move(fut));
@@ -118,10 +119,9 @@ void ChunkLoader::CreateGenerationThreads() {
 }
 
 static Chunk CreateChunk(Point3i pos,
-                  const SimplexNoise& heightNoise,
-                  const Texture& texture) {
+                  const SimplexNoise& heightNoise) {
     Chunk chunk { pos };
-    chunk.Generate(heightNoise, texture);
+    chunk.Generate(heightNoise);
     return chunk;
 }
 

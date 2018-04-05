@@ -12,11 +12,9 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     //uvBuffer { 0 },
     normalBuffer { 0 },
     indexBuffer { 0 },
-    indexCount { 0 } {
+    indexCount { 0 },
+    unsavedData { std::make_unique<VBOData>() } {
 
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-    std::vector<uint32_t> indices;
 
     std::map<Vertex, uint32_t> indexedVertices;
 
@@ -25,20 +23,18 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
             const Vertex& vert = triangle.GetVertex(i);
             auto iter = indexedVertices.find(vert);
             if (iter == indexedVertices.end()) {
-                vertices.push_back(vert.GetGlmPos());
-                normals.push_back(vert.GetGlmNormal());
-                uint32_t index = static_cast<uint32_t>(vertices.size() - 1);
-                indices.push_back(index);
+                unsavedData->vertices.push_back(vert.GetGlmPos());
+                unsavedData->normals.push_back(vert.GetGlmNormal());
+                uint32_t index = static_cast<uint32_t>(unsavedData->vertices.size() - 1);
+                unsavedData->indices.push_back(index);
                 indexedVertices.emplace(vert, index);
             } else {
-                indices.push_back(iter->second);
+                unsavedData->indices.push_back(iter->second);
             }
         }
     }
 
-    indexCount = indices.size();
-    LoadVBOs(vertices, normals, indices);
-    LoadVAO();
+    indexCount = unsavedData->indices.size();
 }
 
 Mesh::Mesh(Mesh&& other):
@@ -47,7 +43,8 @@ Mesh::Mesh(Mesh&& other):
     vertexBuffer { other.vertexBuffer },
     normalBuffer { other.normalBuffer },
     indexBuffer { other.indexBuffer },
-    indexCount { other.indexCount } {
+    indexCount { other.indexCount },
+    unsavedData { std::move(other.unsavedData) } {
     other.vao = 0;
     other.vertexBuffer = 0;
     other.normalBuffer = 0;
@@ -65,10 +62,12 @@ Mesh& Mesh::operator=(Mesh&& other) {
     normalBuffer = other.normalBuffer;
     indexBuffer = other.indexBuffer;
     indexCount = other.indexCount;
+    unsavedData = std::move(other.unsavedData);
     other.vao = 0;
     other.vertexBuffer = 0;
     other.normalBuffer = 0;
     other.indexBuffer = 0;
+    other.unsavedData = nullptr;
     assert(vao != 0);
     assert(vertexBuffer != 0);
     assert(normalBuffer != 0);
@@ -91,9 +90,8 @@ Mesh::~Mesh() {
     }
 }
 
-void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
-                    const std::vector<glm::vec3>& normals,
-                    const std::vector<uint32_t>& indices) {
+void Mesh::LoadVBOs() {
+    assert(unsavedData != nullptr);
     assert(vertexBuffer == 0);  //for now
     assert(normalBuffer == 0);  //will check later, what is needed
     assert(indexBuffer == 0);
@@ -102,8 +100,8 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(
         GL_ARRAY_BUFFER,
-        vertices.size() * sizeof(glm::vec3),
-        vertices.data(),
+        unsavedData->vertices.size() * sizeof(glm::vec3),
+        unsavedData->vertices.data(),
         GL_STATIC_DRAW
     );    
 
@@ -111,8 +109,8 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
     glBufferData(
         GL_ARRAY_BUFFER,
-        normals.size() * sizeof(glm::vec3),
-        normals.data(),
+        unsavedData->normals.size() * sizeof(glm::vec3),
+        unsavedData->normals.data(),
         GL_STATIC_DRAW
     );
 
@@ -120,11 +118,11 @@ void Mesh::LoadVBOs(const std::vector<glm::vec3>& vertices,
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
-        indices.size() * sizeof(uint32_t), 
-        indices.data(),
+        unsavedData->indices.size() * sizeof(uint32_t), 
+        unsavedData->indices.data(),
         GL_STATIC_DRAW
     );
-
+    unsavedData = nullptr;
 }
 
 void Mesh::LoadVAO() {
@@ -163,7 +161,11 @@ void Mesh::LoadVAO() {
     glBindVertexArray(0);
 }
 
-void Mesh::Draw() const {
+void Mesh::Draw() {
+    if (vao == 0) {
+        LoadVBOs();
+        LoadVAO();
+    }
     assert(vao != 0);
     glBindVertexArray(vao);
     glDrawElements(

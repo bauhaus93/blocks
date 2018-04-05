@@ -24,7 +24,7 @@ class Mesh {
     GLuint       uvBuffer;
     GLuint       normalBuffer;
     GLuint       indexBuffer;
-    size_t	     indexCount;
+    std::size_t	 indexCount;
 };
 
 }   // namespace mc

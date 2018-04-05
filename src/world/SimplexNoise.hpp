@@ -13,7 +13,7 @@
 #include "logger/GlobalLogger.hpp"
 
 
-namespace mc::world::chunk {
+namespace mc::world {
 
 typedef std::vector<uint8_t> Vec8u;
 

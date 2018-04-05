@@ -5,8 +5,6 @@ add_sources(
   ChunkLoader.cpp
   Grid.hpp
   Grid.cpp
-  SimplexNoise.hpp
-  SimplexNoise.cpp
   CompositeMesh.hpp
   CompositeMesh.cpp
   PointChunkCmp.hpp

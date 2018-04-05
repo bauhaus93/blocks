@@ -15,29 +15,34 @@
 
 namespace mc::mesh {
 
+struct VBOData {
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<uint32_t> indices;
+};
+
 class Mesh {
  public:
     explicit    Mesh(std::vector<Triangle> triangles_);
                 Mesh(Mesh&& other);
     Mesh&       operator=(Mesh&& other);
                 ~Mesh();
-    void        Draw() const;
+    void        Draw();
 
  private:
 
-    void        LoadVBOs(const std::vector<glm::vec3>& vertices,
-                         const std::vector<glm::vec3>& normals,
-                         const std::vector<uint32_t>& indices);
+    void        LoadVBOs();
     void        LoadVAO();
 
     std::vector<Triangle> triangles;
 
     GLuint      vao;
     GLuint      vertexBuffer;
-    //GLuint      uvBuffer;
     GLuint      normalBuffer;
     GLuint      indexBuffer;
     uint32_t    indexCount;
+
+    std::unique_ptr<VBOData>    unsavedData;
 };
 
 }       // namespace mc::mesh

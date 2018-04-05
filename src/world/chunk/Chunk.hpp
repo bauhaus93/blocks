@@ -14,15 +14,15 @@
 #include "utility/Point3.hpp"
 #include "utility/PointTransformation.hpp"
 #include "utility/Defs.hpp"
-#include "graphics/Texture.hpp"
-#include "graphics/Mesh.hpp"
 #include "world/Block.hpp"
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
+#include "world/SimplexNoise.hpp"
+#include "world/HeightCalculation.hpp"
 
 #include "CompositeMesh.hpp"
-#include "SimplexNoise.hpp"
+
 
 namespace mc::world::chunk {
 
@@ -36,7 +36,7 @@ class Chunk {
                     Chunk(Chunk&& other);
     Chunk&          operator=(Chunk&& other);
 
-    void            Generate(const SimplexNoise& noise, const Texture& texture);
+    void            Generate(const SimplexNoise& noise);
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            IsFull() const;
@@ -50,7 +50,7 @@ class Chunk {
     void            Draw(const Camera& camera) const;
 
  private:
-    void    GenerateColumn(Point3i top, const Texture& texture, std::array<int32_t, 4>& neighbourHeight);
+    void    GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight);
     void    CreateNonBorderRenderCandidates();
 
 
