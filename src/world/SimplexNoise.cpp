@@ -47,6 +47,7 @@ uint32_t SimplexNoise::GetSeed() const{
 }
 
 double SimplexNoise::GetNoise(double x, double y) const{
+    assert(x >= 0.0 && y >= 0.0);
     double n0 = 0, n1 = 0, n2 = 0; // Noise contributions from the three corners
     // Skew the input space to determine which simplex cell we're in
     double s = (x + y) * F2; // Hairy factor for 2D

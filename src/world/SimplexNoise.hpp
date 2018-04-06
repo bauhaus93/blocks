@@ -27,17 +27,18 @@ class SimplexNoise {
                 ~SimplexNoise() = default;
 
     uint32_t    GetSeed() const;
-    double      GetNoise(double x, double y) const;
+
     double      GetOctavedNoise(int x, int y, int octaves, double roughness, double scale) const;
 
- private:
+ private:    
     const uint32_t  seed;
     std::mt19937    rng;
     Vec8u           permutation;
 
-    double              Fade(double t) const;
-    double              Lerp(double t, double a, double b) const;
-    double              Gradient(int hash, double x, double y, double z) const;
+    double          GetNoise(double x, double y) const;
+    double          Fade(double t) const;
+    double          Lerp(double t, double a, double b) const;
+    double          Gradient(int hash, double x, double y, double z) const;
 
 
 };
