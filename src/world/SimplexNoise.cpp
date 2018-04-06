@@ -47,7 +47,6 @@ uint32_t SimplexNoise::GetSeed() const{
 }
 
 double SimplexNoise::GetNoise(double x, double y) const{
-
     double n0 = 0, n1 = 0, n2 = 0; // Noise contributions from the three corners
     // Skew the input space to determine which simplex cell we're in
     double s = (x + y) * F2; // Hairy factor for 2D
@@ -125,6 +124,8 @@ double SimplexNoise::GetOctavedNoise(int x, int y,
                                      int octaves,
                                      double roughness,
                                      double scale) const {
+    x += std::numeric_limits<int>::max() / 2;
+    y += std::numeric_limits<int>::max() / 2;
     double sum = 0;
     double frequency = scale;
     double weight = 1;

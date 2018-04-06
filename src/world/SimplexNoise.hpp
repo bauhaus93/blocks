@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
+#include <limits>
 
 #include "logger/GlobalLogger.hpp"
 
