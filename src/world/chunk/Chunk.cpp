@@ -127,51 +127,47 @@ void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourH
 }
 
 void Chunk::UpdateBlockVisibility(Direction dir, Chunk& neighbour) {
+    struct DirData {
+        uint8_t indexU;
+        uint8_t indexV;
+        uint8_t indexW;
+        int32_t localW;
+        int32_t neighbourW;
+    };
+    static constexpr std::array<DirData, 6> dirData { DirData { 0, 2, 1, 0, CHUNK_SIZE - 1 },  //Direction::NORTH
+                                                      DirData { 1, 2, 0, CHUNK_SIZE - 1, 0 },  //Direction::EAST
+                                                      DirData { 0, 2, 1, CHUNK_SIZE - 1, 0 },  //Direction::SOUTH
+                                                      DirData { 1, 2, 0, 0, CHUNK_SIZE - 1 },  //Direction::WEST
+                                                      DirData { 0, 1, 2, CHUNK_SIZE - 1, 0 },  //Direction::UP
+                                                      DirData { 0, 1, 2, 0, CHUNK_SIZE - 1 }   //Direction::DOWN
+                                                    };
     assert(!CheckedNeighbour(dir));
     Direction opp = GetOpposite(dir);
+    const DirData& currDir = dirData[GetIndex(dir)];
 
-    switch (dir) {
-        case Direction::NORTH:
-            for (auto i = 0; i < CHUNK_SIZE; i++) {
-                for (auto j = 0; j < CHUNK_SIZE; j++) {
-                    Point3i localBlockPos(i, 0, j);
-                    Point3i neighbourBlockPos(i, CHUNK_SIZE - 1, j);
+    for (auto i = 0; i < CHUNK_SIZE; i++) {
+        for (auto j = 0; j < CHUNK_SIZE; j++) {
+            Point3i localBlockPos(0);
+            Point3i neighbourBlockPos(0);
+            localBlockPos[currDir.indexU] = i;
+            localBlockPos[currDir.indexV] = j;
+            localBlockPos[currDir.indexW] = currDir.localW;
+            neighbourBlockPos[currDir.indexU] = i;
+            neighbourBlockPos[currDir.indexV] = j;
+            neighbourBlockPos[currDir.indexW] = currDir.neighbourW;
 
-                    auto foundLocal = blocks.find(localBlockPos);
-                    auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
+            auto foundLocal = blocks.find(localBlockPos);
+            auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
 
-                    if (foundLocal != blocks.end() && foundNeighbour == blocks.end()) {
-                        foundLocal->second.RemoveNeighbour(dir);
-                    } else if (foundNeighbour != blocks.end() && foundLocal == blocks.end()) {
-                        if (!neighbour.CheckedNeighbour(opp)) {
-                            foundNeighbour->second.RemoveNeighbour(opp);
-                            neighbour.checkedNeighbours.Add(opp);
-                        }
-                    }
+            if (foundLocal != blocks.end() && foundNeighbour == neighbour.blocks.end()) {
+                foundLocal->second.RemoveNeighbour(dir);
+            } else if (foundNeighbour != neighbour.blocks.end() && foundLocal == blocks.end()) {
+                if (!neighbour.CheckedNeighbour(opp)) {
+                    foundNeighbour->second.RemoveNeighbour(opp);
+                    neighbour.checkedNeighbours.Add(opp);
                 }
             }
-            break;
-        case Direction::UP:
-             for (auto i = 0; i < CHUNK_SIZE; i++) {
-                for (auto j = 0; j < CHUNK_SIZE; j++) {
-                    Point3i localBlockPos(i, j, CHUNK_SIZE - 1);
-                    Point3i neighbourBlockPos(i, j, 0);
-
-                    auto foundLocal = blocks.find(localBlockPos);
-                    auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
-
-                    if (foundLocal != blocks.end() && foundNeighbour == blocks.end()) {
-                        foundLocal->second.RemoveNeighbour(dir);
-                    } else if (foundNeighbour != blocks.end() && foundLocal == blocks.end()) {
-                        if (!neighbour.CheckedNeighbour(opp)) {
-                            foundNeighbour->second.RemoveNeighbour(opp);
-                            neighbour.checkedNeighbours.Add(opp);
-                        }
-                    }
-                }
-            }
-            break;
-        default: break;
+        }
     }
     checkedNeighbours.Add(dir);
 }

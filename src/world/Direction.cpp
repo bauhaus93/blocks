@@ -14,6 +14,7 @@ uint8_t GetIndex(Direction dir) {
         case Direction::DOWN:   return 5;
         default: assert(0);
     }
+    return 0;
 }
 
 Direction GetDirection(uint8_t index) {
@@ -27,6 +28,7 @@ Direction GetDirection(uint8_t index) {
         case 5: return Direction::DOWN;
         default: assert(0);
     }
+    return Direction::NORTH;
 }
 
 uint8_t GetValue(Direction dir) {
@@ -43,6 +45,7 @@ Direction GetOpposite(Direction dir) {
         case Direction::DOWN:   return Direction::UP;
         default: assert(0);
     }
+    return Direction::NORTH;
 }
 
 Point3i GetOffset(Direction dir) {
@@ -55,6 +58,7 @@ Point3i GetOffset(Direction dir) {
         case Direction::DOWN:   return Point3i(0, 0, -1);
         default: assert(0);
     }
+    return Point3i(0);
 }
 
 }       // namespace mc::world
