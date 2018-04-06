@@ -53,10 +53,6 @@ bool Chunk::operator<(const Chunk& rhs) const {
     return GetPosition() < rhs.GetPosition();
 }
 
-bool Chunk::operator<(const Point3i& rhsChunkPos) const {
-    return GetPosition() < rhsChunkPos;
-}
-
 /* measurements:
     70-100 ms (full 4096 chunk): (OLD) Block visibility checked after generation is done (through map accesses), excluding border blocks
     ~60 ms    (full 4096): (CURRENT) Visibility saved in block, calculated during building (partly using raw pointers), includes border blocks, which need additionial checking
@@ -130,39 +126,54 @@ void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourH
     }
 }
 
-
-//TODO finish, when chunk meshing is working
 void Chunk::UpdateBlockVisibility(Direction dir, Chunk& neighbour) {
-    /*
-    if (!IsEmpty()) {
-        Direction opp = GetOpposite(dir);
+    assert(!CheckedNeighbour(dir));
+    Direction opp = GetOpposite(dir);
 
-        assert(!curr.CheckedNeighbours(dir));
-        assert(!neighbour.CheckedNeighbours(opp));
-        checkedNeighbours.Add(dir);
-        neighbour.checkedNeighbours.Add(opp);
+    switch (dir) {
+        case Direction::NORTH:
+            for (auto i = 0; i < CHUNK_SIZE; i++) {
+                for (auto j = 0; j < CHUNK_SIZE; j++) {
+                    Point3i localBlockPos(i, 0, j);
+                    Point3i neighbourBlockPos(i, CHUNK_SIZE - 1, j);
 
-        switch (dir) {
-            case Direction::NORTH:
-                for (auto i = 0; i < CHUNK_SIZE; i++) {
-                    for (auto j = 0; j < CHUNK_SIZE; j++) {
-                        Point3i localBlockPos(i, 0, j);
-                        Point3i neigbourBlockPos(i, Chunk:SIZE - 1, j);
-                        auto foundLocal = blocks.find(localBlockPos);
-                        auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
-                        if (foundLocal != blocks.end() &&
-                            foundNeighbour == blocks.end()) {
-                            foundLocal->second.RemoveNeighbour(dir);
-                        } else if (foundLocal == blocks.end() &&
-                            foundNeighbour != blocks.end()) {
+                    auto foundLocal = blocks.find(localBlockPos);
+                    auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
+
+                    if (foundLocal != blocks.end() && foundNeighbour == blocks.end()) {
+                        foundLocal->second.RemoveNeighbour(dir);
+                    } else if (foundNeighbour != blocks.end() && foundLocal == blocks.end()) {
+                        if (!neighbour.CheckedNeighbour(opp)) {
                             foundNeighbour->second.RemoveNeighbour(opp);
+                            neighbour.checkedNeighbours.Add(opp);
                         }
-                        
                     }
                 }
-        }
-    } 
-    */
+            }
+            break;
+        case Direction::UP:
+             for (auto i = 0; i < CHUNK_SIZE; i++) {
+                for (auto j = 0; j < CHUNK_SIZE; j++) {
+                    Point3i localBlockPos(i, j, CHUNK_SIZE - 1);
+                    Point3i neighbourBlockPos(i, j, 0);
+
+                    auto foundLocal = blocks.find(localBlockPos);
+                    auto foundNeighbour = neighbour.blocks.find(neighbourBlockPos);
+
+                    if (foundLocal != blocks.end() && foundNeighbour == blocks.end()) {
+                        foundLocal->second.RemoveNeighbour(dir);
+                    } else if (foundNeighbour != blocks.end() && foundLocal == blocks.end()) {
+                        if (!neighbour.CheckedNeighbour(opp)) {
+                            foundNeighbour->second.RemoveNeighbour(opp);
+                            neighbour.checkedNeighbours.Add(opp);
+                        }
+                    }
+                }
+            }
+            break;
+        default: break;
+    }
+    checkedNeighbours.Add(dir);
 }
 
 void Chunk::CreateMesh() {

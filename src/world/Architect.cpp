@@ -26,12 +26,12 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 // smaller SCALE -> the bigger results
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
     constexpr double MIN_HEIGHT = 1.0;
-    constexpr double HEIGHT_VARIATION = 10.0;
+    constexpr double MAX_HEIGHT = 100.0;
     constexpr double OCTAVES = 6;
     constexpr double ROUGHNESS = 0.01;
-    constexpr double SCALE = 0.0025;
+    constexpr double SCALE = 0.005;
     double normalizedNoise = (1.0 + heightNoise.GetOctavedNoise(globalPos, OCTAVES, ROUGHNESS, SCALE)) / 2.0;
-    return static_cast<int32_t>(MIN_HEIGHT + HEIGHT_VARIATION * normalizedNoise);
+    return static_cast<int32_t>(MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * normalizedNoise);
 }
 
 int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {

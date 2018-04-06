@@ -25,7 +25,7 @@ void Grid::SetCenter(Point3i gridPos) {
     if (centerPos != gridPos) {
         DEBUG("Changing center chunk, ", centerPos, "-> ", gridPos);
         centerPos = gridPos;
-        UnloadOldChunks();
+        //UnloadOldChunks();
         LoadNewChunks();
     }
 }
@@ -71,11 +71,17 @@ void Grid::UnloadOldChunks() {
 
 void Grid::UpdateChunks() {
     if (chunkLoader.HasFinishedChunks()) {
-        std::map<Point3i, Chunk> newChunks = chunkLoader.GetFinishedChunks();
-        loadedChunks.insert(std::make_move_iterator(newChunks.begin()),
-                            std::make_move_iterator(newChunks.end()));
+        //sf::Clock clock;
+        std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
+        for (auto iter = std::make_move_iterator(newChunks.begin());
+             iter != std::make_move_iterator(newChunks.end()); ++iter) {
+
+            loadedChunks.emplace(iter->GetPosition(), *iter);
+        }
+        /*loadedChunks.insert(std::make_move_iterator(newChunks.begin()),
+                            std::make_move_iterator(newChunks.end()));*/
         UpdateChunkBorders();
-        TRACE("Currently loaded chunks: ", loadedChunks.size());
+        //DEBUG("Updating chunks took ", clock.getElapsedTime().asMilliseconds(), "ms");
     }
 }
 

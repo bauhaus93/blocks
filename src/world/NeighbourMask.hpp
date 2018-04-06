@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <cstdint>
 #include <cassert>
 
@@ -21,8 +22,9 @@ class NeighbourMask {
 
  private:
     uint8_t mask;
-
 };
+
+std::ostream& operator<<(std::ostream& os, const NeighbourMask& mask);
 
 
 }       // namespace mc::world

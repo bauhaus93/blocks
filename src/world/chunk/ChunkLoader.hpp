@@ -34,7 +34,7 @@ class ChunkLoader {
     bool                IsRunning() const;
     bool                HasFinishedChunks();
     void                RequestChunks(const std::vector<Point3i>& requestedChunkPos);
-    std::map<Point3i, Chunk>  GetFinishedChunks();
+    std::vector<Chunk>  GetFinishedChunks();
 
 
  private:
@@ -49,7 +49,7 @@ class ChunkLoader {
     const Architect&        architect;
     std::unique_ptr<std::thread> controlThread;
     ChunkFutures            generationThreads;
-    std::map<Point3i, Chunk> finishedChunks;
+    std::vector<Chunk>      finishedChunks;
     std::list<Point3i>      pendingChunkPos;
 };
 

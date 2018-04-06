@@ -43,7 +43,6 @@ class Grid {
     const Architect&            architect;
     Point3i                     centerPos;
     std::map<Point3i, Chunk>    loadedChunks;
-    std::map<Point2i, int32_t>  heightEstaminations;
     ChunkLoader                 chunkLoader;
 
 };

@@ -37,14 +37,14 @@ void ChunkLoader::RequestChunks(const std::vector<Point3i>& requestedChunkPos) {
     pendingMutex.unlock();
 }
 
-std::map<Point3i, Chunk> ChunkLoader::GetFinishedChunks() {
-    std::map<Point3i, Chunk> retMap;
+std::vector<Chunk> ChunkLoader::GetFinishedChunks() {
+    std::vector<Chunk> retVec;
     
     finishedMutex.lock();
-    retMap.swap(finishedChunks);
+    retVec.swap(finishedChunks);
     finishedMutex.unlock();
 
-    return retMap;
+    return retVec;
 }
 
 void ChunkLoader::Start() {
@@ -91,7 +91,7 @@ void ChunkLoader::HandleFinishedThreads() {
         if (iter->get()->wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
             finishedMutex.lock();
             Chunk chunk = iter->get()->get();
-            finishedChunks.emplace(chunk.GetPosition(), std::move(chunk));
+            finishedChunks.emplace_back(std::move(chunk));
             finishedMutex.unlock();
             iter = generationThreads.erase(iter); 
         } else {

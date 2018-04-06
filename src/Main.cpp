@@ -1,12 +1,13 @@
 
 #include <iostream>
-#include <memory>
+#include <fstream>
 
 #include "logger/GlobalLogger.hpp"
 #include "Application.hpp"
 #include "ApplicationError.hpp"
 
 int main(int argc, char** argv) {
+    //std::ofstream out("out.log");
     mc::log::CreateGlobalLogger(std::cout);
 
     try {
