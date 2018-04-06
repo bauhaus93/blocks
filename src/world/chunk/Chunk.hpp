@@ -18,10 +18,10 @@
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
-#include "world/SimplexNoise.hpp"
-#include "world/HeightCalculation.hpp"
-
+#include "world/Architect.hpp"
+#include "world/Size.hpp"
 #include "CompositeMesh.hpp"
+
 
 
 namespace mc::world::chunk {
@@ -29,14 +29,12 @@ namespace mc::world::chunk {
 class Chunk {
 
  public:
-    static constexpr int32_t   SIZE = 16;
-
     explicit        Chunk(const Point3i& chunkPos_);
                     Chunk(const Chunk& other) = delete;
                     Chunk(Chunk&& other);
     Chunk&          operator=(Chunk&& other);
 
-    void            Generate(const SimplexNoise& noise);
+    void            Generate(const Architect& architect);
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            IsFull() const;
@@ -62,6 +60,8 @@ class Chunk {
     std::unique_ptr<mesh::Mesh> mesh;
 };
 
-typedef std::array<int32_t, Chunk::SIZE * Chunk::SIZE> HeightArray;
+typedef std::array<int32_t, CHUNK_SIZE * CHUNK_SIZE> HeightArray;
+
+
 
 }       // namespace mc::world::chunk

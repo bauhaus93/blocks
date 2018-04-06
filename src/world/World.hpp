@@ -15,6 +15,7 @@
 #include "chunk/Grid.hpp"
 
 #include "Camera.hpp"
+#include "Architect.hpp"
 
 namespace mc::world {
 
@@ -32,6 +33,7 @@ class World {
  private:
 
     Camera      camera;
+    Architect   architect;
     chunk::Grid grid;
 };
 

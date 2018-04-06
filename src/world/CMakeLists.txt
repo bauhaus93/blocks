@@ -18,9 +18,10 @@ add_sources(
   Direction.cpp
   SimplexNoise.hpp
   SimplexNoise.cpp
-  HeightCalculation.hpp
-  HeightCalculation.cpp
+  Architect.hpp
+  Architect.cpp
   Octree.hpp
+  Size.hpp
 )
 
 add_subdirectory(chunk)

@@ -6,12 +6,12 @@ namespace mc::world::chunk {
 
 static void CalculateHeights(HeightArray& height,
                     const Point3i chunkPos,
-                    const SimplexNoise& heightNoise);
+                    const Architect& architect);
 //bool IsBorderBlock(const Point3i& blockPos);
 
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
-    origin { chunkPos * static_cast<float>(Chunk::SIZE * Block::SIZE) },
+    origin { chunkPos * static_cast<float>(CHUNK_SIZE * BLOCK_SIZE) },
     model {  CreateTranslationMatrix(origin) * glm::mat4(1.0f) },
     checkedNeighbours { },
     blocks { },
@@ -42,7 +42,7 @@ bool Chunk::IsEmpty() const {
 }
 
 bool Chunk::IsFull() const {
-    return blocks.size() == Chunk::SIZE * Chunk::SIZE;
+    return blocks.size() == CHUNK_SIZE * CHUNK_SIZE;
 }
 
 bool Chunk::BlockExists(const Point3i& blockPos) const {
@@ -61,33 +61,33 @@ bool Chunk::operator<(const Point3i& rhsChunkPos) const {
     70-100 ms (full 4096 chunk): (OLD) Block visibility checked after generation is done (through map accesses), excluding border blocks
     ~60 ms    (full 4096): (CURRENT) Visibility saved in block, calculated during building (partly using raw pointers), includes border blocks, which need additionial checking
 */
-void Chunk::Generate(const SimplexNoise& noise) {
+void Chunk::Generate(const Architect& architect) {
     sf::Clock clock;
 
     HeightArray relativeHeight;
-    CalculateHeights(relativeHeight, chunkPos, noise);
+    CalculateHeights(relativeHeight, chunkPos, architect);
 
     int32_t* currHeight = &relativeHeight[0];
-    for (auto y = 0; y < Chunk::SIZE; y++) {
-        for (auto x = 0; x < Chunk::SIZE; x++) {
+    for (auto y = 0; y < CHUNK_SIZE; y++) {
+        for (auto x = 0; x < CHUNK_SIZE; x++) {
             //border column neigbours in other chunks are considered having SIZE height
             //assuming they're full of blocks -> false positives occur (visible blocks classified invisible)
-            std::array<int32_t, 4> neighbourHeight = { { Chunk::SIZE,
-                                                       Chunk::SIZE,
-                                                       Chunk::SIZE,
-                                                       Chunk::SIZE
+            std::array<int32_t, 4> neighbourHeight = { { CHUNK_SIZE,
+                                                       CHUNK_SIZE,
+                                                       CHUNK_SIZE,
+                                                       CHUNK_SIZE
                                                      } };
             if (x > 0) {
                 neighbourHeight[0] = *(currHeight - 1);
             }
             if (y > 0) {
-                neighbourHeight[1] = *(currHeight - Chunk::SIZE);
+                neighbourHeight[1] = *(currHeight - CHUNK_SIZE);
             }
-            if (x + 1 < Chunk::SIZE) {
+            if (x + 1 < CHUNK_SIZE) {
                 neighbourHeight[2] = *(currHeight + 1);
             }
-            if (y + 1 < Chunk::SIZE) {
-                neighbourHeight[3] = *(currHeight + Chunk::SIZE);
+            if (y + 1 < CHUNK_SIZE) {
+                neighbourHeight[3] = *(currHeight + CHUNK_SIZE);
             }
             GenerateColumn(Point3i(x, y, *currHeight), neighbourHeight);
             currHeight++;
@@ -114,7 +114,7 @@ void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourH
     while (curr[2] >= 0) {
         Block block;
 
-        if (curr[2] == top[2] && top[2] != Chunk::SIZE - 1) {
+        if (curr[2] == top[2] && top[2] != CHUNK_SIZE - 1) {
             block.AddNeighbour(Direction::DOWN);
         } else {
             block.AddNeighbour(Direction::UP);
@@ -144,8 +144,8 @@ void Chunk::UpdateBlockVisibility(Direction dir, Chunk& neighbour) {
 
         switch (dir) {
             case Direction::NORTH:
-                for (auto i = 0; i < Chunk::SIZE; i++) {
-                    for (auto j = 0; j < Chunk::SIZE; j++) {
+                for (auto i = 0; i < CHUNK_SIZE; i++) {
+                    for (auto j = 0; j < CHUNK_SIZE; j++) {
                         Point3i localBlockPos(i, 0, j);
                         Point3i neigbourBlockPos(i, Chunk:SIZE - 1, j);
                         auto foundLocal = blocks.find(localBlockPos);
@@ -178,24 +178,21 @@ void Chunk::Draw(const Camera& camera) const {
 
 static void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
-                      const SimplexNoise& heightNoise) {
+                      const Architect& architect) {
 
 
-    int32_t chunkMinHeight = chunkPos[2] * Chunk::SIZE;    //incl
-    int32_t chunkMaxHeight = chunkMinHeight + Chunk::SIZE; //excl
+    int32_t chunkMinHeight = chunkPos[2] * CHUNK_SIZE;    //incl
+    int32_t chunkMaxHeight = chunkMinHeight + CHUNK_SIZE; //excl
     int32_t* currHeight = &height[0];
 
-    for (auto y = 0; y < Chunk::SIZE; y++) {
-        for (auto x = 0; x < Chunk::SIZE; x++) {
-            Point2i globalPos(chunkPos[0] * Chunk::SIZE + x,
-                            chunkPos[1] * Chunk::SIZE + y);
-            //height given in global block granularity
-            *currHeight = CalculateHeight(globalPos, heightNoise);
+    for (auto y = 0; y < CHUNK_SIZE; y++) {
+        for (auto x = 0; x < CHUNK_SIZE; x++) {
+            *currHeight = architect.GetChunkRelativeHeight(chunkPos, Point2i(x, y));
 
             if (*currHeight >= chunkMinHeight && *currHeight < chunkMaxHeight) {
                 *currHeight -= chunkMinHeight;       // part air/underground col
             } else if (*currHeight >= chunkMaxHeight) {
-                *currHeight = Chunk::SIZE - 1;      // full underground col
+                *currHeight = CHUNK_SIZE - 1;      // full underground col
             } else {
                 *currHeight = -1;                     // full air col
             }

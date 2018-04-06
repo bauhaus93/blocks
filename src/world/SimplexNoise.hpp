@@ -12,6 +12,7 @@
 #include <limits>
 
 #include "logger/GlobalLogger.hpp"
+#include "utility/Point2.hpp"
 
 
 namespace mc::world {
@@ -28,7 +29,7 @@ class SimplexNoise {
 
     uint32_t    GetSeed() const;
 
-    double      GetOctavedNoise(int x, int y, int octaves, double roughness, double scale) const;
+    double      GetOctavedNoise(Point2i pos, int octaves, double roughness, double scale) const;
 
  private:    
     const uint32_t  seed;

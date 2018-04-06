@@ -18,8 +18,6 @@ namespace mc::world {
 class Block {
 
  public:
-    static constexpr float   SIZE = 2.0f;
-
                 Block();
                 Block(const Block& other);
     void        AddNeighbour(Direction dir);

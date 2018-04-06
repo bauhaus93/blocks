@@ -9,6 +9,7 @@
 #include "utility/Point3.hpp"
 #include "world/Direction.hpp"
 #include "world/Block.hpp"
+#include "world/Size.hpp"
 
 #include "mesh/Mesh.hpp"
 #include "mesh/Vertex.hpp"

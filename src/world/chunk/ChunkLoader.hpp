@@ -14,7 +14,7 @@
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
-#include "world/SimplexNoise.hpp"
+#include "world/Architect.hpp"
 #include "ApplicationError.hpp"
 #include "Chunk.hpp"
 
@@ -27,7 +27,7 @@ typedef std::list<std::unique_ptr<std::future<Chunk>>> ChunkFutures;
 class ChunkLoader {
 
  public:
-    explicit            ChunkLoader(uint32_t maxThreads_, const SimplexNoise& heightNoise_);
+    explicit            ChunkLoader(uint32_t maxThreads_, const Architect& architect_);
 
     void                Start();
     void                Stop();
@@ -46,7 +46,7 @@ class ChunkLoader {
     std::mutex              pendingMutex;
     std::mutex              finishedMutex;
     const uint32_t          maxThreads;
-    const SimplexNoise&     heightNoise;
+    const Architect&        architect;
     std::unique_ptr<std::thread> controlThread;
     ChunkFutures            generationThreads;
     std::map<Point3i, Chunk> finishedChunks;

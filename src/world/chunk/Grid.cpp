@@ -4,11 +4,11 @@
 
 namespace mc::world::chunk {
 
-Grid::Grid(int32_t chunkDrawDistance):
+Grid::Grid(int32_t chunkDrawDistance, const Architect& architect_):
     gridSize { Point3i(chunkDrawDistance) },
+    architect { architect_ },
     centerPos(1337, 1337, 1337),
-    heightNoise { },
-    chunkLoader { 10, heightNoise } {
+    chunkLoader { 10, architect } {
     chunkLoader.Start();
 }
 
@@ -17,7 +17,7 @@ Grid::~Grid() {
 }
 
 void Grid::SetCenter(Point3f worldPos) {
-    Point3i gridPos(worldPos / Chunk::SIZE / Block::SIZE);
+    Point3i gridPos(worldPos / CHUNK_SIZE / BLOCK_SIZE);
     SetCenter(gridPos);
 }
 
@@ -30,7 +30,6 @@ void Grid::SetCenter(Point3i gridPos) {
     }
 }
 
-
 void Grid::LoadNewChunks() {
     Point3i min = centerPos - gridSize;
     Point3i max = centerPos + gridSize;
@@ -38,7 +37,7 @@ void Grid::LoadNewChunks() {
 
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
-            int32_t maxZ = std::min(2 + CalculateHeight(Point2i(x, y) * Point2i(Chunk::SIZE), heightNoise) / Chunk::SIZE, max[2]);
+            int32_t maxZ = std::min(2 + architect.GetGlobalHeight(Point2i(x, y), Point2i(CHUNK_SIZE / 2)) / CHUNK_SIZE, max[2]);
             for (auto z = min[2]; z < maxZ; z++) {
                 Point3i p(x, y, z);
                 if (loadedChunks.find(p) == loadedChunks.end()) {

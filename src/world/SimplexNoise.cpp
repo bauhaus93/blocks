@@ -121,19 +121,18 @@ double SimplexNoise::GetNoise(double x, double y) const{
     return 70.0 * (n0 + n1 + n2);
 }
 
-double SimplexNoise::GetOctavedNoise(int x, int y,
+double SimplexNoise::GetOctavedNoise(Point2i pos,
                                      int octaves,
                                      double roughness,
                                      double scale) const {
-    x += std::numeric_limits<int>::max() / 2;
-    y += std::numeric_limits<int>::max() / 2;
+    pos += static_cast<int32_t>(std::numeric_limits<int32_t>::max() / 2);
     double sum = 0;
     double frequency = scale;
     double weight = 1;
     double weightSum = 0;
 
     for(int octave = 0; octave < octaves; octave++){
-        sum +=  GetNoise(x * frequency, y * frequency) * weight;
+        sum +=  GetNoise(pos[0] * frequency, pos[1] * frequency) * weight;
         frequency *= 2;
         weightSum += weight;
         weight *= roughness;

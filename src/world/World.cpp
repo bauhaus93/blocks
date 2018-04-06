@@ -6,7 +6,8 @@ namespace mc::world {
 
 World::World():
     camera { Point3f(4.0f, 4.0f, 0.0f), Point3f(0.0f, 0.0f, 0.0f) },
-    grid { 10 } {
+    architect { },
+    grid { 10, architect } {
     INFO("Creating world");
     grid.SetCenter(camera.GetPosition());
 }

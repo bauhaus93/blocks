@@ -13,8 +13,8 @@
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
 #include "world/Octree.hpp"
-#include "world/SimplexNoise.hpp"
-#include "world/HeightCalculation.hpp"
+#include "world/Architect.hpp"
+#include "world/Size.hpp"
 
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
@@ -25,7 +25,7 @@ namespace mc::world::chunk {
 class Grid {
 
  public:
-    explicit        Grid(int32_t chunkDrawDistance);
+    explicit        Grid(int32_t chunkDrawDistance, const Architect& architect_);
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);
@@ -40,8 +40,8 @@ class Grid {
     std::vector<Point3i> CreateVisibleChunkPosVec() const;
 
     Point3i                     gridSize;
+    const Architect&            architect;
     Point3i                     centerPos;
-    SimplexNoise                heightNoise;
     std::map<Point3i, Chunk>    loadedChunks;
     std::map<Point2i, int32_t>  heightEstaminations;
     ChunkLoader                 chunkLoader;

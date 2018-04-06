@@ -5,14 +5,14 @@
 namespace mc::world::chunk {
 
 static Chunk CreateChunk(Point3i pos,
-                  const SimplexNoise& heightNoise);
+                  const Architect& architect);
 
-ChunkLoader::ChunkLoader(uint32_t maxThreads_, const SimplexNoise& heightNoise_):
+ChunkLoader::ChunkLoader(uint32_t maxThreads_, const Architect& architect_):
     stop { false },
     pendingMutex { },
     finishedMutex { },
     maxThreads { maxThreads_ },
-    heightNoise { heightNoise_ },
+    architect { architect_ },
     controlThread { nullptr },
     generationThreads { },
     finishedChunks { } {
@@ -109,7 +109,7 @@ void ChunkLoader::CreateGenerationThreads() {
         std::unique_ptr<std::future<Chunk>> fut =
             std::make_unique<std::future<Chunk>>(std::async(
                 CreateChunk,
-                *iter, std::cref(heightNoise)
+                *iter, std::cref(architect)
             )
         );
         generationThreads.push_back(std::move(fut));
@@ -119,12 +119,10 @@ void ChunkLoader::CreateGenerationThreads() {
 }
 
 static Chunk CreateChunk(Point3i pos,
-                  const SimplexNoise& heightNoise) {
+                  const Architect& architect) {
     Chunk chunk { pos };
-    chunk.Generate(heightNoise);
+    chunk.Generate(architect);
     return chunk;
 }
-
-
 
 }   // namespace mc::world::chunk
