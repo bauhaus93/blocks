@@ -5,7 +5,7 @@
 namespace mc::world {
 
 World::World():
-    camera { Point3f(4.0f, 4.0f, 0.0f), Point3f(0.0f, 0.0f, 0.0f) },
+    camera { Point3f(0.0f, 0.0f, 250.0f), Point3f(0.0f, 0.0f, 0.0f) },
     architect { },
     grid { 10, architect } {
     INFO("Creating world");

@@ -18,7 +18,7 @@ Architect::Architect(uint32_t seed_):
 
 int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) const {
     Point2i globalPos = GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]), localPos);
-    return (GetGlobalHeight(globalPos) - chunkPos[2] * CHUNK_SIZE) - 1;
+    return std::min(CHUNK_SIZE - 1, (GetGlobalHeight(globalPos) - chunkPos[2] * CHUNK_SIZE) - 1);
 
 }
 

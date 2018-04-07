@@ -187,22 +187,11 @@ static void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
                       const Architect& architect) {
 
-
-    int32_t chunkMinHeight = chunkPos[2] * CHUNK_SIZE;    //incl
-    int32_t chunkMaxHeight = chunkMinHeight + CHUNK_SIZE; //excl
     int32_t* currHeight = &height[0];
 
     for (auto y = 0; y < CHUNK_SIZE; y++) {
         for (auto x = 0; x < CHUNK_SIZE; x++) {
             *currHeight = architect.GetChunkRelativeHeight(chunkPos, Point2i(x, y));
-
-            if (*currHeight >= chunkMinHeight && *currHeight < chunkMaxHeight) {
-                *currHeight -= chunkMinHeight;       // part air/underground col
-            } else if (*currHeight >= chunkMaxHeight) {
-                *currHeight = CHUNK_SIZE - 1;      // full underground col
-            } else {
-                *currHeight = -1;                     // full air col
-            }
             currHeight++;
         }
     }
