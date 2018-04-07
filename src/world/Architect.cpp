@@ -28,8 +28,8 @@ int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
     constexpr double MIN_HEIGHT = 1.0;
     constexpr double MAX_HEIGHT = 100.0;
     constexpr double OCTAVES = 6;
-    constexpr double ROUGHNESS = 0.01;
-    constexpr double SCALE = 0.005;
+    constexpr double ROUGHNESS = 0.5;
+    constexpr double SCALE = 0.0025;
     double normalizedNoise = (1.0 + heightNoise.GetOctavedNoise(globalPos, OCTAVES, ROUGHNESS, SCALE)) / 2.0;
     return static_cast<int32_t>(MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * normalizedNoise);
 }

@@ -27,6 +27,7 @@ class Mesh {
                 Mesh(Mesh&& other);
     Mesh&       operator=(Mesh&& other);
                 ~Mesh();
+    std::size_t GetTriangleCount() const { return triangles.size(); }
     void        Draw();
 
  private:

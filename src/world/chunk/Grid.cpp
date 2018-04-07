@@ -37,8 +37,10 @@ void Grid::LoadNewChunks() {
 
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
-            int32_t maxZ = std::min(2 + architect.GetGlobalHeight(Point2i(x, y), Point2i(CHUNK_SIZE / 2)) / CHUNK_SIZE, max[2]);
-            for (auto z = min[2]; z < maxZ; z++) {
+            int32_t globHeight = architect.GetGlobalHeight(Point2i(x, y), Point2i(CHUNK_SIZE / 2));
+            int32_t minZ = std::max(globHeight / CHUNK_SIZE - 1, min[2]);
+            int32_t maxZ = std::min(globHeight / CHUNK_SIZE + 2, max[2]);
+            for (auto z = minZ; z < maxZ; z++) {
                 Point3i p(x, y, z);
                 if (loadedChunks.find(p) == loadedChunks.end()) {
                     requestChunks.push_back(p);
@@ -75,13 +77,13 @@ void Grid::UpdateChunks() {
         std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
         for (auto iter = std::make_move_iterator(newChunks.begin());
              iter != std::make_move_iterator(newChunks.end()); ++iter) {
-
             loadedChunks.emplace(iter->GetPosition(), *iter);
         }
         /*loadedChunks.insert(std::make_move_iterator(newChunks.begin()),
                             std::make_move_iterator(newChunks.end()));*/
         UpdateChunkBorders();
         //DEBUG("Updating chunks took ", clock.getElapsedTime().asMilliseconds(), "ms");
+        INFO("Currently loaded chunks: ", loadedChunks.size());
     }
 }
 

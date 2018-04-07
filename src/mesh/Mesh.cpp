@@ -15,7 +15,6 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     indexCount { 0 },
     unsavedData { std::make_unique<VBOData>() } {
 
-
     std::map<Vertex, uint32_t> indexedVertices;
 
     for (auto& triangle: triangles) {
