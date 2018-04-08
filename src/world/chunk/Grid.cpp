@@ -79,30 +79,8 @@ void Grid::UpdateChunks() {
              iter != std::make_move_iterator(newChunks.end()); ++iter) {
             loadedChunks.emplace(iter->GetPosition(), *iter);
         }
-        /*loadedChunks.insert(std::make_move_iterator(newChunks.begin()),
-                            std::make_move_iterator(newChunks.end()));*/
-        UpdateChunkBorders();
         //DEBUG("Updating chunks took ", clock.getElapsedTime().asMilliseconds(), "ms");
         INFO("Currently loaded chunks: ", loadedChunks.size());
-    }
-}
-
-void Grid::UpdateChunkBorders() { 
-    for(auto& pair : loadedChunks) {
-        const Point3i& pos = pair.first;
-        Chunk& chunk = pair.second;
-        if (!chunk.IsEmpty() && !chunk.AllNeighboursChecked()) {
-            for (uint8_t i = 0; i < 6; i++) {
-                Direction dir = GetDirection(i);
-                if (!chunk.CheckedNeighbour(dir)) {
-                    Point3i neighbourPos = pos + GetOffset(dir);
-                    auto neighbourFind = loadedChunks.find(neighbourPos);
-                    if (neighbourFind != loadedChunks.end()) {
-                        chunk.UpdateBlockVisibility(dir, neighbourFind->second);
-                    }
-                }
-            }
-        }
     }
 }
 

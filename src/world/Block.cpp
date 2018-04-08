@@ -5,11 +5,13 @@
 namespace mc::world {
 
 
-Block::Block():
+Block::Block(Point3i position_):
+    position { position_ },
     neighbours { } {
 }
 
 Block::Block(const Block& other):
+    position { other.position },
     neighbours { other.neighbours } {
 }
 

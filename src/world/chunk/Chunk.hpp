@@ -38,25 +38,20 @@ class Chunk {
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            IsFull() const;
-    bool            BlockExists(const Point3i& blockPos) const;
-    bool            AllNeighboursChecked() const { return checkedNeighbours.IsFull(); }
-    bool            CheckedNeighbour(Direction dir) const { return checkedNeighbours.Contains(dir); }
-    void            UpdateBlockVisibility(Direction dir, Chunk& neighbour);
     void            CreateMesh();
     bool            operator<(const Chunk& rhs) const;
     bool            operator<(const Point3i& rhsChunkPos) const;
     void            Draw(const Camera& camera) const;
 
  private:
-    void    GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight);
+    void    GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, bool topNeighbour);
     void    CreateNonBorderRenderCandidates();
 
 
-    Point3i         chunkPos;
-    Point3f         origin;
-    glm::mat4       model;
-    NeighbourMask   checkedNeighbours;
-    Map3D<Block>    blocks;
+    Point3i                     chunkPos;
+    Point3f                     origin;
+    glm::mat4                   model;
+    std::vector<Block>          blocks;
     std::unique_ptr<mesh::Mesh> mesh;
 };
 

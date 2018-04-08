@@ -18,13 +18,15 @@ namespace mc::world {
 class Block {
 
  public:
-                Block();
+                Block(Point3i position_);
                 Block(const Block& other);
+    Point3i     GetPosition() const { return position; }
     void        AddNeighbour(Direction dir);
     void        RemoveNeighbour(Direction dir);
     bool        IsVisible() const { return !neighbours.IsFull(); }
     bool        HasNeighbour(Direction dir) const { return neighbours.Contains(dir); }
  private:
+    Point3i             position;
     NeighbourMask       neighbours;
 };
 

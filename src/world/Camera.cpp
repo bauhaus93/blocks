@@ -14,7 +14,7 @@ Camera::Camera(const Point3f& position_, const Point3f& rotation_):
                     glm::vec3 { 0, 0, 0 },
                     glm::vec3 { 0, 0, 1 }) },
     projection { glm::perspective(
-                            glm::radians(90.0f),
+                            glm::radians(75.0f),
                             4.0f / 3.0f,
                             0.5f,
                             1000.0f) },

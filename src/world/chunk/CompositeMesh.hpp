@@ -18,7 +18,7 @@
 
 namespace mc::world::chunk {
 
-std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const Map3D<Block>& blocks);
+std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const std::vector<Block>& blocks);
 
 }       // namespace mc::world::chunk
 
