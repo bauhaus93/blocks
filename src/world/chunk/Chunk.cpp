@@ -134,13 +134,13 @@ void Chunk::UpdateBlockVisibility(Direction dir, Chunk& neighbour) {
         int32_t localW;
         int32_t neighbourW;
     };
-    static constexpr std::array<DirData, 6> dirData { DirData { 0, 2, 1, 0, CHUNK_SIZE - 1 },  //Direction::NORTH
+    static constexpr std::array<DirData, 6> dirData { { DirData { 0, 2, 1, 0, CHUNK_SIZE - 1 },  //Direction::NORTH
                                                       DirData { 1, 2, 0, CHUNK_SIZE - 1, 0 },  //Direction::EAST
                                                       DirData { 0, 2, 1, CHUNK_SIZE - 1, 0 },  //Direction::SOUTH
                                                       DirData { 1, 2, 0, 0, CHUNK_SIZE - 1 },  //Direction::WEST
                                                       DirData { 0, 1, 2, CHUNK_SIZE - 1, 0 },  //Direction::UP
                                                       DirData { 0, 1, 2, 0, CHUNK_SIZE - 1 }   //Direction::DOWN
-                                                    };
+                                                    } };
     assert(!CheckedNeighbour(dir));
     Direction opp = GetOpposite(dir);
     const DirData& currDir = dirData[GetIndex(dir)];
