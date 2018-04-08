@@ -2,7 +2,7 @@
 
 #include "ShaderProgram.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
 static GLuint LoadShader(const std::string& filePath, GLenum shaderType);
 
@@ -128,4 +128,4 @@ static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
 }
 
 
-}   // namespace mc
+}   // namespace mc::graphics

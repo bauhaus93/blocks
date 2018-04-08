@@ -1,20 +1,19 @@
 add_sources(
-  OpenGLError.hpp
-  OpenGLError.cpp
-  Mesh.hpp
-  Mesh.cpp
-  MeshLoader.hpp
-  MeshLoader.cpp
   ShaderProgram.hpp
   ShaderProgram.cpp
-  ShaderError.hpp
-  ShaderError.cpp
-  ShaderProgramError.hpp
-  ShaderProgramError.cpp
   Bitmap.hpp
   Bitmap.cpp
   Texture.hpp
   Texture.cpp
+  TextureAtlas.hpp
+  TextureAtlas.cpp
+  OpenGLError.hpp
+  OpenGLError.cpp
+  ShaderError.hpp
+  ShaderError.cpp
+  ShaderProgramError.hpp
+  ShaderProgramError.cpp
+
 )
 
 add_subdirectory(shader)

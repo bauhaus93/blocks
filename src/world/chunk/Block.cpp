@@ -2,11 +2,12 @@
 
 #include "Block.hpp"
 
-namespace mc::world {
+namespace mc::world::chunk {
 
 
-Block::Block(Point3i position_):
+Block::Block(Point3i position_, BlockType type_):
     position { position_ },
+    type { type_ },
     neighbours { } {
 }
 
@@ -23,4 +24,4 @@ void Block::RemoveNeighbour(Direction dir) {
     neighbours.Remove(dir);
 }
 
-}   // namespace mc::world
+}   // namespace mc::world::chunk

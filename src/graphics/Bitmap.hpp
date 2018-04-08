@@ -6,15 +6,19 @@
 #include <string>
 #include <fstream>
 
-#include "glad/Glad.h"
-
+#include "utility/Point2.hpp"
 #include "logger/GlobalLogger.hpp"
+#include "glad/Glad.h"
 #include "ApplicationError.hpp"
 
-namespace mc {
+namespace mc::graphics {
+
+struct BitmapResult {
+    GLuint id;
+    Point2i size;
+};
+
+BitmapResult ReadBitmap(const std::string& filePath);
 
 
-GLuint ReadBitmap(const std::string& filePath);
-
-
-}   // namespace mc
+}   // namespace mc::graphics

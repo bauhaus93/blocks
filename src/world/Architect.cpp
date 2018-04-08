@@ -16,6 +16,19 @@ Architect::Architect(uint32_t seed_):
     heightNoise { static_cast<uint32_t>(rng()) } {
 }
 
+int32_t Architect::GetAvgGlobalHeight(Point2i chunkPos) const {
+    static const std::array<Point2i, 5> localPos { { Point2i(CHUNK_SIZE / 2),
+                                                     Point2i(0),
+                                                     Point2i(0, CHUNK_SIZE - 1),
+                                                     Point2i(CHUNK_SIZE - 1, 0),
+                                                     Point2i(CHUNK_SIZE - 1) } };
+        int32_t sum = 0;
+    for (uint8_t i = 0; i < 5; i++) {
+        sum += GetGlobalHeight(chunkPos, localPos[i]);
+    }
+    return sum / 5;
+}
+
 int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) const {
     Point2i globalPos = GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]), localPos);
     return std::min(CHUNK_SIZE - 1, (GetGlobalHeight(globalPos) - chunkPos[2] * CHUNK_SIZE) - 1);
@@ -23,7 +36,8 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 }
 
 //solid hilly: 1.0/10.0/6/0.01/0.025
-// smaller SCALE -> the bigger results
+//really nice hilly: 1.0/100.0/6/0.5/0.0025
+// smaller SCALE -> bigger results
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
     constexpr double MIN_HEIGHT = 1.0;
     constexpr double MAX_HEIGHT = 100.0;
@@ -38,9 +52,14 @@ int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
     return GetGlobalHeight(GetGlobalPosition(chunkPos, localPos));
 }
 
+chunk::BlockType Architect::GetBlockType(Point3i chunkPos, Point3i localPos) const {
+    return chunk::BlockType::GRASS;
+}
+
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {
     return chunkPos * CHUNK_SIZE + localPos;
 }
+
 
 
 }   // namespace mc::world

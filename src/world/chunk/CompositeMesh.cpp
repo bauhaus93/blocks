@@ -23,11 +23,15 @@ static std::vector<mesh::Quad> CreateQuads(const std::vector<Block>& blocks) {
         if (block.IsVisible()) {
             if (!block.HasNeighbour(Direction::NORTH)) {
                 static const Point3f normal(0.0f, -1.0f, 0.0f);
+                static const std::array<Point3f, 4> vertOffsets { { Point3f(0.0f),
+                                                                    Point3f(BLOCK_SIZE, 0.0f, 0.0f),
+                                                                    Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
+                                                                    Point3f(0.0f, 0.0f, BLOCK_SIZE) } };
+                Point2f uv = 
                 mesh::Quad quad;
-                quad.SetVertex(0, mesh::Vertex(pos, normal));
-                quad.SetVertex(1, mesh::Vertex(pos + Point3f(BLOCK_SIZE, 0.0f, 0.0f), normal));
-                quad.SetVertex(2, mesh::Vertex(pos + Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE), normal));
-                quad.SetVertex(3, mesh::Vertex(pos + Point3f(0.0f, 0.0f, BLOCK_SIZE), normal));
+                for (uint8_t i = 0; i < 4; i++) {
+                    quad.SetVertex(i, mesh::Vertex(pos + vertOffsets[i], normal));
+                }
                 quads.emplace_back(std::move(quad));
             }
             if (!block.HasNeighbour(Direction::EAST)) {

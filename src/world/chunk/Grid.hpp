@@ -8,14 +8,15 @@
 #include <algorithm>
 #include <array>
 
-#include "ApplicationError.hpp"
+
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
+#include "graphics/TextureAtlas.hpp"
 #include "world/Octree.hpp"
 #include "world/Architect.hpp"
 #include "world/Size.hpp"
-
+#include "ApplicationError.hpp"
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
 
@@ -24,7 +25,7 @@ namespace mc::world::chunk {
 class Grid {
 
  public:
-    explicit        Grid(int32_t chunkDrawDistance, const Architect& architect_);
+    explicit        Grid(int32_t chunkDrawDistance, const Architect& architect_, const graphics::TextureAtlas& atlas);
                     ~Grid();
 
     void            SetCenter(Point3f worldPos);

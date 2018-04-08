@@ -4,7 +4,7 @@
 
 namespace mc::world {
 
-ShaderProgram LoadShader();
+static graphics::ShaderProgram LoadShader();
 
 Camera::Camera(const Point3f& position_, const Point3f& rotation_):
     Entity(position_, rotation_),
@@ -69,8 +69,8 @@ void Camera::Rotate(const Point3f& offset) {
     UpdateView();
 }
 
-ShaderProgram LoadShader() {
-    ShaderProgram program;
+static graphics::ShaderProgram LoadShader() {
+    graphics::ShaderProgram program;
     program.AddVertexShader("shader/VertexShader.glsl");
     program.AddFragmentShader("shader/FragmentShader.glsl");
     program.Link();

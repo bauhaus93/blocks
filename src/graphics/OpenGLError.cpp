@@ -2,6 +2,23 @@
 
 #include "OpenGLError.hpp"
 
+
+namespace mc::graphics {
+
+static std::string GetErrorString();
+
+OpenGLError::OpenGLError(const std::string& error,
+                         const std::string& function):
+    ApplicationError(error, function, GetErrorString()) {
+
+}
+
+OpenGLError::OpenGLError(const std::string& error,
+                         const std::string& function,
+                         const std::string& description):
+    ApplicationError(error, function, description) {
+}
+
 static std::string GetErrorString() {
     switch(glGetError()) {
     case GL_NO_ERROR:           return "GL_NO_ERROR";
@@ -14,19 +31,4 @@ static std::string GetErrorString() {
     }
 }
 
-namespace mc {
-
-OpenGLError::OpenGLError(const std::string& error,
-                         const std::string& function):
-    ApplicationError(error, function, GetErrorString()) {
-
-}
-
-OpenGLError::OpenGLError(const std::string& error,
-                         const std::string& function,
-                         const std::string& description):
-    ApplicationError(error, function, description) {
-
-}
-
-}   // namespace mc
+}   // namespace mc::graphics

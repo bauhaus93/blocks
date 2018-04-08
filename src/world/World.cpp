@@ -5,10 +5,12 @@
 namespace mc::world {
 
 World::World():
+    atlas { "data/atlas.bmp", Point2f(32.0f) },
     camera { Point3f(0.0f, 0.0f, 400.0f), Point3f(0.0f, 0.0f, 0.0f) },
     architect { },
-    grid { 40, architect } {
+    grid { 40, architect, atlas } {
     INFO("Creating world");
+    atlas.MakeActive();
     grid.SetCenter(camera.GetPosition());
 }
 

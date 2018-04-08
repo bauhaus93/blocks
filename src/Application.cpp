@@ -40,7 +40,7 @@ void Application::Run() {
 static bool LoadGlad() {
     INFO("Loading glad");
     if (!gladLoadGL()) {
-        throw OpenGLError("gladLoadGL", __FUNCTION__);
+        throw graphics::OpenGLError("gladLoadGL", __FUNCTION__);
     }
     DEBUG("Glad loaded");
     return true;

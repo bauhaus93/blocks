@@ -9,7 +9,7 @@
 
 #include "ApplicationError.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
 class OpenGLError: public ApplicationError {
 
@@ -26,4 +26,4 @@ class OpenGLError: public ApplicationError {
 
 };
 
-}   // namespace mc
+}   // namespace mc::graphics

@@ -13,7 +13,7 @@
 #include "ShaderError.hpp"
 #include "ShaderProgramError.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
 class ShaderProgram {
 
@@ -42,4 +42,4 @@ class ShaderProgram {
 
 };
 
-}   // namespace mc
+}   // namespace mc::graphics

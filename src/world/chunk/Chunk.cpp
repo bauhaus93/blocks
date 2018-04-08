@@ -86,21 +86,15 @@ void Chunk::Generate(const Architect& architect) {
                     neighbourHeight[3] = architect.GetChunkRelativeHeight(chunkPos + offset, Point2i(x, 0)); 
                 }
 
-                bool topNeighbour = false;
-                if (*currHeight == CHUNK_SIZE - 1) {
-                    Point3i offset = GetOffset(Direction::UP);
-                    if (architect.GetChunkRelativeHeight(chunkPos + offset, Point2i(x, y)) > 0) {
-                        topNeighbour = true;
-                    }
-                }
-                GenerateColumn(Point3i(x, y, *currHeight), neighbourHeight, topNeighbour);
+
+                GenerateColumn(Point3i(x, y, *currHeight), neighbourHeight, architect);
             }
             currHeight++;
         }
     }
 
     if (!IsEmpty()) {
-        CreateMesh();
+        CreateMesh(atlasFieldSize);
     }
    
     TRACE("Generated chunk ", chunkPos,
@@ -109,15 +103,22 @@ void Chunk::Generate(const Architect& architect) {
 }
 
 
-void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, bool topNeighbour) {
+void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, const Architect& architect) {
     Point3i curr(top);
     static Direction neighbours[] = { Direction::WEST,    // -x
                                       Direction::NORTH,   // -y
                                       Direction::EAST,    // +x
                                       Direction::SOUTH }; // +y
+    bool topNeighbour = false;
+    if (curr[2] == CHUNK_SIZE - 1) {
+        Point3i offset = GetOffset(Direction::UP);
+        if (architect.GetChunkRelativeHeight(chunkPos + offset, Point2i(top[0], top[1])) > 0) {
+            topNeighbour = true;
+        }
+    }
 
     while (curr[2] >= 0) {
-        Block block(curr);
+        Block block(curr, architect.GetBlockType(chunkPos, curr));
 
         if (curr[2] != top[2]) {
             block.AddNeighbour(Direction::UP);

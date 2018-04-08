@@ -14,15 +14,13 @@
 #include "utility/Point3.hpp"
 #include "utility/PointTransformation.hpp"
 #include "utility/Defs.hpp"
-#include "world/Block.hpp"
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
 #include "world/Architect.hpp"
 #include "world/Size.hpp"
+#include "Block.hpp"
 #include "CompositeMesh.hpp"
-
-
 
 namespace mc::world::chunk {
 
@@ -44,7 +42,7 @@ class Chunk {
     void            Draw(const Camera& camera) const;
 
  private:
-    void    GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, bool topNeighbour);
+    void    GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, const Architect& architect);
     void    CreateNonBorderRenderCandidates();
 
 

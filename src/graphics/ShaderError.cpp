@@ -2,7 +2,7 @@
 
 #include "ShaderError.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
 static std::string GetShaderError(GLuint shaderId) {
     int logLen;
@@ -16,10 +16,9 @@ static std::string GetShaderError(GLuint shaderId) {
     return msg;
 }
 
-
 ShaderError::ShaderError(const std::string& function, GLuint shaderId):
     OpenGLError { "ShaderError", __FUNCTION__, GetShaderError(shaderId) } {
 }
 
 
-}   // namespace mc
+}   // namespace mc::graphics

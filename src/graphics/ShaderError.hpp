@@ -9,7 +9,7 @@
 
 #include "OpenGLError.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
 class ShaderError: public OpenGLError {
 
@@ -23,4 +23,4 @@ class ShaderError: public OpenGLError {
 
 };
 
-}   // namespace mc
+}   // namespace mc::graphics

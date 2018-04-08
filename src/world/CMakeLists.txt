@@ -10,8 +10,6 @@ add_sources(
   BoundingBox.hpp
   BoundingBox.cpp
   Intersection.hpp
-  Block.hpp
-  Block.cpp
   NeighbourMask.hpp
   NeighbourMask.cpp
   Direction.hpp

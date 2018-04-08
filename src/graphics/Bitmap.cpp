@@ -2,23 +2,11 @@
 
 #include "Bitmap.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
-static GLuint CreateTexture(const char* data, int width, int height) {
-    GLuint id;
+static BitmapResult CreateTexture(const char* data, int width, int height);
 
-    glGenTextures(1, &id);
-    glBindTexture(GL_TEXTURE_2D, id);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    return id;
-}
-
-
-GLuint ReadBitmap(const std::string& filePath) {
+BitmapResult ReadBitmap(const std::string& filePath) {
     std::ifstream fs(filePath, std::ios::in | std::ios::binary);
     DEBUG("Reading bitmap: \"", filePath, "\"");
 
@@ -72,5 +60,17 @@ GLuint ReadBitmap(const std::string& filePath) {
         "Could not open \"" + filePath + "\"");
 }
 
+static BitmapResult CreateTexture(const char* data, int width, int height) {
+    GLuint id;
 
-}   // namespace mc
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    return BitmapResult { id, Point2i(width, height) };
+}
+
+}   // namespace mc::graphics

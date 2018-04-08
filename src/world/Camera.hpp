@@ -35,7 +35,7 @@ class Camera: public Entity {
 
     void            UpdateView();
 
-    ShaderProgram  shader;
+    graphics::ShaderProgram  shader;
     glm::mat4      view;
     glm::mat4      projection;
     Frustum        frustum;

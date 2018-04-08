@@ -4,11 +4,11 @@
 
 namespace mc::world::chunk {
 
-Grid::Grid(int32_t chunkDrawDistance, const Architect& architect_):
+Grid::Grid(int32_t chunkDrawDistance, const Architect& architect_, const graphics::TextureAtlas& atlas):
     gridSize { Point3i(chunkDrawDistance) },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
-    chunkLoader { 50, architect } {
+    chunkLoader { 50, architect, atlas } {
     chunkLoader.Start();
 }
 
@@ -37,7 +37,7 @@ void Grid::LoadNewChunks() {
 
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
-            int32_t globHeight = architect.GetGlobalHeight(Point2i(x, y), Point2i(CHUNK_SIZE / 2));
+            int32_t globHeight = architect.GetAvgGlobalHeight(Point2i(x, y));
             int32_t minZ = std::max(globHeight / CHUNK_SIZE - 1, min[2]);
             int32_t maxZ = std::min(globHeight / CHUNK_SIZE + 2, max[2]);
             for (auto z = minZ; z < maxZ; z++) {

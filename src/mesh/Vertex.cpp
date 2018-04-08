@@ -4,8 +4,9 @@
 
 namespace mc::mesh {
 
-Vertex::Vertex(Point3f pos_, Point3f normal_):
+Vertex::Vertex(Point3f pos_, Point2f uv_, Point3f normal_):
     pos { pos_ },
+    uv { uv_ },
     normal { normal_ } {
 }
 
@@ -14,6 +15,13 @@ bool Vertex::operator<(const Vertex& other) const {
         if (pos[i] < other.pos[i]) {
             return true;
         } else if (pos[i] > other.pos[i]) {
+            return false;
+        }
+    }
+    for (uint8_t i = 0; i < 2; i++) {
+        if (uv[i] < other.uv[i]) {
+            return true;
+        } else if (uv[i] > other.uv[i]) {
             return false;
         }
     }
@@ -29,6 +37,10 @@ bool Vertex::operator<(const Vertex& other) const {
 
 glm::vec3 Vertex::GetGlmPos() const {
     return glm::vec3(pos[0], pos[1], pos[2]);
+}
+
+glm::vec2 Vertex::GetGlmUV() const {
+    return glm::vec2(uv[0], uv[1]);
 }
 
 glm::vec3 Vertex::GetGlmNormal() const {

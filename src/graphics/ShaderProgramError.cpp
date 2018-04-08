@@ -2,7 +2,7 @@
 
 #include "ShaderProgramError.hpp"
 
-namespace mc {
+namespace mc::graphics {
 
 static std::string GetProgramError(GLuint programId) {
     int logLen;
@@ -29,4 +29,4 @@ ShaderProgramError::ShaderProgramError(const std::string& function,
 }
 
 
-}   // namespace mc
+}   // namespace mc::graphics
