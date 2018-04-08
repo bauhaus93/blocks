@@ -7,6 +7,5 @@ add_sources(
   Grid.cpp
   CompositeMesh.hpp
   CompositeMesh.cpp
-  PointChunkCmp.hpp
 )
 

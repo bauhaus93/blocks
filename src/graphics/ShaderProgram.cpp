@@ -31,7 +31,7 @@ void ShaderProgram::AddFragmentShader(const std::string& filePath) {
 }
 
 void ShaderProgram::Link() {
-    INFO("Linking shader program");
+    DEBUG("Linking shader program");
 
     LinkSetup();
 
@@ -105,9 +105,9 @@ static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
     GLuint id = glCreateShader(shaderType);
 
     switch (shaderType) {
-    case GL_VERTEX_SHADER: INFO("Compiling vertex shader: \"", filePath, "\"");  break;
-    case GL_FRAGMENT_SHADER: INFO("Compiling fragment shader: \"", filePath, "\"");  break;
-    default: INFO("Compiling shader: \"", filePath, "\"");   break;
+    case GL_VERTEX_SHADER: DEBUG("Compiling vertex shader: \"", filePath, "\"");  break;
+    case GL_FRAGMENT_SHADER: DEBUG("Compiling fragment shader: \"", filePath, "\"");  break;
+    default: DEBUG("Compiling shader: \"", filePath, "\"");   break;
     }
 
     std::string code = ReadFile(filePath);

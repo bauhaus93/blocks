@@ -8,7 +8,7 @@ Grid::Grid(int32_t chunkDrawDistance, const Architect& architect_):
     gridSize { Point3i(chunkDrawDistance) },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
-    chunkLoader { 10, architect } {
+    chunkLoader { 50, architect } {
     chunkLoader.Start();
 }
 
@@ -80,7 +80,6 @@ void Grid::UpdateChunks() {
             loadedChunks.emplace(iter->GetPosition(), *iter);
         }
         //DEBUG("Updating chunks took ", clock.getElapsedTime().asMilliseconds(), "ms");
-        INFO("Currently loaded chunks: ", loadedChunks.size());
     }
 }
 

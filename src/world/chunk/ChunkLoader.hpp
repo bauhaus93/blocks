@@ -18,8 +18,6 @@
 #include "ApplicationError.hpp"
 #include "Chunk.hpp"
 
-#include "PointChunkCmp.hpp"
-
 namespace mc::world::chunk {
 
 typedef std::list<std::unique_ptr<std::future<Chunk>>> ChunkFutures;

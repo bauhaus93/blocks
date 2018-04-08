@@ -18,7 +18,6 @@
 
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
-#include "PointChunkCmp.hpp"
 
 namespace mc::world::chunk {
 
