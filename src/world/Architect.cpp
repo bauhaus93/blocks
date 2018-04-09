@@ -53,7 +53,7 @@ int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
 }
 
 chunk::BlockType Architect::GetBlockType(Point3i chunkPos, Point3i localPos) const {
-    return chunk::BlockType::MUD;
+    return chunk::BlockType::GRASS;
 }
 
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {

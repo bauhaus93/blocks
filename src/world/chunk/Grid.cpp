@@ -27,7 +27,7 @@ void Grid::GivePositionUpdate(Point3i gridPos) {
     for (uint8_t i = 0; i < 3; i++) {
         if (abs(diff[i]) >= refreshDistance) {
             centerPos = gridPos;
-            INFO("New center chunk, ", centerPos, ", ", loadedChunks.size(), " chunks loaded");
+            INFO("New center chunk: ", centerPos, ", active chunks: ", loadedChunks.size());
             UnloadOldChunks();
             LoadNewChunks();
         }
@@ -75,7 +75,7 @@ void Grid::UnloadOldChunks() {
     DEBUG("Unloading ", unloadCount, " chunks");
 }
 
-void Grid::UpdateChunks() {
+void Grid::Update() {
     if (chunkLoader.HasFinishedChunks()) {
         //sf::Clock clock;
         std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();

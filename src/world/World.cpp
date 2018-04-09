@@ -20,7 +20,7 @@ World::~World() {
 
 void World::Tick() {
     grid.GivePositionUpdate(camera.GetPosition());
-    grid.UpdateChunks();
+    grid.Update();
 }
 
 void World::Draw() const {

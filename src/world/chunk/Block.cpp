@@ -13,6 +13,7 @@ Block::Block(Point3i position_, BlockType type_):
 
 Block::Block(const Block& other):
     position { other.position },
+    type { other.type },
     neighbours { other.neighbours } {
 }
 

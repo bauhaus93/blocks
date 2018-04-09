@@ -39,6 +39,7 @@ void ChunkLoader::RequestChunks(const std::vector<Point3i>& requestedChunkPos) {
     pendingChunkPos.insert(pendingChunkPos.end(), requestedChunkPos.begin(), requestedChunkPos.end());
     pendingChunkPos.sort();
     pendingChunkPos.unique();
+    INFO("Chunks in loading queue: ", pendingChunkPos.size());
     pendingMutex.unlock();
 }
 
