@@ -47,5 +47,14 @@ glm::vec3 Vertex::GetGlmNormal() const {
     return glm::vec3(normal[0], normal[1], normal[2]);
 }
 
+std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
+    os << "Vertex(";
+    os << "pos = (" << vertex.GetPos() << ")";
+    os << ", uv = (" << vertex.GetUV() << ")";
+    os << ", normal = (" << vertex.GetNormal() << ")";
+    os << ")";
+    return os;
+}
+
 }       // namespace mc::mesh
 

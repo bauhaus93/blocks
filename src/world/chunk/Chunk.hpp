@@ -14,6 +14,7 @@
 #include "utility/Point3.hpp"
 #include "utility/PointTransformation.hpp"
 #include "utility/Defs.hpp"
+#include "graphics/TextureAtlas.hpp"
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
@@ -32,19 +33,20 @@ class Chunk {
                     Chunk(Chunk&& other);
     Chunk&          operator=(Chunk&& other);
 
-    void            Generate(const Architect& architect);
+    void            Generate(const Architect& architect, const graphics::TextureAtlas& atlas);
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            IsFull() const;
-    void            CreateMesh();
+    void            CreateMesh(const graphics::TextureAtlas& atlas);
     bool            operator<(const Chunk& rhs) const;
     bool            operator<(const Point3i& rhsChunkPos) const;
     void            Draw(const Camera& camera) const;
 
  private:
-    void    GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, const Architect& architect);
+    void    GenerateColumn(Point3i top,
+                           const std::array<int32_t, 4>& neighbourHeight,
+                           const Architect& architect);
     void    CreateNonBorderRenderCandidates();
-
 
     Point3i                     chunkPos;
     Point3f                     origin;

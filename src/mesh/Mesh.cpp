@@ -9,7 +9,7 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     triangles { std::move(triangles_) },
     vao { 0 },
     vertexBuffer { 0 },
-    //uvBuffer { 0 },
+    uvBuffer { 0 },
     normalBuffer { 0 },
     indexBuffer { 0 },
     indexCount { 0 },
@@ -23,6 +23,7 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
             auto iter = indexedVertices.find(vert);
             if (iter == indexedVertices.end()) {
                 unsavedData->vertices.push_back(vert.GetGlmPos());
+                unsavedData->uvs.push_back(vert.GetGlmUV());
                 unsavedData->normals.push_back(vert.GetGlmNormal());
                 uint32_t index = static_cast<uint32_t>(unsavedData->vertices.size() - 1);
                 unsavedData->indices.push_back(index);
@@ -32,7 +33,6 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
             }
         }
     }
-
     indexCount = unsavedData->indices.size();
 }
 
@@ -40,6 +40,7 @@ Mesh::Mesh(Mesh&& other):
     triangles { std::move(other.triangles) },
     vao { other.vao },
     vertexBuffer { other.vertexBuffer },
+    uvBuffer { other.uvBuffer },
     normalBuffer { other.normalBuffer },
     indexBuffer { other.indexBuffer },
     indexCount { other.indexCount },
@@ -53,22 +54,26 @@ Mesh::Mesh(Mesh&& other):
 Mesh& Mesh::operator=(Mesh&& other) {
     assert(vao == 0);
     assert(vertexBuffer == 0);
+    assert(uvBuffer == 0);
     assert(normalBuffer == 0);
     assert(indexBuffer == 0);
     triangles = std::move(other.triangles);
     vao = other.vao;
     vertexBuffer = other.vertexBuffer;
+    uvBuffer = other.uvBuffer;
     normalBuffer = other.normalBuffer;
     indexBuffer = other.indexBuffer;
     indexCount = other.indexCount;
     unsavedData = std::move(other.unsavedData);
     other.vao = 0;
     other.vertexBuffer = 0;
+    other.uvBuffer = 0;
     other.normalBuffer = 0;
     other.indexBuffer = 0;
     other.unsavedData = nullptr;
     assert(vao != 0);
     assert(vertexBuffer != 0);
+    assert(uvBuffer != 0);
     assert(normalBuffer != 0);
     assert(indexBuffer != 0);
     return *this; 
@@ -81,6 +86,9 @@ Mesh::~Mesh() {
     if (normalBuffer != 0) {
         glDeleteBuffers(1, &normalBuffer);
     }
+    if (uvBuffer != 0) {
+        glDeleteBuffers(1, &uvBuffer);
+    }
     if (vertexBuffer != 0) {
         glDeleteBuffers(1, &vertexBuffer);
     }
@@ -91,8 +99,9 @@ Mesh::~Mesh() {
 
 void Mesh::LoadVBOs() {
     assert(unsavedData != nullptr);
-    assert(vertexBuffer == 0);  //for now
-    assert(normalBuffer == 0);  //will check later, what is needed
+    assert(vertexBuffer == 0);
+    assert(uvBuffer == 0);
+    assert(normalBuffer == 0);
     assert(indexBuffer == 0);
 
     glGenBuffers(1, &vertexBuffer);
@@ -102,7 +111,16 @@ void Mesh::LoadVBOs() {
         unsavedData->vertices.size() * sizeof(glm::vec3),
         unsavedData->vertices.data(),
         GL_STATIC_DRAW
-    );    
+    );
+
+    glGenBuffers(1, &uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        unsavedData->uvs.size() * sizeof(glm::vec2),
+        unsavedData->uvs.data(),
+        GL_STATIC_DRAW
+    );  
 
     glGenBuffers(1, &normalBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
@@ -126,9 +144,10 @@ void Mesh::LoadVBOs() {
 
 void Mesh::LoadVAO() {
     assert(vertexBuffer != 0);
+    assert(uvBuffer != 0);
     assert(normalBuffer != 0);
     assert(indexBuffer != 0);
-    assert(vao == 0);   //will make recreation later
+    assert(vao == 0);
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -145,9 +164,20 @@ void Mesh::LoadVAO() {
     );
 
     glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
     glVertexAttribPointer(
         1,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        nullptr
+    );
+
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+    glVertexAttribPointer(
+        2,
         3,
         GL_FLOAT,
         GL_FALSE,

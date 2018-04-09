@@ -5,10 +5,10 @@
 namespace mc::mesh {
 
 Quad::Quad():
-    vertex { { Vertex { Point3f(0.0f), Point3f(0.0f) },
-               Vertex { Point3f(0.0f), Point3f(0.0f) },
-               Vertex { Point3f(0.0f), Point3f(0.0f) },
-               Vertex { Point3f(0.0f), Point3f(0.0f) } } }  {
+    vertex { { Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) },
+               Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) },
+               Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) },
+               Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) } } }  {
 }
 
 Quad::Quad(Quad&& other):
@@ -25,6 +25,11 @@ void Quad::SetVertex(uint8_t index, Vertex vert) {
     vertex[index] = vert;
 }
 
+const Vertex& Quad::GetVertex(uint8_t index) const {
+    assert(index < 4);
+    return vertex[index];
+}
+
 Triangle Quad::GetFirstTriangle() const {
     Triangle t;
     t.SetVertex(0, vertex[0]);
@@ -39,6 +44,17 @@ Triangle Quad::GetSecondTriangle() const {
     t.SetVertex(1, vertex[3]);
     t.SetVertex(2, vertex[0]);
     return t;
+}
+
+std::ostream& operator<<(std::ostream& os, const Quad& quad) {
+    os << "Quad: ";
+    for (uint8_t i = 0; i < 4; i++) {
+        os << quad.GetVertex(i);
+        if (i != 3) {
+            os << ", ";
+        }
+    }
+    return os;
 }
 
 

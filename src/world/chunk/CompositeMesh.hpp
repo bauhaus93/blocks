@@ -9,6 +9,7 @@
 #include "utility/Point3.hpp"
 #include "world/Direction.hpp"
 #include "world/Size.hpp"
+#include "graphics/TextureAtlas.hpp"
 #include "mesh/Mesh.hpp"
 #include "mesh/Vertex.hpp"
 #include "mesh/Quad.hpp"
@@ -16,9 +17,10 @@
 #include "Block.hpp"
 #include "BlockType.hpp"
 
+
 namespace mc::world::chunk {
 
-std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const std::vector<Block>& blocks);
+std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const std::vector<Block>& blocks, const graphics::TextureAtlas& atlas);
 
 }       // namespace mc::world::chunk
 

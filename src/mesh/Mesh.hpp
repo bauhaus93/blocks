@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "logger/GlobalLogger.hpp"
@@ -16,9 +17,10 @@
 namespace mc::mesh {
 
 struct VBOData {
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-    std::vector<uint32_t> indices;
+    std::vector<glm::vec3>  vertices;
+    std::vector<glm::vec2>  uvs;
+    std::vector<glm::vec3>  normals;
+    std::vector<uint32_t>   indices;
 };
 
 class Mesh {
@@ -39,6 +41,7 @@ class Mesh {
 
     GLuint      vao;
     GLuint      vertexBuffer;
+    GLuint      uvBuffer;
     GLuint      normalBuffer;
     GLuint      indexBuffer;
     uint32_t    indexCount;

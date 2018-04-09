@@ -46,7 +46,7 @@ bool Chunk::operator<(const Chunk& rhs) const {
     return GetPosition() < rhs.GetPosition();
 }
 
-void Chunk::Generate(const Architect& architect) {
+void Chunk::Generate(const Architect& architect, const graphics::TextureAtlas& atlas) {
     sf::Clock clock;
 
     HeightArray relativeHeight;
@@ -94,7 +94,7 @@ void Chunk::Generate(const Architect& architect) {
     }
 
     if (!IsEmpty()) {
-        CreateMesh(atlasFieldSize);
+        CreateMesh(atlas);
     }
    
     TRACE("Generated chunk ", chunkPos,
@@ -103,7 +103,9 @@ void Chunk::Generate(const Architect& architect) {
 }
 
 
-void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourHeight, const Architect& architect) {
+void Chunk::GenerateColumn(Point3i top,
+                           const std::array<int32_t, 4>& neighbourHeight,
+                           const Architect& architect) {
     Point3i curr(top);
     static Direction neighbours[] = { Direction::WEST,    // -x
                                       Direction::NORTH,   // -y
@@ -139,8 +141,8 @@ void Chunk::GenerateColumn(Point3i top, const std::array<int32_t, 4>& neighbourH
     }
 }
 
-void Chunk::CreateMesh() {
-    mesh = CreateCompositeMesh(blocks);
+void Chunk::CreateMesh(const graphics::TextureAtlas& atlas) {
+    mesh = CreateCompositeMesh(blocks, atlas);
 }
 
 void Chunk::Draw(const Camera& camera) const {

@@ -10,8 +10,8 @@ ShaderProgram::ShaderProgram():
     programId { glCreateProgram() },
     vertexShader { 0 },
     fragmentShader { 0 },
-    mvpHandle { 0 } {
-    //uniformTexture { 0 } {
+    mvpHandle { 0 },
+    uniformTexture { 0 } {
     INFO("Creating shader program");
 }
 
@@ -47,7 +47,7 @@ void ShaderProgram::Link() {
     DEBUG("Linked shader program");
 
     LoadMVPHandle();
-    //LoadUniformTexture();
+    LoadUniformTexture();
 }
 
 void ShaderProgram::LoadMVPHandle() {
@@ -58,15 +58,14 @@ void ShaderProgram::LoadMVPHandle() {
     }
 }
 
-/*void ShaderProgram::LoadUniformTexture() {
+void ShaderProgram::LoadUniformTexture() {
     uniformTexture = glGetUniformLocation(programId, "uniformTexture");
     if (uniformTexture == -1) {
         throw ShaderProgramError(__FUNCTION__,
                                  "Could not get uniform texture location");
     }
     glUniform1i(uniformTexture, 0); //TODO maybe move to other location to set each frame
-
-}*/
+}
 
 void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) const {
     glUniformMatrix4fv(mvpHandle, 1, GL_FALSE, &mvp[0][0]);

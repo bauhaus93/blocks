@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <array>
 #include <memory>
 
@@ -16,11 +17,14 @@ class Quad {
             Quad(Quad&& other);
     Quad&   operator=(Quad&& other);
     void    SetVertex(uint8_t index, Vertex vert);
+    const Vertex& GetVertex(uint8_t index) const; 
     Triangle GetFirstTriangle() const;
     Triangle GetSecondTriangle() const;
  private:
     std::array<Vertex, 4> vertex;
 };
+
+std::ostream& operator<<(std::ostream& os, const Quad& quad);
 
 }       // namespace mc::mesh
 

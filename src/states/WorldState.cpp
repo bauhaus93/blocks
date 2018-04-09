@@ -62,24 +62,25 @@ void WorldState::HandleMouseMovement() {
 }
 
 void WorldState::HandleKeys() {
+    constexpr float SPEED = 4.0f;
     glm::vec3 dir = CreateDirection(world.GetCamera().GetRotation());
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         Point3f offset(dir[0], dir[1], dir[2]);
-        world.GetCamera().Move(offset);
+        world.GetCamera().Move(offset * SPEED);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         Point3f offset(-dir[0], -dir[1], -dir[2]);
-        world.GetCamera().Move(offset);
+        world.GetCamera().Move(offset * SPEED);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {  //right is maybe left?!
         glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
         Point3f offset { right[0], right[1], right[2] };
-        world.GetCamera().Move(offset);
+        world.GetCamera().Move(offset * SPEED);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0, 0, 1), dir));
         Point3f offset { -right[0], -right[1], -right[2] };
-        world.GetCamera().Move(offset);
+        world.GetCamera().Move(offset * SPEED);
     }
 }
 

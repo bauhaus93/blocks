@@ -12,7 +12,7 @@ class TextureAtlas {
  public:
             TextureAtlas(const std::string& filePath, Point2f fieldSize_);
     void    MakeActive() const;
-    Point2f GetFieldUV(Point2i fieldPos) const;
+    Point2f GetFieldUV(Point2i fieldPos, uint8_t corner) const;
 
  private:
     const Texture   texture;
