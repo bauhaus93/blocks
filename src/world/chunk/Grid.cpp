@@ -6,6 +6,7 @@ namespace mc::world::chunk {
 
 Grid::Grid(int32_t chunkDrawDistance, const Architect& architect_, const graphics::TextureAtlas& atlas):
     gridSize { Point3i(chunkDrawDistance) },
+    refreshDistance { chunkDrawDistance / 10 },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
     chunkLoader { 50, architect, atlas } {
@@ -22,11 +23,14 @@ void Grid::SetCenter(Point3f worldPos) {
 }
 
 void Grid::SetCenter(Point3i gridPos) {
-    if (centerPos != gridPos) {
-        DEBUG("Changing center chunk, ", centerPos, "-> ", gridPos);
-        centerPos = gridPos;
-        UnloadOldChunks();
-        LoadNewChunks();
+    Point3i diff = centerPos - gridPos;
+    for (uint8_t i = 0; i < 3; i++) {
+        if (abs(diff[i]) >= refreshDistance) {
+            centerPos = gridPos;
+            INFO("New center chunk, ", centerPos, ", ", loadedChunks.size(), " chunks loaded");
+            UnloadOldChunks();
+            LoadNewChunks();
+        }
     }
 }
 

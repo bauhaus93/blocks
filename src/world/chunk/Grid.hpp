@@ -39,6 +39,7 @@ class Grid {
     std::vector<Point3i> CreateVisibleChunkPosVec() const;
 
     Point3i                     gridSize;
+    int32_t                     refreshDistance;
     const Architect&            architect;
     Point3i                     centerPos;
     std::map<Point3i, Chunk>    loadedChunks;
