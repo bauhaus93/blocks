@@ -34,10 +34,11 @@ bool ChunkLoader::HasFinishedChunks() {
     return retVal;
 }
 
-//Currently allowing loaded same chunk multiple times!
 void ChunkLoader::RequestChunks(const std::vector<Point3i>& requestedChunkPos) {
     pendingMutex.lock();
     pendingChunkPos.insert(pendingChunkPos.end(), requestedChunkPos.begin(), requestedChunkPos.end());
+    pendingChunkPos.sort();
+    pendingChunkPos.unique();
     pendingMutex.unlock();
 }
 
