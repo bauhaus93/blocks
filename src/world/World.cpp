@@ -11,7 +11,7 @@ World::World():
     grid { 40, architect, atlas } {
     INFO("Creating world");
     atlas.MakeActive();
-    grid.SetCenter(camera.GetPosition());
+    grid.GivePositionUpdate(camera.GetPosition());
 }
 
 World::~World() {
@@ -19,7 +19,7 @@ World::~World() {
 }
 
 void World::Tick() {
-    grid.SetCenter(camera.GetPosition());
+    grid.GivePositionUpdate(camera.GetPosition());
     grid.UpdateChunks();
 }
 

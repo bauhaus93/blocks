@@ -28,12 +28,12 @@ class Grid {
     explicit        Grid(int32_t chunkDrawDistance, const Architect& architect_, const graphics::TextureAtlas& atlas);
                     ~Grid();
 
-    void            SetCenter(Point3f worldPos);
+    void            GivePositionUpdate(Point3f worldPos);
     void            Draw(const Camera& camera) const;
     void            UpdateChunks();
 
  private:
-    void            SetCenter(Point3i centerPos);
+    void            GivePositionUpdate(Point3i centerPos);
     void            LoadNewChunks();
     void            UnloadOldChunks();
     std::vector<Point3i> CreateVisibleChunkPosVec() const;

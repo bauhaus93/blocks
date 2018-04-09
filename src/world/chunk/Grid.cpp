@@ -17,12 +17,12 @@ Grid::~Grid() {
     chunkLoader.Stop();
 }
 
-void Grid::SetCenter(Point3f worldPos) {
+void Grid::GivePositionUpdate(Point3f worldPos) {
     Point3i gridPos(worldPos / CHUNK_SIZE / BLOCK_SIZE);
-    SetCenter(gridPos);
+    GivePositionUpdate(gridPos);
 }
 
-void Grid::SetCenter(Point3i gridPos) {
+void Grid::GivePositionUpdate(Point3i gridPos) {
     Point3i diff = centerPos - gridPos;
     for (uint8_t i = 0; i < 3; i++) {
         if (abs(diff[i]) >= refreshDistance) {
