@@ -18,7 +18,7 @@ add_sources(
   SimplexNoise.cpp
   Architect.hpp
   Architect.cpp
-  ProtBlock.hpp
+  ProtoBlock.hpp
   ProtoBlock.cpp
   Octree.hpp
   Size.hpp

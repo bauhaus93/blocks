@@ -2,7 +2,7 @@
 
 #include "ProtoBlock.hpp"
 
-namespace mc::world::chunk {
+namespace mc::world {
 
 ProtoBlock::ProtoBlock(BlockType type_):
     type { type_ } {
@@ -19,4 +19,4 @@ uint32_t ProtoBlock::GetFace(Direction face) const {
 }
 
 
-}   // namespace mc::world::chunk
+}   // namespace mc::world

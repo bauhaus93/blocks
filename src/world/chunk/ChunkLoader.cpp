@@ -5,18 +5,15 @@
 namespace mc::world::chunk {
 
 static Chunk CreateChunk(Point3i pos,
-                  const Architect& architect,
-                  const graphics::TextureAtlas& atlas);
+                  const Architect& architect);
 
 ChunkLoader::ChunkLoader(uint32_t maxThreads_,
-                         const Architect& architect_,
-                         const graphics::TextureAtlas& atlas_):
+                         const Architect& architect_):
     stop { false },
     pendingMutex { },
     finishedMutex { },
     maxThreads { maxThreads_ },
     architect { architect_ },
-    atlas { atlas_ },
     controlThread { nullptr },
     generationThreads { },
     finishedChunks { } {
@@ -116,7 +113,7 @@ void ChunkLoader::CreateGenerationThreads() {
             std::make_unique<std::future<Chunk>>(std::async(
                 std::launch::async,
                 CreateChunk,
-                *iter, std::cref(architect), std::cref(atlas)
+                *iter, std::cref(architect)
             )
         );
         generationThreads.push_back(std::move(fut));
@@ -125,9 +122,9 @@ void ChunkLoader::CreateGenerationThreads() {
     pendingMutex.unlock();
 }
 
-static Chunk CreateChunk(Point3i pos, const Architect& architect, const graphics::TextureAtlas& atlas) {
+static Chunk CreateChunk(Point3i pos, const Architect& architect) {
     Chunk chunk { pos };
-    chunk.Generate(architect, atlas);
+    chunk.Generate(architect);
     return chunk;
 }
 

@@ -5,16 +5,10 @@
 namespace mc::world::chunk {
 
 
-Block::Block(Point3i position_, BlockType type_):
+Block::Block(Point3i position_, const ProtoBlock& prototype_):
     position { position_ },
-    type { type_ },
+    protoype { prototype_ },
     neighbours { } {
-}
-
-Block::Block(const Block& other):
-    position { other.position },
-    type { other.type },
-    neighbours { other.neighbours } {
 }
 
 void Block::AddNeighbour(Direction dir) {

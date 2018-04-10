@@ -24,7 +24,8 @@ namespace mc::world::chunk {
 class Grid {
 
  public:
-    explicit        Grid(int32_t chunkDrawDistance, const Architect& architect_, const graphics::TextureAtlas& atlas);
+    explicit        Grid(int32_t chunkDrawDistance,
+                         const Architect& architect_);
                     ~Grid();
 
     void            GivePositionUpdate(Point3f worldPos);
@@ -37,12 +38,12 @@ class Grid {
     void            UnloadOldChunks();
     std::vector<Point3i> CreateVisibleChunkPosVec() const;
 
-    Point3i                     gridSize;
-    int32_t                     refreshDistance;
-    const Architect&            architect;
-    Point3i                     centerPos;
-    std::map<Point3i, Chunk>    loadedChunks;
-    ChunkLoader                 chunkLoader;
+    Point3i                                 gridSize;
+    int32_t                                 refreshDistance;
+    const Architect&                        architect;
+    Point3i                                 centerPos;
+    std::map<Point3i, Chunk>                loadedChunks;
+    ChunkLoader                             chunkLoader;
 
 };
 

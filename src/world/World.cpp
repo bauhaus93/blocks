@@ -4,16 +4,17 @@
 
 namespace mc::world {
 
-const Point2u TEXTURE_SIZE(32);
-const uint32_t ATLAS_DEPTH(1);
+const Point2u TEXTURE_SIZE(32u);
+const uint32_t ATLAS_DEPTH(1u);
 
 World::World():
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
+    protoblocks { },
     camera { Point3f(0.0f, 0.0f, 400.0f), Point3f(0.0f, 0.0f, 0.0f) },
-    architect { },
-    grid { 40, architect, atlas } {
+    architect { protoblocks },
+    grid { 40, architect } {
     INFO("Creating world");
-    LoadAtlas();
+    LoadProtoBlocks();
     grid.GivePositionUpdate(camera.GetPosition());
 }
 
@@ -21,23 +22,26 @@ World::~World() {
     INFO("Destroying world");
 }
 
-void World::LoadAtlas() {
+void World::LoadProtoBlocks() {
     assert(ATLAS_DEPTH == 1);
     std::vector<uint8_t> texData;
     BitmapResult bmp(ReadBitmap("data/atlas.bmp"));
     texData.reserve(TEXTURE_SIZE[0] * TEXTURE_SIZE[1] * 3);
 
     auto bmpIter = bmp.data.begin();
-    for (uint32_t y = 0; y < TEXTURE_SIZE[1]; y++) {
-        for (uint32_t x = 0; x < TEXTURE_SIZE[0]; x++) {
-            auto lineStart = bmpIter;
-            auto lineEnd = bmpIter + TEXTURE_SIZE[0] * 3;
-            texData.insert(texData.end(),
-                           lineStart,
-                           lineEnd);
-            bmpIter = lineEnd;
-        }
+    for (uint32_t line = 0; line < TEXTURE_SIZE[1]; line++) {
+        auto lineStart = bmpIter;
+        auto lineEnd = bmpIter + TEXTURE_SIZE[0] * 3;
+        texData.insert(texData.end(),
+                        lineStart,
+                        lineEnd);
+        bmpIter = lineEnd;
         bmpIter += bmp.size[0] * 3;
+    }
+    uint32_t layer = atlas.AddTextureLayer(texData);
+    auto result = protoblocks.emplace(BlockType::MUD, BlockType::MUD);
+    for (uint8_t i = 0; i < 6; i++) {
+        result.first->second.AddFace(GetDirection(i), layer);
     }
 }
 

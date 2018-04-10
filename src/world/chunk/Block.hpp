@@ -9,24 +9,22 @@
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
-#include "world/BlockType.hpp"
+#include "world/ProtoBlock.hpp"
 
 namespace mc::world::chunk {
 
 class Block {
-
  public:
-                Block(Point3i position_, BlockType type_);
-                Block(const Block& other);
-    Point3i     GetPosition() const { return position; }
-    BlockType   GetType() const { return type; }
-    void        AddNeighbour(Direction dir);
-    void        RemoveNeighbour(Direction dir);
-    bool        IsVisible() const { return !neighbours.IsFull(); }
-    bool        HasNeighbour(Direction dir) const { return neighbours.Contains(dir); }
+                        Block(Point3i position_, const ProtoBlock& prototype_);
+    Point3i             GetPosition() const { return position; }
+    const ProtoBlock&   GetPrototype() const { return protoype; }
+    void                AddNeighbour(Direction dir);
+    void                RemoveNeighbour(Direction dir);
+    bool                IsVisible() const { return !neighbours.IsFull(); }
+    bool                HasNeighbour(Direction dir) const { return neighbours.Contains(dir); }
  private:
     Point3i             position;
-    BlockType           type;
+    const ProtoBlock&   protoype;
     NeighbourMask       neighbours;
 };
 

@@ -30,19 +30,19 @@ class World {
                 World();
                 ~World();
 
-    void        LoadAtlas();
-    
     Camera&     GetCamera() { return camera; }
 
     void        Tick();
     void        Draw() const;
 
  private:
-    const graphics::TextureAtlas    atlas;
+    graphics::TextureAtlas          atlas;
     std::map<BlockType, ProtoBlock> protoblocks;
     Camera                          camera;
     Architect                       architect;
     chunk::Grid                     grid;
+
+    void                            LoadProtoBlocks();
 };
 
 }   // namespace mc::world::world

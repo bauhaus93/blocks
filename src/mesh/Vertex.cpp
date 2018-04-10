@@ -4,7 +4,7 @@
 
 namespace mc::mesh {
 
-Vertex::Vertex(Point3f pos_, Point2f uv_, Point3f normal_):
+Vertex::Vertex(Point3f pos_, Point3f uv_, Point3f normal_):
     pos { pos_ },
     uv { uv_ },
     normal { normal_ } {
@@ -39,8 +39,8 @@ glm::vec3 Vertex::GetGlmPos() const {
     return glm::vec3(pos[0], pos[1], pos[2]);
 }
 
-glm::vec2 Vertex::GetGlmUV() const {
-    return glm::vec2(uv[0], uv[1]);
+glm::vec3 Vertex::GetGlmUV() const {
+    return glm::vec3(uv[0], uv[1], uv[2]);
 }
 
 glm::vec3 Vertex::GetGlmNormal() const {

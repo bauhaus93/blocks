@@ -4,12 +4,13 @@
 
 namespace mc::world::chunk {
 
-Grid::Grid(int32_t chunkDrawDistance, const Architect& architect_, const graphics::TextureAtlas& atlas):
+Grid::Grid(int32_t chunkDrawDistance,
+           const Architect& architect_):
     gridSize { Point3i(chunkDrawDistance) },
     refreshDistance { chunkDrawDistance / 10 },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
-    chunkLoader { 50, architect, atlas } {
+    chunkLoader { 50, architect } {
     chunkLoader.Start();
 }
 

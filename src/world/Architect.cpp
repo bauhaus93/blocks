@@ -6,11 +6,12 @@ namespace mc::world {
 
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos);
 
-Architect::Architect():
-    Architect(static_cast<uint32_t>(std::random_device{}())) {
+Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_):
+    Architect(protoblocks_, static_cast<uint32_t>(std::random_device{}())) {
 }
 
-Architect::Architect(uint32_t seed_):
+Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32_t seed_):
+    protoblocks { protoblocks_ },
     seed { seed_ },
     rng { seed },
     heightNoise { static_cast<uint32_t>(rng()) } {
@@ -54,8 +55,9 @@ int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
     return GetGlobalHeight(GetGlobalPosition(chunkPos, localPos));
 }
 
-BlockType Architect::GetBlockType(Point3i chunkPos, Point3i localPos) const {
-    return BlockType::GRASS;
+const ProtoBlock& Architect::GetBlockPrototype(Point3i chunkPos, Point3i localPos) const {
+    assert(protoblocks.find(BlockType::MUD) != protoblocks.end());
+    return protoblocks.at(BlockType::MUD);
 }
 
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {

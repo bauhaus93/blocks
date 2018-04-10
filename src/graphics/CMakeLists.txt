@@ -1,8 +1,6 @@
 add_sources(
   ShaderProgram.hpp
   ShaderProgram.cpp
-  Texture.hpp
-  Texture.cpp
   TextureAtlas.hpp
   TextureAtlas.cpp
   OpenGLError.hpp

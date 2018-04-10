@@ -33,11 +33,11 @@ class Chunk {
                     Chunk(Chunk&& other);
     Chunk&          operator=(Chunk&& other);
 
-    void            Generate(const Architect& architect, const graphics::TextureAtlas& atlas);
+    void            Generate(const Architect& architect);
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            IsFull() const;
-    void            CreateMesh(const graphics::TextureAtlas& atlas);
+    void            CreateMesh();
     bool            operator<(const Chunk& rhs) const;
     bool            operator<(const Point3i& rhsChunkPos) const;
     void            Draw(const Camera& camera) const;
@@ -46,7 +46,6 @@ class Chunk {
     void    GenerateColumn(Point3i top,
                            const std::array<int32_t, 4>& neighbourHeight,
                            const Architect& architect);
-    void    CreateNonBorderRenderCandidates();
 
     Point3i                     chunkPos;
     Point3f                     origin;

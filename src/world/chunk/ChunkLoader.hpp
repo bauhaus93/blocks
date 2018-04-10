@@ -11,6 +11,7 @@
 #include <cassert>
 #include <algorithm>
 #include <list>
+#include <map>
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
@@ -27,8 +28,7 @@ class ChunkLoader {
 
  public:
     explicit            ChunkLoader(uint32_t maxThreads_,
-                                    const Architect& architect_,
-                                    const graphics::TextureAtlas& atlas_);
+                                    const Architect& architect_);
 
     void                Start();
     void                Stop();
@@ -48,7 +48,6 @@ class ChunkLoader {
     std::mutex                      finishedMutex;
     const uint32_t                  maxThreads;
     const Architect&                architect;
-    const graphics::TextureAtlas&   atlas;
     std::unique_ptr<std::thread>    controlThread;
     ChunkFutures                    generationThreads;
     std::vector<Chunk>              finishedChunks;

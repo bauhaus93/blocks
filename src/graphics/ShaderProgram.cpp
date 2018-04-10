@@ -59,7 +59,7 @@ void ShaderProgram::LoadMVPHandle() {
 }
 
 void ShaderProgram::LoadUniformTexture() {
-    uniformTexture = glGetUniformLocation(programId, "uniformTexture");
+    uniformTexture = glGetUniformLocation(programId, "textureArray");
     if (uniformTexture == -1) {
         throw ShaderProgramError(__FUNCTION__,
                                  "Could not get uniform texture location");

@@ -5,10 +5,10 @@
 namespace mc::mesh {
 
 Quad::Quad():
-    vertex { { Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) },
-               Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) },
-               Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) },
-               Vertex { Point3f(0.0f), Point2f(0.0f), Point3f(0.0f) } } }  {
+    vertex { { Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) },
+               Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) },
+               Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) },
+               Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) } } }  {
 }
 
 Quad::Quad(Quad&& other):

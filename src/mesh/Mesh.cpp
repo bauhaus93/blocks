@@ -117,7 +117,7 @@ void Mesh::LoadVBOs() {
     glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
     glBufferData(
         GL_ARRAY_BUFFER,
-        unsavedData->uvs.size() * sizeof(glm::vec2),
+        unsavedData->uvs.size() * sizeof(glm::vec3),
         unsavedData->uvs.data(),
         GL_STATIC_DRAW
     );  
@@ -167,7 +167,7 @@ void Mesh::LoadVAO() {
     glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
     glVertexAttribPointer(
         1,
-        2,
+        3,
         GL_FLOAT,
         GL_FALSE,
         0,

@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "utility/Point2.hpp"
-
 namespace mc::world {
 
 enum class BlockType {

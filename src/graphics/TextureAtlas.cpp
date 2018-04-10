@@ -33,6 +33,7 @@ void TextureAtlas::MakeActive() {
 
 uint32_t TextureAtlas::AddTextureLayer(std::vector<uint8_t>& textureData) {
     assert(nextLayer < layerCount);
+    //INFO(textureData.size(), " vs", textureSize[0] * textureSize[1] * 3);
     assert(textureData.size() == textureSize[0] * textureSize[1] * 3);
 
     glTexSubImage3D(
