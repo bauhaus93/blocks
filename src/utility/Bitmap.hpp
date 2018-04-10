@@ -8,17 +8,16 @@
 
 #include "utility/Point2.hpp"
 #include "logger/GlobalLogger.hpp"
-#include "glad/Glad.h"
 #include "ApplicationError.hpp"
 
-namespace mc::graphics {
+namespace mc {
 
 struct BitmapResult {
-    GLuint id;
+    std::vector<uint8_t> data;
     Point2i size;
 };
 
 BitmapResult ReadBitmap(const std::string& filePath);
 
 
-}   // namespace mc::graphics
+}   // namespace mc

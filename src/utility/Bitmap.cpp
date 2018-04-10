@@ -2,17 +2,16 @@
 
 #include "Bitmap.hpp"
 
-namespace mc::graphics {
-
-static BitmapResult CreateTexture(const char* data, int width, int height);
+namespace mc {
 
 BitmapResult ReadBitmap(const std::string& filePath) {
+    assert(sizeof(char) == sizeof(uint8_t));
     std::ifstream fs(filePath, std::ios::in | std::ios::binary);
     DEBUG("Reading bitmap: \"", filePath, "\"");
 
     if (fs.is_open()) {
         char header[54];
-        std::vector<char> buffer;
+        std::vector<uint8_t> buffer;
 
         fs.read(header, 54);
         if (fs.gcount() != 54) {
@@ -44,7 +43,7 @@ BitmapResult ReadBitmap(const std::string& filePath) {
         fs.seekg(dataPos, fs.beg);
 
         buffer.resize(imageSize, 0);
-        fs.read(buffer.data(), imageSize);
+        fs.read(reinterpret_cast<char*>(buffer.data()), imageSize);
         if (fs.gcount() != imageSize) {
             throw ApplicationError(
                 "BitmapError",
@@ -52,7 +51,7 @@ BitmapResult ReadBitmap(const std::string& filePath) {
                 "Read only " + std::to_string(fs.gcount()) + " bytes of data, but expected to read" + std::to_string(imageSize));
         }
         DEBUG("Successfully read bitmap");
-        return CreateTexture(buffer.data(), width, height);
+        return BitmapResult { std::move(buffer), Point2i(width, height) };
     }
     throw ApplicationError(
         "BitmapError",
@@ -60,20 +59,4 @@ BitmapResult ReadBitmap(const std::string& filePath) {
         "Could not open \"" + filePath + "\"");
 }
 
-static BitmapResult CreateTexture(const char* data, int width, int height) {
-    GLuint id;
-
-    glGenTextures(1, &id);
-    glBindTexture(GL_TEXTURE_2D, id);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,  GL_NEAREST);
-    //glGenerateMipmap(GL_TEXTURE_2D);
-
-    return BitmapResult { id, Point2i(width, height) };
-}
-
-}   // namespace mc::graphics
+}   // namespace mc

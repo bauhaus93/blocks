@@ -1,6 +1,8 @@
 add_sources(
   FileRead.hpp
   FileRead.cpp
+  Bitmap.hpp
+  Bitmap.cpp
   Defs.hpp
   Point.hpp
   Point2.hpp

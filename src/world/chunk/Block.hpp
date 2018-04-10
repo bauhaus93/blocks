@@ -9,7 +9,7 @@
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
-#include "BlockType.hpp"
+#include "world/BlockType.hpp"
 
 namespace mc::world::chunk {
 

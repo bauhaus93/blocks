@@ -3,15 +3,12 @@
 #pragma once
 
 #include "utility/Point2.hpp"
-#include "world/Direction.hpp"
 
-namespace mc::world::chunk {
+namespace mc::world {
 
 enum class BlockType {
     GRASS,
     MUD
 };
-
-Point2i GetAtlasField(BlockType type, Direction dir);
 
 }   // namespace mc::world::chunk

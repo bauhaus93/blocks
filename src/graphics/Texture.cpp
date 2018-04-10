@@ -12,6 +12,12 @@ Texture::Texture(const std::string& filePath):
     size = result.size;
 }
 
+Texture::~Texture() {
+    if (id != 0) {
+        glDeleteTextures(1, &id);
+    }
+}
+
 Texture::Texture(Texture&& other):
     id { other.id },
     size { other.size } {
@@ -23,12 +29,6 @@ Texture& Texture::operator=(Texture&& other) {
     size = other.size;
     other.id = 0;
     return *this;
-}
-
-Texture::~Texture() {
-    if (id != 0) {
-        glDeleteTextures(1, &id);
-    }
 }
 
 void Texture::MakeActive() const {

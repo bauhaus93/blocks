@@ -1,8 +1,6 @@
 add_sources(
   ShaderProgram.hpp
   ShaderProgram.cpp
-  Bitmap.hpp
-  Bitmap.cpp
   Texture.hpp
   Texture.cpp
   TextureAtlas.hpp
