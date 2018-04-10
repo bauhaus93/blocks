@@ -19,10 +19,10 @@ Point2f TextureAtlas::GetFieldUV(Point2i fieldPos, uint8_t corner) const {
     Point2f fieldPerc = fieldSize / Point2f(texture.GetSize());
     Point2f uv = Point2f(fieldPos) * fieldPerc;
     switch (corner) {
-        case 0:                                     break;
-        case 1: uv += Point2f(0.0f, fieldPerc[1]);   break;
-        case 2: uv += Point2f(fieldPerc[0], 0.0f);   break;
-        case 3: uv += fieldPerc;                     break;
+        case 0:                                      break;
+        case 1: uv += Point2f(fieldPerc[0], 0.0f);   break;
+        case 2: uv += fieldPerc;                     break;
+        case 3: uv += Point2f(0.0f, fieldPerc[1]);   break;
         default:    assert(0);
     }
     return uv;

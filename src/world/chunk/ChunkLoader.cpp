@@ -114,6 +114,7 @@ void ChunkLoader::CreateGenerationThreads() {
         
         std::unique_ptr<std::future<Chunk>> fut =
             std::make_unique<std::future<Chunk>>(std::async(
+                std::launch::async,
                 CreateChunk,
                 *iter, std::cref(architect), std::cref(atlas)
             )
