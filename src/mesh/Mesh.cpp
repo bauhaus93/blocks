@@ -15,6 +15,8 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     indexCount { 0 },
     unsavedData { std::make_unique<VBOData>() } {
 
+    triangles.shrink_to_fit();
+
     std::map<Vertex, uint32_t> indexedVertices;
 
     for (auto& triangle: triangles) {

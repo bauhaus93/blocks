@@ -90,6 +90,7 @@ void Chunk::Generate(const Architect& architect) {
             currHeight++;
         }
     }
+    blocks.shrink_to_fit();
 
     if (!IsEmpty()) {
         CreateMesh();
@@ -141,6 +142,9 @@ void Chunk::GenerateColumn(Point3i top,
 
 void Chunk::CreateMesh() {
     mesh = CreateCompositeMesh(blocks);
+    if (mesh->IsEmpty()) {
+        mesh = nullptr;
+    }
 }
 
 void Chunk::Draw(const Camera& camera) const {

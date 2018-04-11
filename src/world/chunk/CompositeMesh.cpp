@@ -9,12 +9,14 @@ static std::vector<mesh::Triangle> CreateTriangles(std::vector<mesh::Quad> quads
 
 std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const std::vector<Block>& blocks) {
     std::vector<mesh::Triangle> triangles = CreateTriangles(CreateQuads(blocks));
+
     TRACE("Created ", triangles.size(), " triangles for ", blocks.size(), " blocks");
     return std::make_unique<mesh::Mesh>(std::move(triangles));
 }
 
 static std::vector<mesh::Quad> CreateQuads(const std::vector<Block>& blocks) {
     std::vector<mesh::Quad> quads;
+    quads.reserve(blocks.size() * 6);
     static const std::array<std::array<Point3f, 4>, 6> vertexOffset = { {
         // Direction::NORTH
         {   Point3f(0.0f),
@@ -88,6 +90,7 @@ static std::vector<mesh::Quad> CreateQuads(const std::vector<Block>& blocks) {
 
 static std::vector<mesh::Triangle> CreateTriangles(std::vector<mesh::Quad> quads) {
     std::vector<mesh::Triangle> triangles;
+    triangles.reserve(quads.size() * 2);
 
     for (auto& quad: quads) {
         triangles.emplace_back(quad.GetFirstTriangle());
