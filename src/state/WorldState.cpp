@@ -81,9 +81,9 @@ void WorldState::HandleKeys() {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        glm::vec3 right = glm::normalize(glm::cross(dir, glm::vec3(0, 0, 1)));
-        glm::vec3 up = glm::normalize(glm::cross(right, dir));
-        totalOffset += up;
+        //glm::vec3 right = glm::normalize(glm::cross(dir, glm::vec3(0, 0, 1)));
+        //glm::vec3 up = glm::normalize(glm::cross(right, dir));
+        totalOffset += glm::vec3(0.0f, 0.0f, 1.0f);
     }
     
     if (abs(totalOffset[0]) > 0.01f ||
