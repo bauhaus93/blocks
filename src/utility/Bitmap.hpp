@@ -5,19 +5,18 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <cstdint>
+#include <algorithm>
 
 #include "utility/Point2.hpp"
+#include "utility/FileRead.hpp"
 #include "logger/GlobalLogger.hpp"
 #include "ApplicationError.hpp"
+#include "Image.hpp"
 
 namespace mc {
 
-struct BitmapResult {
-    std::vector<uint8_t> data;
-    Point2i size;
-};
-
-BitmapResult ReadBitmap(const std::string& filePath);
+Image ReadBitmap(const std::string& filePath);
 
 
 }   // namespace mc

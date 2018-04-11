@@ -9,6 +9,7 @@
 
 #include "glad/glad.h"
 #include "utility/Point2.hpp"
+#include "utility/Image.hpp"
 
 namespace mc::graphics {
 
@@ -17,7 +18,7 @@ class TextureAtlas {
                 TextureAtlas(Point2u textureSize_, uint32_t layerCount_);
                 ~TextureAtlas();
     void        MakeActive();
-    uint32_t    AddTextureLayer(std::vector<uint8_t>& textureData);
+    uint32_t    AddTextureLayer(const Image& img);
 
  private:
     const Point2u                   textureSize;

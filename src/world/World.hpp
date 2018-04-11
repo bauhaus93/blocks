@@ -12,6 +12,7 @@
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Bitmap.hpp"
+#include "utility/Image.hpp"
 #include "graphics/TextureAtlas.hpp"
 #include "chunk/Grid.hpp"
 

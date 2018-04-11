@@ -31,10 +31,10 @@ void TextureAtlas::MakeActive() {
     glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 }
 
-uint32_t TextureAtlas::AddTextureLayer(std::vector<uint8_t>& textureData) {
+uint32_t TextureAtlas::AddTextureLayer(const Image& img) {
     assert(nextLayer < layerCount);
-    //INFO(textureData.size(), " vs", textureSize[0] * textureSize[1] * 3);
-    assert(textureData.size() == textureSize[0] * textureSize[1] * 3);
+    assert(img.GetDepth() == 24);
+    assert(img.GetSize() == textureSize);
 
     glTexSubImage3D(
         GL_TEXTURE_2D_ARRAY,
@@ -43,7 +43,7 @@ uint32_t TextureAtlas::AddTextureLayer(std::vector<uint8_t>& textureData) {
         static_cast<GLint>(textureSize[0]), static_cast<GLint>(textureSize[1]), 1,
         GL_RGB,
         GL_UNSIGNED_BYTE,
-        textureData.data()
+        img.GetData().data()
     );
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

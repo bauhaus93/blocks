@@ -11,4 +11,5 @@ void main() {
     if (abs(normal.z - 1.0f) > 0.01f) {
         color *= 0.75;
     }
+
 }
