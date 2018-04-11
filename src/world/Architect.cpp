@@ -43,7 +43,7 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 // smaller SCALE -> bigger results
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
     constexpr double MIN_HEIGHT = 1.0;
-    constexpr double MAX_HEIGHT = 500.0;
+    constexpr double MAX_HEIGHT = 100.0;
     constexpr double OCTAVES = 6;
     constexpr double ROUGHNESS = 0.5;
     constexpr double SCALE = 0.0025;
@@ -56,8 +56,10 @@ int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
 }
 
 const ProtoBlock& Architect::GetBlockPrototype(Point3i chunkPos, Point3i localPos) const {
-    assert(protoblocks.find(BlockType::MUD) != protoblocks.end());
-    return protoblocks.at(BlockType::MUD);
+    if (chunkPos[0] % 5 == 0 || chunkPos[1] % 5 == 0) {
+        return protoblocks.at(BlockType::MUD);
+    }
+    return protoblocks.at(BlockType::GRASS);
 }
 
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {

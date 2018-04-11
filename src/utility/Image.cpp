@@ -29,7 +29,7 @@ Image Image::CreateSubImage(Point2u origin, Point2u subSize) const {
     std::vector<uint8_t> subData;
     uint32_t lineSize = size[0] * depth / 8;
     uint32_t subLineSize = subSize[0] * depth / 8;
-    auto start = data.begin() + origin[1] * lineSize + origin[0];
+    auto start = data.begin() + origin[1] * lineSize + origin[0] * depth / 8;
     for (uint32_t i = 0; i < subSize[1]; i++) {
         subData.insert(subData.end(),
                        start,

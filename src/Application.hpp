@@ -13,8 +13,8 @@
 
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
-#include "states/GameState.hpp"
-#include "states/StateStack.hpp"
+#include "state/GameState.hpp"
+#include "state/StateStack.hpp"
 
 namespace mc {
 
