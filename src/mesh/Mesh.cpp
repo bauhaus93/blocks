@@ -36,6 +36,24 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     indexCount = unsavedData->indices.size();
 }
 
+Mesh::~Mesh() {
+    if (indexBuffer != 0) {
+        glDeleteBuffers(1, &indexBuffer);
+    }
+    if (normalBuffer != 0) {
+        glDeleteBuffers(1, &normalBuffer);
+    }
+    if (uvBuffer != 0) {
+        glDeleteBuffers(1, &uvBuffer);
+    }
+    if (vertexBuffer != 0) {
+        glDeleteBuffers(1, &vertexBuffer);
+    }
+    if (vao != 0) {
+        glDeleteVertexArrays(1, &vao);
+    }
+}
+
 Mesh::Mesh(Mesh&& other):
     triangles { std::move(other.triangles) },
     vao { other.vao },
@@ -79,23 +97,7 @@ Mesh& Mesh::operator=(Mesh&& other) {
     return *this; 
 }
 
-Mesh::~Mesh() {
-    if (indexBuffer != 0) {
-        glDeleteBuffers(1, &indexBuffer);
-    }
-    if (normalBuffer != 0) {
-        glDeleteBuffers(1, &normalBuffer);
-    }
-    if (uvBuffer != 0) {
-        glDeleteBuffers(1, &uvBuffer);
-    }
-    if (vertexBuffer != 0) {
-        glDeleteBuffers(1, &vertexBuffer);
-    }
-    if (vao != 0) {
-        glDeleteVertexArrays(1, &vao);
-    }
-}
+
 
 void Mesh::LoadVBOs() {
     assert(unsavedData != nullptr);

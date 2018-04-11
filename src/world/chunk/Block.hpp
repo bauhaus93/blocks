@@ -15,7 +15,7 @@ namespace mc::world::chunk {
 
 class Block {
  public:
-                        Block(Point3i position_, const ProtoBlock& prototype_);
+                        Block(Point3i8 position_, const ProtoBlock& prototype_);
     Point3i             GetPosition() const { return position; }
     const ProtoBlock&   GetPrototype() const { return protoype; }
     void                AddNeighbour(Direction dir);
@@ -23,7 +23,7 @@ class Block {
     bool                IsVisible() const { return !neighbours.IsFull(); }
     bool                HasNeighbour(Direction dir) const { return neighbours.Contains(dir); }
  private:
-    Point3i             position;
+    Point3i8            position;
     const ProtoBlock&   protoype;
     NeighbourMask       neighbours;
 };

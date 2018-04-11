@@ -5,7 +5,7 @@
 namespace mc::world::chunk {
 
 
-Block::Block(Point3i position_, const ProtoBlock& prototype_):
+Block::Block(Point3i8 position_, const ProtoBlock& prototype_):
     position { position_ },
     protoype { prototype_ },
     neighbours { } {

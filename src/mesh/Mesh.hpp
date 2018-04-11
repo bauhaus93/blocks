@@ -26,9 +26,10 @@ struct VBOData {
 class Mesh {
  public:
     explicit    Mesh(std::vector<Triangle> triangles_);
+                ~Mesh();
                 Mesh(Mesh&& other);
     Mesh&       operator=(Mesh&& other);
-                ~Mesh();
+
     std::size_t GetTriangleCount() const { return triangles.size(); }
     void        Draw();
 

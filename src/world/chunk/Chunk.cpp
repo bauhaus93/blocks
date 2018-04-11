@@ -85,8 +85,6 @@ void Chunk::Generate(const Architect& architect) {
                     Point3i offset = GetOffset(Direction::SOUTH);
                     neighbourHeight[3] = architect.GetChunkRelativeHeight(chunkPos + offset, Point2i(x, 0)); 
                 }
-
-
                 GenerateColumn(Point3i(x, y, *currHeight), neighbourHeight, architect);
             }
             currHeight++;
