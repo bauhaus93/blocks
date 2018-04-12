@@ -17,7 +17,7 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     heightNoise { static_cast<uint32_t>(rng()) } {
 }
 
-int32_t Architect::GetAvgGlobalHeight(Point2i chunkPos) const {
+std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) const {
     static const std::array<Point2i, 7> localPos { { Point2i(CHUNK_SIZE / 2),
                                                      Point2i(0),
                                                      Point2i(0, CHUNK_SIZE - 1),
@@ -25,11 +25,14 @@ int32_t Architect::GetAvgGlobalHeight(Point2i chunkPos) const {
                                                      Point2i(CHUNK_SIZE - 1),
                                                      Point2i(CHUNK_SIZE / 2, 0),
                                                      Point2i(0, CHUNK_SIZE / 2) } };
-    int32_t sum = 0;
+    int32_t min = std::numeric_limits<int32_t>::max();
+    int32_t max = 0;
     for (uint8_t i = 0; i < 7; i++) {
-        sum += GetGlobalHeight(chunkPos, localPos[i]);
+        int32_t h = GetGlobalHeight(chunkPos, localPos[i]);
+        min = std::min(min, h);
+        max = std::max(max, h);
     }
-    return sum / 7; 
+    return std::make_pair(min, max); 
 }
 
 int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) const {
@@ -42,8 +45,8 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 //really nice hilly: 1.0/100.0/6/0.5/0.0025
 // smaller SCALE -> bigger results
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
-    constexpr double MIN_HEIGHT = 1.0;
-    constexpr double MAX_HEIGHT = 100.0;
+    constexpr double MIN_HEIGHT = 100.0;
+    constexpr double MAX_HEIGHT = 200.0;
     constexpr double OCTAVES = 6;
     constexpr double ROUGHNESS = 0.5;
     constexpr double SCALE = 0.0025;
