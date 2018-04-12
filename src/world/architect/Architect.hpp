@@ -8,12 +8,12 @@
 
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
-#include "ProtoBlock.hpp"
-#include "BlockType.hpp"
+#include "world/ProtoBlock.hpp"
+#include "world/BlockType.hpp"
+#include "world/Size.hpp"
 #include "SimplexNoise.hpp"
-#include "Size.hpp"
 
-namespace mc::world {
+namespace mc::world::architect {
 
 class Architect {
  public:
@@ -37,4 +37,4 @@ class Architect {
 };
 
 
-}   // namespace mc::world
+}   // namespace mc::world::architect

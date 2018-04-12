@@ -14,10 +14,6 @@ add_sources(
   NeighbourMask.cpp
   Direction.hpp
   Direction.cpp
-  SimplexNoise.hpp
-  SimplexNoise.cpp
-  Architect.hpp
-  Architect.cpp
   ProtoBlock.hpp
   ProtoBlock.cpp
   Octree.hpp
@@ -25,3 +21,4 @@ add_sources(
 )
 
 add_subdirectory(chunk)
+add_subdirectory(architect)

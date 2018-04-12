@@ -2,7 +2,7 @@
 
 #include "Architect.hpp"
 
-namespace mc::world {
+namespace mc::world::architect {
 
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos);
 
@@ -86,4 +86,4 @@ Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {
 
 
 
-}   // namespace mc::world
+}   // namespace mc::world::architect

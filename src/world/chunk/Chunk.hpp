@@ -18,7 +18,7 @@
 #include "world/Camera.hpp"
 #include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
-#include "world/Architect.hpp"
+#include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
 #include "Block.hpp"
 #include "CompositeMesh.hpp"
@@ -33,7 +33,7 @@ class Chunk {
                     Chunk(Chunk&& other);
     Chunk&          operator=(Chunk&& other);
 
-    void            Generate(const Architect& architect);
+    void            Generate(const architect::Architect& architect);
     const Point3i&  GetPosition() const { return chunkPos; }
     bool            IsEmpty() const;
     bool            IsFull() const;
@@ -45,7 +45,7 @@ class Chunk {
  private:
     void    GenerateColumn(Point3i top,
                            const std::array<int32_t, 4>& neighbourHeight,
-                           const Architect& architect);
+                           const architect::Architect& architect);
 
     Point3i                     chunkPos;
     Point3f                     origin;

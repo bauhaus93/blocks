@@ -6,7 +6,7 @@ namespace mc::world::chunk {
 
 static void CalculateHeights(HeightArray& height,
                     const Point3i chunkPos,
-                    const Architect& architect);
+                    const architect::Architect& architect);
 //bool IsBorderBlock(const Point3i& blockPos);
 
 Chunk::Chunk(const Point3i& chunkPos_):
@@ -46,7 +46,7 @@ bool Chunk::operator<(const Chunk& rhs) const {
     return GetPosition() < rhs.GetPosition();
 }
 
-void Chunk::Generate(const Architect& architect) {
+void Chunk::Generate(const architect::Architect& architect) {
     sf::Clock clock;
 
     HeightArray relativeHeight;
@@ -104,7 +104,7 @@ void Chunk::Generate(const Architect& architect) {
 
 void Chunk::GenerateColumn(Point3i top,
                            const std::array<int32_t, 4>& neighbourHeight,
-                           const Architect& architect) {
+                           const architect::Architect& architect) {
     Point3i curr(top);
     static Direction neighbours[] = { Direction::WEST,    // -x
                                       Direction::NORTH,   // -y
@@ -156,7 +156,7 @@ void Chunk::Draw(const Camera& camera) const {
 
 static void CalculateHeights(HeightArray& height,
                       const Point3i chunkPos,
-                      const Architect& architect) {
+                      const architect::Architect& architect) {
 
     int32_t* currHeight = &height[0];
 

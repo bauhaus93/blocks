@@ -11,7 +11,7 @@
 
 #include "SimplexNoise.hpp"
 
-namespace mc::world {
+namespace mc::world::architect {
 
 static const double F2 = 0.5 * (sqrt(3.0) - 1.0);
 static const double G2 = (3.0 - sqrt(3.0)) / 6.0;
@@ -140,4 +140,4 @@ double SimplexNoise::GetOctavedNoise(Point2i pos,
     return sum / weightSum;
 }
 
-}   // namespace mc::world::chunk
+}   // namespace mc::world::architect

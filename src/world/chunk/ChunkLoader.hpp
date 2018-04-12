@@ -15,7 +15,7 @@
 
 #include "utility/Point3.hpp"
 #include "logger/GlobalLogger.hpp"
-#include "world/Architect.hpp"
+#include "world/architect/Architect.hpp"
 #include "graphics/TextureAtlas.hpp"
 #include "ApplicationError.hpp"
 #include "Chunk.hpp"
@@ -28,7 +28,7 @@ class ChunkLoader {
 
  public:
     explicit            ChunkLoader(uint32_t maxThreads_,
-                                    const Architect& architect_);
+                                    const architect::Architect& architect_);
 
     void                Start();
     void                Stop();
@@ -47,7 +47,7 @@ class ChunkLoader {
     std::mutex                      pendingMutex;
     std::mutex                      finishedMutex;
     const uint32_t                  maxThreads;
-    const Architect&                architect;
+    const architect::Architect&     architect;
     std::unique_ptr<std::thread>    controlThread;
     ChunkFutures                    generationThreads;
     std::vector<Chunk>              finishedChunks;

@@ -15,9 +15,9 @@
 #include "utility/Image.hpp"
 #include "graphics/TextureAtlas.hpp"
 #include "chunk/Grid.hpp"
+#include "architect/Architect.hpp"
 
 #include "Camera.hpp"
-#include "Architect.hpp"
 #include "ProtoBlock.hpp"
 
 namespace mc::world {
@@ -40,7 +40,7 @@ class World {
     graphics::TextureAtlas          atlas;
     std::map<BlockType, ProtoBlock> protoblocks;
     Camera                          camera;
-    Architect                       architect;
+    architect::Architect            architect;
     chunk::Grid                     grid;
 
     void                            LoadProtoBlocks();

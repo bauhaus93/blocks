@@ -11,9 +11,8 @@
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
-#include "graphics/TextureAtlas.hpp"
 #include "world/Octree.hpp"
-#include "world/Architect.hpp"
+#include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
 #include "ApplicationError.hpp"
 #include "Chunk.hpp"
@@ -25,7 +24,7 @@ class Grid {
 
  public:
     explicit        Grid(int32_t chunkDrawDistance,
-                         const Architect& architect_);
+                         const architect::Architect& architect_);
                     ~Grid();
 
     void            GivePositionUpdate(Point3f worldPos);
@@ -40,7 +39,7 @@ class Grid {
 
     Point3i                                 gridSize;
     int32_t                                 refreshDistance;
-    const Architect&                        architect;
+    const architect::Architect&             architect;
     Point3i                                 centerPos;
     std::map<Point3i, Chunk>                loadedChunks;
     ChunkLoader                             chunkLoader;

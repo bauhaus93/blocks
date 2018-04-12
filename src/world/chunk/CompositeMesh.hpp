@@ -6,10 +6,10 @@
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Defs.hpp"
+#include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "world/Direction.hpp"
 #include "world/Size.hpp"
-#include "world/Architect.hpp"
 #include "mesh/Mesh.hpp"
 #include "mesh/Vertex.hpp"
 #include "mesh/Quad.hpp"

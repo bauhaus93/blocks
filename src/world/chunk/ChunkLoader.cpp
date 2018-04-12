@@ -5,10 +5,10 @@
 namespace mc::world::chunk {
 
 static Chunk CreateChunk(Point3i pos,
-                  const Architect& architect);
+                  const architect::Architect& architect);
 
 ChunkLoader::ChunkLoader(uint32_t maxThreads_,
-                         const Architect& architect_):
+                         const architect::Architect& architect_):
     stop { false },
     pendingMutex { },
     finishedMutex { },
@@ -122,7 +122,7 @@ void ChunkLoader::CreateGenerationThreads() {
     pendingMutex.unlock();
 }
 
-static Chunk CreateChunk(Point3i pos, const Architect& architect) {
+static Chunk CreateChunk(Point3i pos, const architect::Architect& architect) {
     Chunk chunk { pos };
     chunk.Generate(architect);
     return chunk;

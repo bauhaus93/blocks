@@ -5,7 +5,7 @@
 namespace mc::world::chunk {
 
 Grid::Grid(int32_t chunkDrawDistance,
-           const Architect& architect_):
+           const architect::Architect& architect_):
     gridSize { Point3i(chunkDrawDistance) },
     refreshDistance { chunkDrawDistance / 10 },
     architect { architect_ },
