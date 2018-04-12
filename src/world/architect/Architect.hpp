@@ -12,6 +12,8 @@
 #include "world/BlockType.hpp"
 #include "world/Size.hpp"
 #include "SimplexNoise.hpp"
+#include "GlobalPosition.hpp"
+#include "Biome.hpp"
 
 namespace mc::world::architect {
 
@@ -31,6 +33,7 @@ class Architect {
     const uint32_t                          seed;
     std::mt19937                            rng;
     const SimplexNoise                      heightNoise;
+    std::vector<Biome>                      biomes;
 
     int32_t                                 GetRawGlobalHeight(Point2i globalPos) const;
 

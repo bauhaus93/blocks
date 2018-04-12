@@ -4,8 +4,6 @@
 
 namespace mc::world::architect {
 
-Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos);
-
 Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_):
     Architect(protoblocks_, static_cast<uint32_t>(std::random_device{}())) {
 }
@@ -15,6 +13,7 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     seed { seed_ },
     rng { seed },
     heightNoise { static_cast<uint32_t>(rng()) } {
+
 }
 
 std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) const {
@@ -60,11 +59,12 @@ int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
 //really nice hilly: 1.0/100.0/6/0.5/0.0025
 // smaller SCALE -> bigger results
 int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
-    constexpr double MIN_HEIGHT = 100.0;
-    constexpr double MAX_HEIGHT = 200.0;
+    constexpr double MIN_HEIGHT = 100;
+    constexpr double MAX_HEIGHT = 200;
     constexpr double OCTAVES = 6;
     constexpr double ROUGHNESS = 0.5;
     constexpr double SCALE = 0.0025;
+
     double normalizedNoise = (1.0 + heightNoise.GetOctavedNoise(globalPos, OCTAVES, ROUGHNESS, SCALE)) / 2.0;
     return static_cast<int32_t>(MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * normalizedNoise);
 }
@@ -79,11 +79,5 @@ const ProtoBlock& Architect::GetBlockPrototype(Point3i chunkPos, Point3i localPo
     }
     return protoblocks.at(BlockType::GRASS);
 }
-
-Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {
-    return chunkPos * CHUNK_SIZE + localPos;
-}
-
-
 
 }   // namespace mc::world::architect

@@ -42,6 +42,19 @@ SimplexNoise::SimplexNoise(uint32_t seed_):
     }
 }
 
+SimplexNoise::SimplexNoise(SimplexNoise&& other):
+    seed { other.seed },
+    rng { std::move(other.rng) },
+    permutation { std::move(other.permutation) } {
+}
+
+SimplexNoise& SimplexNoise::operator=(SimplexNoise&& other) {
+    seed = other.seed;
+    rng = std::move(other.rng);
+    permutation = std::move(other.permutation);
+    return *this;
+}
+
 uint32_t SimplexNoise::GetSeed() const{
     return seed;
 }

@@ -20,18 +20,18 @@ typedef std::vector<uint8_t> Vec8u;
 
 class SimplexNoise {
  public:
-                SimplexNoise();
-    explicit    SimplexNoise(uint32_t seed_);
-                SimplexNoise(const SimplexNoise& other) = delete;
-                SimplexNoise(SimplexNoise&& other) = delete;
-                ~SimplexNoise() = default;
+                    SimplexNoise();
+    explicit        SimplexNoise(uint32_t seed_);
+                    SimplexNoise(SimplexNoise&& other);
+    SimplexNoise&   operator=(SimplexNoise&& other);
+                    ~SimplexNoise() = default;
 
     uint32_t    GetSeed() const;
 
     double      GetOctavedNoise(Point2i pos, int octaves, double roughness, double scale) const;
 
  private:    
-    const uint32_t  seed;
+    uint32_t        seed;
     std::mt19937    rng;
     Vec8u           permutation;
 
