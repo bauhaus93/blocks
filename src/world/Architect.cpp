@@ -28,7 +28,7 @@ std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) c
     int32_t min = std::numeric_limits<int32_t>::max();
     int32_t max = 0;
     for (uint8_t i = 0; i < 7; i++) {
-        int32_t h = GetGlobalHeight(chunkPos, localPos[i]);
+        int32_t h = GetRawGlobalHeight(GetGlobalPosition(chunkPos, localPos[i]));
         min = std::min(min, h);
         max = std::max(max, h);
     }
@@ -41,10 +41,25 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 
 }
 
+int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
+    static const std::array<Point2i, 5> offsets = { {
+        Point2i(0),
+        Point2i(0, 1),
+        Point2i(1, 0),
+        Point2i(0, -1),
+        Point2i(-1, 0)
+    } };
+    int32_t sum = 0;
+    for (auto off: offsets) {
+        sum += GetRawGlobalHeight(globalPos + off);
+    }
+    return sum / 5;
+}
+
 //solid hilly: 1.0/10.0/6/0.01/0.025
 //really nice hilly: 1.0/100.0/6/0.5/0.0025
 // smaller SCALE -> bigger results
-int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
+int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
     constexpr double MIN_HEIGHT = 100.0;
     constexpr double MAX_HEIGHT = 200.0;
     constexpr double OCTAVES = 6;

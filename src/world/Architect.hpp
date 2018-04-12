@@ -32,6 +32,8 @@ class Architect {
     std::mt19937                            rng;
     const SimplexNoise                      heightNoise;
 
+    int32_t                                 GetRawGlobalHeight(Point2i globalPos) const;
+
 };
 
 
