@@ -9,15 +9,20 @@ TextureAtlas::TextureAtlas(Point2u textureSize_, uint32_t layerCount_):
     layerCount { layerCount_ },
     nextLayer { 0 },
     textureId { 0 } {
+    
+    uint32_t mipmaps = 1;
+    uint32_t mipmapDivider = 2;
+    while (textureSize[0] / mipmapDivider > 0 &&
+           textureSize[1] / mipmapDivider > 0) {
+        mipmaps++;
+        mipmapDivider *= 2;
+    }
+    INFO("Creating TextureAtlas: size = ", textureSize, ", layers = ", layerCount, ", mipmaps = ", mipmaps);
 
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
-    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGB8, textureSize[0], textureSize[1], layerCount);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipmaps, GL_RGB8, textureSize[0], textureSize[1], layerCount);
 
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 TextureAtlas::~TextureAtlas() {
@@ -46,11 +51,11 @@ uint32_t TextureAtlas::AddTextureLayer(const Image& img) {
         img.GetData().data()
     );
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,  GL_NEAREST);
-    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     return nextLayer++;
 }
 

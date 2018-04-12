@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "glad/glad.h"
+#include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
 #include "utility/Image.hpp"
 
