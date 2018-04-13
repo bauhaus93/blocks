@@ -23,7 +23,7 @@ std::vector<uint8_t> ReadFileRaw(const std::string& filePath) {
 
     if (fs.is_open()) {
         fs.seekg(0, std::ios::end);
-        std::ios::streampos size = fs.tellg();
+        auto size = fs.tellg();
         fs.seekg(0, std::ios::beg);
         buffer.resize(size);
         fs.read(reinterpret_cast<char*>(buffer.data()), size);

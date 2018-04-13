@@ -19,35 +19,35 @@ static std::vector<mesh::Quad> CreateQuads(const std::vector<Block>& blocks) {
     quads.reserve(blocks.size() * 6);
     static const std::array<std::array<Point3f, 4>, 6> vertexOffset = { {
         // Direction::NORTH
-        {   Point3f(0.0f),
+        { { Point3f(0.0f),
             Point3f(BLOCK_SIZE, 0.0f, 0.0f),
             Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
-            Point3f(0.0f, 0.0f, BLOCK_SIZE) },
+            Point3f(0.0f, 0.0f, BLOCK_SIZE) } },
         // Direction::EAST
-        {   Point3f(BLOCK_SIZE, 0.0f, 0.0f),
+        { { Point3f(BLOCK_SIZE, 0.0f, 0.0f),
             Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
             Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
-            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE ) },
+            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE ) } },
         // Direction::SOUTH
-        {   Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
+        { { Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
             Point3f(0.0f, BLOCK_SIZE, 0.0f),
             Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE),
-            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) },
+            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) } },
         // Direction::WEST
-        {   Point3f(0.0f, BLOCK_SIZE, 0.0f),
+        { { Point3f(0.0f, BLOCK_SIZE, 0.0f),
             Point3f(0.0f, 0.0f, 0.0f),
             Point3f(0.0f, 0.0f, BLOCK_SIZE),
-            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) },
+            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) } },
         // Direction::UP
-        {   Point3f(0.0f, 0.0f, BLOCK_SIZE),
+        { {  Point3f(0.0f, 0.0f, BLOCK_SIZE),
             Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
             Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
-            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) },
+            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) } },
         // Direction::DOWN
-        {   Point3f(0.0f, BLOCK_SIZE, 0.0f),
+        { {  Point3f(0.0f, BLOCK_SIZE, 0.0f),
             Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
             Point3f(BLOCK_SIZE, 0.0f, 0.0f),
-            Point3f(0.0f) }
+            Point3f(0.0f) } }
     } };
     static const std::array<Point2f, 4> vertexUV = { { 
         Point2f(0.0f),
