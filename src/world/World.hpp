@@ -30,8 +30,10 @@ class World {
 
                 World();
                 ~World();
+    void        SetDrawDistance(int32_t chunkDrawDistance);
 
     Camera&     GetCamera() { return camera; }
+    int32_t     GetChunkDrawDistance() const { return grid.GetDrawDistance(); }
 
     void        Tick();
     void        Draw() const;

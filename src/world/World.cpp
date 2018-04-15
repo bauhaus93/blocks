@@ -12,14 +12,21 @@ World::World():
     protoblocks { },
     camera { Point3f(0.0f, 0.0f, 400.0f), Point3f(0.0f, 0.0f, 0.0f) },
     architect { protoblocks },
-    grid { 40, architect } {
+    grid { architect } {
     INFO("Creating world");
     LoadProtoBlocks();
+
+    SetDrawDistance(40);
     grid.GivePositionUpdate(camera.GetPosition());
 }
 
 World::~World() {
     INFO("Destroying world");
+}
+
+void World::SetDrawDistance(int32_t chunkDrawDistance) {
+    grid.SetDrawDistance(chunkDrawDistance);
+    camera.SetFar((chunkDrawDistance - chunkDrawDistance / 10 ) * CHUNK_SIZE * BLOCK_SIZE);
 }
 
 void World::LoadProtoBlocks() {

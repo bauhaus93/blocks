@@ -28,6 +28,7 @@ class WorldState: public GameState {
     void                HandleEvents();
     void                HandleMouseMovement();
     void                HandleKeys();
+    void                HandleMovementKeys();
     void                DrawScene();
 
     world::World        world;

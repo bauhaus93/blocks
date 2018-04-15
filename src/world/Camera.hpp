@@ -26,6 +26,13 @@ class Camera: public Entity {
  public:
                     Camera(const Point3f& position_, const Point3f& rotation_);
 
+    void            SetFOV(float fovDegree);
+    void            SetAspectRatio(float ratio);
+    void            SetNear(float near_);
+    void            SetFar(float far_);
+
+    void            ModFOV(float degree);
+
     void            LoadMVPMatrix(const glm::mat4& model) const;
     void            Move(const Point3f& offset) override;
     void            Rotate(const Point3f& offset) override;
@@ -34,6 +41,12 @@ class Camera: public Entity {
  private:
 
     void            UpdateView();
+    void            UpdateProjection();
+
+    float           fov;
+    float           aspectRatio;
+    float           near;
+    float           far;
 
     graphics::ShaderProgram  shader;
     glm::mat4      view;

@@ -8,6 +8,10 @@ static graphics::ShaderProgram LoadShader();
 
 Camera::Camera(const Point3f& position_, const Point3f& rotation_):
     Entity(position_, rotation_),
+    fov { 75.0f },
+    aspectRatio { 4.0f / 3.0f },
+    near { 0.5f },
+    far { 200.0f },
     shader { LoadShader() },
     view { glm::lookAt(
                     CreateVec(position),
@@ -19,6 +23,28 @@ Camera::Camera(const Point3f& position_, const Point3f& rotation_):
                             0.5f,
                             1000.0f) },
     frustum { view, projection } {
+}
+
+void Camera::SetFOV(float fovDegree) {
+    fov = fovDegree;
+    UpdateProjection();
+}
+void Camera::SetAspectRatio(float ratio) {
+    aspectRatio = ratio;
+    UpdateProjection();
+}
+void Camera::SetNear(float near_) {
+    near = near_;
+    UpdateProjection();
+}
+void Camera::SetFar(float far_) {
+    far = far_;
+    UpdateProjection();
+}
+
+void Camera::ModFOV(float degree) {
+    fov = std::min(180.0f, std::max(0.0f, fov + degree));
+    UpdateProjection();
 }
 
 void Camera::LoadMVPMatrix(const glm::mat4& model) const {
@@ -37,6 +63,16 @@ void Camera::UpdateView() {
         glm::vec3(0, 0, 1)      //we want z to be up
     );
     frustum.Update(view, projection);
+}
+
+void Camera::UpdateProjection() {
+    projection = glm::perspective(
+        glm::radians(fov),
+        aspectRatio,
+        near,
+        far
+    );
+    TRACE("Updated projection: fov = ", fov, ", aspect = ", aspectRatio, ", near = ", near, ", far = ", far);
 }
 
 void Camera::Move(const Point3f& offset) {

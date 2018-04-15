@@ -4,10 +4,9 @@
 
 namespace mc::world::chunk {
 
-Grid::Grid(int32_t chunkDrawDistance,
-           const architect::Architect& architect_):
-    gridSize { Point3i(chunkDrawDistance) },
-    refreshDistance { chunkDrawDistance / 10 },
+Grid::Grid(const architect::Architect& architect_):
+    drawDistance { 10 },
+    refreshDistance { drawDistance / 10 },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
     chunkLoader { 50, architect } {
@@ -23,6 +22,14 @@ void Grid::GivePositionUpdate(Point3f worldPos) {
     GivePositionUpdate(gridPos);
 }
 
+void Grid::SetDrawDistance(int32_t drawDistance_) {
+    drawDistance = drawDistance_;
+    refreshDistance = drawDistance / 10;
+    UnloadOldChunks();
+    LoadNewChunks();
+    TRACE("Set draw distance to ", drawDistance);
+}
+
 void Grid::GivePositionUpdate(Point3i gridPos) {
     Point3i diff = centerPos - gridPos;
     for (uint8_t i = 0; i < 3; i++) {
@@ -36,8 +43,8 @@ void Grid::GivePositionUpdate(Point3i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
-    Point3i min = centerPos - gridSize;
-    Point3i max = centerPos + gridSize;
+    Point3i min = centerPos - drawDistance;
+    Point3i max = centerPos + drawDistance;
     std::vector<Point3i> requestChunks;
 
     for (auto y = min[1]; y < max[1]; y++) {
@@ -59,8 +66,8 @@ void Grid::LoadNewChunks() {
 }
 
 void Grid::UnloadOldChunks() {
-    Point3i min = centerPos - gridSize;
-    Point3i max = centerPos + gridSize;
+    Point3i min = centerPos - drawDistance;
+    Point3i max = centerPos + drawDistance;
     uint32_t unloadCount = 0;
 
     auto iter = loadedChunks.begin();
@@ -73,7 +80,7 @@ void Grid::UnloadOldChunks() {
         }
     }
 
-    DEBUG("Unloading ", unloadCount, " chunks");
+    INFO("Unloading ", unloadCount, " chunks");
 }
 
 void Grid::Update() {

@@ -62,6 +62,22 @@ void WorldState::HandleMouseMovement() {
 }
 
 void WorldState::HandleKeys() {
+    HandleMovementKeys();
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+        world.SetDrawDistance(world.GetChunkDrawDistance() + 5);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        int32_t drawDistance = std::max(0, world.GetChunkDrawDistance() - 5);
+        world.SetDrawDistance(drawDistance);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        world.GetCamera().ModFOV(5.0f);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+        world.GetCamera().ModFOV(-5.0f);    
+    }
+}
+
+void WorldState::HandleMovementKeys() {
     constexpr float SPEED = 4.0f;
     glm::vec3 dir = CreateDirection(world.GetCamera().GetRotation());
     glm::vec3 totalOffset(0.0f, 0.0f, 0.0f);
