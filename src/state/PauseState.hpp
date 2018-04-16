@@ -14,7 +14,7 @@ class PauseState: public GameState {
 
  public:
 
-    explicit            PauseState(sf::RenderWindow& window_);
+    explicit            PauseState(sf::Window& window_);
                         PauseState() = default;
     void                Tick() override;
     State               GetState() const override;

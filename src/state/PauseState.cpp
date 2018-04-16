@@ -4,7 +4,7 @@
 
 namespace mc {
 
-PauseState::PauseState(sf::RenderWindow& window_):
+PauseState::PauseState(sf::Window& window_):
     GameState(window_, 100) {
 }
 

@@ -6,7 +6,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/System.hpp>
-#include <SFML/Graphics.hpp>
 
 #include "world/World.hpp"
 #include "utility/Point3.hpp"
@@ -19,7 +18,7 @@ class WorldState: public GameState {
 
  public:
 
-    explicit            WorldState(sf::RenderWindow& window_);
+    explicit            WorldState(sf::Window& window_);
                         ~WorldState() = default;
     void                Tick() override;
     State               GetState() const override;
@@ -33,7 +32,6 @@ class WorldState: public GameState {
     void                DrawScene();
 
     world::World        world;
-    sf::Font            font;
 };
 
 

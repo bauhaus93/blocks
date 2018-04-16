@@ -31,7 +31,7 @@ class GameState {
 
  public:
 
-                        GameState(sf::RenderWindow& window_, unsigned int delay_);
+                        GameState(sf::Window& window_, unsigned int delay_);
                         GameState(const GameState& other) = delete;
     virtual             ~GameState() = default;
     StateResult         Run();
@@ -41,7 +41,7 @@ class GameState {
     virtual void        Tick() = 0;
     void                SetResultAndLeave(bool pop, State next);
 
-    sf::RenderWindow&    window;
+    sf::Window&         window;
     sf::Time            delay;
     sf::Time            lastTick;
     sf::Time            lastDelta;

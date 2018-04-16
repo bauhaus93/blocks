@@ -4,7 +4,7 @@
 
 namespace mc {
 
-StateStack::StateStack(sf::RenderWindow& window_):
+StateStack::StateStack(sf::Window& window_):
     window { window_ } {
 }
 
