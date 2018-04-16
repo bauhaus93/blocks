@@ -24,7 +24,8 @@ class ShaderProgram {
     void        AddVertexShader(const std::string& filePath);
     void        AddFragmentShader(const std::string& filePath);
     void        Link();
-    void        Use();
+    void        MakeActive();
+    void        MakeInactive() const;
     void        SetMVPMatrix(const glm::mat4& mvp) const;
     GLuint      GetId() const { return programId; }
 

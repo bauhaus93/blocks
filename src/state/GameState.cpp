@@ -4,7 +4,7 @@
 
 namespace mc {
 
-GameState::GameState(sf::Window& window_, unsigned int delay_):
+GameState::GameState(sf::RenderWindow& window_, unsigned int delay_):
     window { window_ },
     delay { sf::milliseconds(delay_) },
     lastDelta { sf::milliseconds(1) },

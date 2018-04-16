@@ -64,8 +64,12 @@ void World::Tick() {
     grid.Update();
 }
 
-void World::Draw() const {
+void World::Draw() {
+    camera.ActivateShader();
+    atlas.Activate();
     grid.Draw(camera);
+    atlas.Deactivate();
+    camera.DeactivateShader();
 }
 
 }   // namespace mc::world

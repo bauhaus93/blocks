@@ -71,8 +71,12 @@ void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) const {
     glUniformMatrix4fv(mvpHandle, 1, GL_FALSE, &mvp[0][0]);
 }
 
-void ShaderProgram::Use() {
+void ShaderProgram::MakeActive() {
     glUseProgram(programId);
+}
+
+void ShaderProgram::MakeInactive() const {
+    glUseProgram(0);
 }
 
 void ShaderProgram::LinkSetup() {

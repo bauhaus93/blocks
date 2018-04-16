@@ -22,6 +22,7 @@ TextureAtlas::TextureAtlas(Point2u textureSize_, uint32_t layerCount_):
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
     glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipmaps, GL_RGB8, textureSize[0], textureSize[1], layerCount);
+    Deactivate();
 
 }
 
@@ -31,15 +32,21 @@ TextureAtlas::~TextureAtlas() {
     }
 }
 
-void TextureAtlas::MakeActive() {
+void TextureAtlas::Activate() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+}
+
+void TextureAtlas::Deactivate() {
+    glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }
 
 uint32_t TextureAtlas::AddTextureLayer(const Image& img) {
     assert(nextLayer < layerCount);
     assert(img.GetDepth() == 24);
     assert(img.GetSize() == textureSize);
+
+    Activate();
 
     glTexSubImage3D(
         GL_TEXTURE_2D_ARRAY,
@@ -56,6 +63,8 @@ uint32_t TextureAtlas::AddTextureLayer(const Image& img) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+
+    Deactivate();
     return nextLayer++;
 }
 

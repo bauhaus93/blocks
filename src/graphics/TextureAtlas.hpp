@@ -18,7 +18,8 @@ class TextureAtlas {
  public:
                 TextureAtlas(Point2u textureSize_, uint32_t layerCount_);
                 ~TextureAtlas();
-    void        MakeActive();
+    void        Activate();
+    void        Deactivate();
     uint32_t    AddTextureLayer(const Image& img);
 
  private:

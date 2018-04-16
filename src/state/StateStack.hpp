@@ -7,6 +7,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "logger/GlobalLogger.hpp"
 #include "GameState.hpp"
@@ -20,7 +21,7 @@ class StateStack {
 
  public:
 
-    explicit    StateStack(sf::Window& window_);
+    explicit    StateStack(sf::RenderWindow& window_);
 
     void        Push(State state);
     void        Run();
@@ -29,7 +30,7 @@ class StateStack {
 
     void        Pop();
 
-    sf::Window&   		                        window;
+    sf::RenderWindow&   		                window;
     std::vector<std::unique_ptr<GameState>>     states;
 };
 

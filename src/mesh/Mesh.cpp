@@ -192,6 +192,9 @@ void Mesh::LoadVAO() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
     glBindVertexArray(0);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
 }
 
 void Mesh::Draw() {

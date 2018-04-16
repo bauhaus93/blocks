@@ -47,6 +47,13 @@ void Camera::ModFOV(float degree) {
     UpdateProjection();
 }
 
+void Camera::ActivateShader() {
+    shader.MakeActive();
+}
+void Camera::DeactivateShader() {
+    shader.MakeInactive();
+}
+
 void Camera::LoadMVPMatrix(const glm::mat4& model) const {
     glm::mat4 mvp = projection * view * model;
     shader.SetMVPMatrix(mvp);
@@ -110,7 +117,6 @@ static graphics::ShaderProgram LoadShader() {
     program.AddVertexShader("shader/VertexShader.glsl");
     program.AddFragmentShader("shader/FragmentShader.glsl");
     program.Link();
-    program.Use();
     return program;
 }
 

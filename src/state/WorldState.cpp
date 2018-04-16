@@ -4,9 +4,13 @@
 
 namespace mc {
 
-WorldState::WorldState(sf::Window& window_):
+WorldState::WorldState(sf::RenderWindow& window_):
     GameState(window_, 20),
-    world { } {
+    world { },
+    font { } {
+    if (!font.loadFromFile("data/Electrolize-Regular.ttf")) {
+        throw ApplicationError("FontLoadError", __FUNCTION__, "Could not load font from file");
+    }
 }
 
 State WorldState::GetState() const {
@@ -114,7 +118,31 @@ void WorldState::HandleMovementKeys() {
 void WorldState::DrawScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     world.Draw();
+
+    glMatrixMode(GL_MODELVIEW); glPushMatrix();
+    glMatrixMode(GL_PROJECTION); glPushMatrix();
+    glPushAttrib(GL_COLOR_BUFFER_BIT | GL_CURRENT_BIT   | GL_ENABLE_BIT  |
+                 GL_TEXTURE_BIT      | GL_TRANSFORM_BIT | GL_VIEWPORT_BIT);
+
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
+    sf::Text text;
+    text.setFont(font);
+    text.setString("SERS");
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::Red);
+    text.setPosition(10, 10);
+    window.resetGLStates();
+    window.draw(text);
+
     window.display();
+
+    glMatrixMode(GL_PROJECTION); glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);  glPopMatrix();
+    glEnable(GL_DEPTH_TEST);
+    glPopAttrib();
+
 }
 
 

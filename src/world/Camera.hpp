@@ -33,6 +33,8 @@ class Camera: public Entity {
 
     void            ModFOV(float degree);
 
+    void            ActivateShader();
+    void            DeactivateShader();
     void            LoadMVPMatrix(const glm::mat4& model) const;
     void            Move(const Point3f& offset) override;
     void            Rotate(const Point3f& offset) override;

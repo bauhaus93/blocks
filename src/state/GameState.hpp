@@ -7,6 +7,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "logger/GlobalLogger.hpp"
 
@@ -30,7 +31,7 @@ class GameState {
 
  public:
 
-                        GameState(sf::Window& window_, unsigned int delay_);
+                        GameState(sf::RenderWindow& window_, unsigned int delay_);
                         GameState(const GameState& other) = delete;
     virtual             ~GameState() = default;
     StateResult         Run();
@@ -40,7 +41,7 @@ class GameState {
     virtual void        Tick() = 0;
     void                SetResultAndLeave(bool pop, State next);
 
-    sf::Window&         window;
+    sf::RenderWindow&    window;
     sf::Time            delay;
     sf::Time            lastTick;
     sf::Time            lastDelta;

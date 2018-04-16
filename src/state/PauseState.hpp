@@ -4,7 +4,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
-
+#include <SFML/Graphics.hpp>
 #include "logger/GlobalLogger.hpp"
 #include "GameState.hpp"
 
@@ -14,7 +14,7 @@ class PauseState: public GameState {
 
  public:
 
-    explicit            PauseState(sf::Window& window_);
+    explicit            PauseState(sf::RenderWindow& window_);
                         PauseState() = default;
     void                Tick() override;
     State               GetState() const override;

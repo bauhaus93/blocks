@@ -36,7 +36,7 @@ class World {
     int32_t     GetChunkDrawDistance() const { return grid.GetDrawDistance(); }
 
     void        Tick();
-    void        Draw() const;
+    void        Draw();
 
  private:
     graphics::TextureAtlas          atlas;
