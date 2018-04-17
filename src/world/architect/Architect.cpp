@@ -74,9 +74,6 @@ int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
 }
 
 const ProtoBlock& Architect::GetBlockPrototype(Point3i chunkPos, Point3i localPos) const {
-    if (chunkPos[0] % 5 == 0 || chunkPos[1] % 5 == 0) {
-        return protoblocks.at(BlockType::MUD);
-    }
     return protoblocks.at(BlockType::GRASS);
 }
 

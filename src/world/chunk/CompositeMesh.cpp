@@ -50,10 +50,10 @@ static std::vector<mesh::Quad> CreateQuads(const std::vector<Block>& blocks) {
             Point3f(0.0f) } }
     } };
     static const std::array<Point2f, 4> vertexUV = { { 
-        Point2f(0.0f),
-        Point2f(1.0f, 0.0f),
         Point2f(1.0f, 1.0f),
-        Point2f(0.0f, 1.0f)
+        Point2f(0.0f, 1.0f),
+        Point2f(0.0f),
+        Point2f(1.0f, 0.0f)
     } };
     static const std::array<Point3f, 6> vertexNormal = { {
         Point3f(0.0f, -1.0f, 0.0f), // Direction::NORTH
