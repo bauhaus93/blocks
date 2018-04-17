@@ -36,6 +36,7 @@ class Architect {
     SimplexNoise                            heightNoise;
     SimplexNoise                            temperatureNoise;
     SimplexNoise                            humidityNoise;
+    SimplexNoise                            mountainNoise;
     std::map<BiomeType, Biome>              biomes;
 
     void                                    LoadBiomes();

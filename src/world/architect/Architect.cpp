@@ -14,13 +14,14 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     rng { seed },
     heightNoise { static_cast<uint32_t>(rng()) },
     temperatureNoise { static_cast<uint32_t>(rng()) },
-    humidityNoise { static_cast<uint32_t>(rng()) } {
+    humidityNoise { static_cast<uint32_t>(rng()) },
+    mountainNoise { static_cast<uint32_t>(rng()) } {
 
-    heightNoise.SetMin(100.0);
-    heightNoise.SetMax(150.0);
+    heightNoise.SetMin(0.0);
+    heightNoise.SetMax(50.0);
     heightNoise.SetOctaves(6);
-    heightNoise.SetRoughness(0.5);
-    heightNoise.SetScale(0.0025);
+    heightNoise.SetRoughness(0.50);
+    heightNoise.SetScale(0.003);
 
     temperatureNoise.SetMin(-20.0);
     temperatureNoise.SetMax(40.0);
@@ -33,6 +34,12 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     humidityNoise.SetOctaves(6);
     humidityNoise.SetRoughness(0.2);
     humidityNoise.SetScale(0.001);
+
+    mountainNoise.SetMin(-4.0);
+    mountainNoise.SetMax(2.0);
+    mountainNoise.SetOctaves(10);
+    mountainNoise.SetRoughness(2.0);
+    mountainNoise.SetScale(0.000008);
 
     LoadBiomes();
 }
@@ -83,7 +90,7 @@ std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) c
     int32_t min = std::numeric_limits<int32_t>::max();
     int32_t max = 0;
     for (uint8_t i = 0; i < 7; i++) {
-        int32_t h = GetRawGlobalHeight(GetGlobalPosition(chunkPos, localPos[i]));
+        int32_t h = GetGlobalHeight(GetGlobalPosition(chunkPos, localPos[i]));
         min = std::min(min, h);
         max = std::max(max, h);
     }
@@ -97,11 +104,29 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
+    /*double sum = 0;
+    int32_t count = 0;
+
+    for (int32_t y = -4; y <= 4; y +=2) {
+        sum += GetRawGlobalHeight(globalPos + Point2i(0, y));
+        count++;
+    }
+    for (int32_t x = -4; x <= 4; x += 2) {
+        sum += GetRawGlobalHeight(globalPos + Point2i(x, 0));
+        count++;
+    }*/
+
     return GetRawGlobalHeight(globalPos);
 }
 
 int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
-    return heightNoise.GetNoise(globalPos);
+    //constexpr int32_t MAX_HEIGHT = 50;
+    double n = mountainNoise.GetNoise(globalPos);
+    double h = heightNoise.GetNoise(globalPos);
+    if (n > 0.0) {
+        return (1.0 + n) * h;
+    }
+    return h;
 }
 
 int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
