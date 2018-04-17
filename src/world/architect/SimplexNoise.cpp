@@ -30,7 +30,12 @@ SimplexNoise::SimplexNoise():
 
 SimplexNoise::SimplexNoise(uint32_t seed_):
     seed { seed_ },
-    rng { seed_ } {
+    rng { seed },
+    octaves { 6 },
+    roughness { 0.5 },
+    scale { 0.0025 },
+    min { -1.0 },
+    max { 1.0 } {
 
     permutation.resize(256);
 
@@ -45,21 +50,51 @@ SimplexNoise::SimplexNoise(uint32_t seed_):
 SimplexNoise::SimplexNoise(SimplexNoise&& other):
     seed { other.seed },
     rng { std::move(other.rng) },
+    octaves { other.octaves },
+    roughness { other.roughness },
+    scale { other.scale },
+    min { other.min },
+    max { other.max },
     permutation { std::move(other.permutation) } {
 }
 
 SimplexNoise& SimplexNoise::operator=(SimplexNoise&& other) {
     seed = other.seed;
     rng = std::move(other.rng);
+    octaves = other.octaves;
+    roughness = other.roughness;
+    scale = other.scale;
+    min = other.min;
+    max = other.max;
     permutation = std::move(other.permutation);
     return *this;
+}
+
+void SimplexNoise::SetOctaves(int octaves_) {
+    octaves = octaves_;
+}
+
+void SimplexNoise::SetRoughness(double roughness_) {
+    roughness = roughness_;
+}
+
+void SimplexNoise::SetScale(double scale_) {
+    scale = scale_;
+}
+
+void SimplexNoise::SetMin(double min_) {
+    min = min_;
+}
+
+void SimplexNoise::SetMax(double max_) {
+    max = max_;
 }
 
 uint32_t SimplexNoise::GetSeed() const{
     return seed;
 }
 
-double SimplexNoise::GetNoise(double x, double y) const{
+double SimplexNoise::GetRawNoise(double x, double y) const{
     assert(x >= 0.0 && y >= 0.0);
     double n0 = 0, n1 = 0, n2 = 0; // Noise contributions from the three corners
     // Skew the input space to determine which simplex cell we're in
@@ -134,10 +169,7 @@ double SimplexNoise::GetNoise(double x, double y) const{
     return 70.0 * (n0 + n1 + n2);
 }
 
-double SimplexNoise::GetOctavedNoise(Point2i pos,
-                                     int octaves,
-                                     double roughness,
-                                     double scale) const {
+double SimplexNoise::GetNoise(Point2i pos) const {
     pos += static_cast<int32_t>(std::numeric_limits<int32_t>::max() / 2);
     double sum = 0;
     double frequency = scale;
@@ -145,12 +177,12 @@ double SimplexNoise::GetOctavedNoise(Point2i pos,
     double weightSum = 0;
 
     for(int octave = 0; octave < octaves; octave++){
-        sum +=  GetNoise(pos[0] * frequency, pos[1] * frequency) * weight;
+        sum +=  GetRawNoise(pos[0] * frequency, pos[1] * frequency) * weight;
         frequency *= 2;
         weightSum += weight;
         weight *= roughness;
     }
-    return sum / weightSum;
+    return min + (max - min) * (sum / weightSum);
 }
 
 }   // namespace mc::world::architect

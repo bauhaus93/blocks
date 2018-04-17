@@ -5,55 +5,36 @@
 namespace mc::world::architect {
 
 Biome::Biome(uint32_t seed):
-    noise { seed },
-    minHeight { 100 },
-    maxHeight { 200 },
-    octaves { 2 },
-    scale { 0.0005 },
-    roughness { 0.5 } {
+    biomeNoise { seed },
+    heightNoise { seed + 1 },
+    blockType { BlockType::MUD } {
 }
 
 Biome::Biome(Biome&& other):
-    noise { std::move(other.noise) },
-    minHeight { other.minHeight },
-    maxHeight { other.maxHeight },
-    octaves { other.octaves },
-    scale { other.scale },
-    roughness { other.roughness } {
+    biomeNoise { std::move(other.biomeNoise) },
+    heightNoise { std::move(other.heightNoise) },
+    blockType { other.blockType } {
 }
 
 Biome& Biome::operator=(Biome&& other) {
-    noise = std::move(other.noise);
-    minHeight = other.minHeight;
-    maxHeight = other.maxHeight;
-    octaves = other.octaves;
-    scale = other.scale;
-    roughness = other.roughness;
+    if (this != &other) {
+        biomeNoise = std::move(other.biomeNoise);
+        heightNoise = std::move(other.heightNoise);
+        blockType = other.blockType;
+    }
     return *this;
 }
 
-void Biome::SetMinHeight(int32_t minHeight_) {
-    minHeight = minHeight_;
+void Biome::SetBlockType(BlockType type) {
+    blockType = type;
 }
 
-void Biome::SetMaxHeight(int32_t maxHeight_) {
-    maxHeight = maxHeight_;
+int32_t Biome::GetValue(Point2i globalPosition) const {
+    return std::round(biomeNoise.GetNoise(globalPosition));
 }
 
-void Biome::SetOctaves(uint32_t octaves_) {
-    octaves = octaves_;
-}
-
-void Biome::SetScale(double scale_) {
-    scale = scale_;
-}
-
-void Biome::SetRoughness(double roughness_) {
-    roughness = roughness_;
-}
-
-double Biome::GetValue(Point2i globalPosition) const {
-    return noise.GetOctavedNoise(globalPosition, octaves, roughness, scale);
+int32_t Biome::GetHeight(Point2i globalPosition) const {
+    return std::round(heightNoise.GetNoise(globalPosition));
 }
 
 }   // namespace mc::world::architect

@@ -119,7 +119,7 @@ void Chunk::GenerateColumn(Point3i top,
     }
 
     while (curr[2] >= 0) {
-        Block block(curr, architect.GetBlockPrototype(chunkPos, curr));
+        Block block(curr, architect.GetProtoBlock(chunkPos, curr));
 
         if (curr[2] != top[2]) {
             block.AddNeighbour(Direction::UP);

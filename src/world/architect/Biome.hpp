@@ -6,6 +6,7 @@
 #include <random>
 #include <memory>
 
+#include "world/BlockType.hpp"
 #include "SimplexNoise.hpp"
 
 namespace mc::world::architect {
@@ -17,21 +18,19 @@ class Biome {
     Biome&                  operator=(Biome&& other);
     void                    SetMinHeight(int32_t minHeight_);
     void                    SetMaxHeight(int32_t maxHeight_);
-    void                    SetOctaves(uint32_t octaves_);
-    void                    SetScale(double scale_);
-    void                    SetRoughness(double roughness_);
+    void                    SetBlockType(BlockType type);
 
-    double                  GetValue(Point2i globalPosition) const;
-    int32_t                 GetMinHeight() const { return minHeight; }
-    int32_t                 GetMaxHeight() const { return maxHeight; }
+    SimplexNoise&           GetBiomeNoise() { return biomeNoise; }
+    SimplexNoise&           GetHeightNoise() { return heightNoise; }
+    BlockType               GetBlockType() const { return blockType; }
+
+    int32_t                 GetValue(Point2i globalPosition) const;
+    int32_t                 GetHeight(Point2i globalPosition) const;
 
  private:
-    SimplexNoise            noise;
-    int32_t                 minHeight;
-    int32_t                 maxHeight;
-    uint32_t                octaves;                     
-    double                  scale;
-    double                  roughness;
+    SimplexNoise            biomeNoise;
+    SimplexNoise            heightNoise;
+    BlockType               blockType;
 };
 
 
