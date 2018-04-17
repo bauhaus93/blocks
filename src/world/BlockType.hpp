@@ -6,7 +6,8 @@ namespace mc::world {
 
 enum class BlockType {
     GRASS,
-    MUD
+    MUD,
+    DESERT
 };
 
 }   // namespace mc::world::chunk

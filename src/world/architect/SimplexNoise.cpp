@@ -182,7 +182,7 @@ double SimplexNoise::GetNoise(Point2i pos) const {
         weightSum += weight;
         weight *= roughness;
     }
-    return min + (max - min) * (sum / weightSum);
+    return min + (max - min) * ((1.0 + (sum / weightSum)) / 2.0);
 }
 
 }   // namespace mc::world::architect

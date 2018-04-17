@@ -11,57 +11,55 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_):
 Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32_t seed_):
     protoblocks { protoblocks_ },
     seed { seed_ },
-    rng { seed } {
+    rng { seed },
+    heightNoise { static_cast<uint32_t>(rng()) },
+    temperatureNoise { static_cast<uint32_t>(rng()) },
+    humidityNoise { static_cast<uint32_t>(rng()) } {
+
+    heightNoise.SetMin(100.0);
+    heightNoise.SetMax(150.0);
+    heightNoise.SetOctaves(6);
+    heightNoise.SetRoughness(0.5);
+    heightNoise.SetScale(0.0025);
+
+    temperatureNoise.SetMin(-20.0);
+    temperatureNoise.SetMax(40.0);
+    temperatureNoise.SetOctaves(4);
+    temperatureNoise.SetRoughness(0);
+    temperatureNoise.SetScale(0.0004);
+
+    humidityNoise.SetMin(0.0);
+    humidityNoise.SetMax(100.0);
+    humidityNoise.SetOctaves(6);
+    humidityNoise.SetRoughness(0.2);
+    humidityNoise.SetScale(0.001);
+
     LoadBiomes();
 }
 
 void Architect::LoadBiomes() {
-    Biome grasslands(rng());
+    Biome grasslands;
     grasslands.SetBlockType(BlockType::GRASS);
+    biomes.emplace(BiomeType::GRASSLANDS, grasslands);
 
-    grasslands.GetBiomeNoise().SetMin(0.0);
-    grasslands.GetBiomeNoise().SetMax(100.0);
-    grasslands.GetBiomeNoise().SetOctaves(6);
-    grasslands.GetBiomeNoise().SetRoughness(0.5);
-    grasslands.GetBiomeNoise().SetScale(0.0005);
+    Biome mud;
+    mud.SetBlockType(BlockType::MUD);
+    biomes.emplace(BiomeType::MUDDY, mud);
 
-    grasslands.GetHeightNoise().SetMin(100.0);
-    grasslands.GetHeightNoise().SetMax(125.0);
-    grasslands.GetHeightNoise().SetOctaves(6);
-    grasslands.GetHeightNoise().SetRoughness(0.5);
-    grasslands.GetHeightNoise().SetScale(0.0025);
-
-    biomes.push_back(std::move(grasslands));
-
-    Biome hills(rng());
-    hills.SetBlockType(BlockType::GRASS);
-
-    hills.GetBiomeNoise().SetMin(0.0);
-    hills.GetBiomeNoise().SetMax(25.0);
-    hills.GetBiomeNoise().SetOctaves(6);
-    hills.GetBiomeNoise().SetRoughness(0.5);
-    hills.GetBiomeNoise().SetScale(0.000075);
-
-    hills.GetHeightNoise().SetMin(100.0);
-    hills.GetHeightNoise().SetMax(200.0);
-    hills.GetHeightNoise().SetOctaves(6);
-    hills.GetHeightNoise().SetRoughness(0.5);
-    hills.GetHeightNoise().SetScale(0.0025);
-
-    biomes.push_back(std::move(hills));
+    Biome desert;
+    desert.SetBlockType(BlockType::DESERT);
+    biomes.emplace(BiomeType::DESERT, desert);
 }
 
 const Biome& Architect::GetBiome(Point2i globalPos) const {
-    double max = -1.0f;
-    std::size_t maxPos = 0;
-    for (std::size_t i = 0; i < biomes.size(); i++) {
-        double value = biomes[i].GetValue(globalPos);
-        if (value > max) {
-            max = value;
-            maxPos = i;
-        }
+    //double height = heightNoise.GetNoise(globalPos);
+    double temperature = temperatureNoise.GetNoise(globalPos);
+    //double humidity = humidityNoise.GetNoise(globalPos);
+
+    if (temperature >= 30.0) {
+        return biomes.at(BiomeType::DESERT);
     }
-    return biomes[maxPos];
+    return biomes.at(BiomeType::GRASSLANDS);
 }
 
 const Biome& Architect::GetBiome(Point2i chunkPos, Point2i localPos) {
@@ -99,27 +97,11 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
-    constexpr int32_t range = 8;
-    int32_t sum = 0;
-    int32_t count = 0;
-    for (int32_t y = -range; y <= range; y += 2) {
-        Point2i off(0, y);
-        sum += GetRawGlobalHeight(globalPos + off);
-        count++;
-    }
-    for (int32_t x = -range; x < range; x += 2) {
-        Point2i off(x, 0);
-        sum += GetRawGlobalHeight(globalPos + off);
-        count++;
-    }
-    return sum / count;
+    return GetRawGlobalHeight(globalPos);
 }
 
-//solid hilly: 1.0/10.0/6/0.01/0.025
-//really nice hilly: 1.0/100.0/6/0.5/0.0025
-// smaller SCALE -> bigger results
 int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
-    return GetBiome(globalPos).GetHeight(globalPos);
+    return heightNoise.GetNoise(globalPos);
 }
 
 int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {

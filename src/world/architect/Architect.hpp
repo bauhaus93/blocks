@@ -33,7 +33,10 @@ class Architect {
     const std::map<BlockType, ProtoBlock>&  protoblocks;
     const uint32_t                          seed;
     std::mt19937                            rng;
-    std::vector<Biome>                      biomes;
+    SimplexNoise                            heightNoise;
+    SimplexNoise                            temperatureNoise;
+    SimplexNoise                            humidityNoise;
+    std::map<BiomeType, Biome>              biomes;
 
     void                                    LoadBiomes();
     int32_t                                 GetRawGlobalHeight(Point2i globalPos) const;

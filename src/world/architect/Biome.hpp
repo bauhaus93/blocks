@@ -11,25 +11,23 @@
 
 namespace mc::world::architect {
 
+
+enum class BiomeType {
+    GRASSLANDS,
+    MUDDY,
+    DESERT
+};
+
 class Biome {
  public:
-                            Biome(uint32_t seed);
-                            Biome(Biome&& other);
-    Biome&                  operator=(Biome&& other);
-    void                    SetMinHeight(int32_t minHeight_);
-    void                    SetMaxHeight(int32_t maxHeight_);
+                            Biome();
     void                    SetBlockType(BlockType type);
 
-    SimplexNoise&           GetBiomeNoise() { return biomeNoise; }
-    SimplexNoise&           GetHeightNoise() { return heightNoise; }
     BlockType               GetBlockType() const { return blockType; }
 
     int32_t                 GetValue(Point2i globalPosition) const;
-    int32_t                 GetHeight(Point2i globalPosition) const;
 
  private:
-    SimplexNoise            biomeNoise;
-    SimplexNoise            heightNoise;
     BlockType               blockType;
 };
 

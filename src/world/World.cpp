@@ -5,7 +5,7 @@
 namespace mc::world {
 
 const Point2u TEXTURE_SIZE(32u);
-const uint32_t ATLAS_DEPTH(3u);
+const uint32_t ATLAS_DEPTH(4u);
 
 World::World():
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
@@ -30,11 +30,11 @@ void World::SetDrawDistance(int32_t chunkDrawDistance) {
 }
 
 void World::LoadProtoBlocks() {
-    assert(ATLAS_DEPTH == 3);
     Image img = ReadBitmap("data/atlas.bmp");
     uint32_t mudLayer = 0;
     uint32_t grassLayer = 0;
     uint32_t grassMudLayer = 0;
+    uint32_t desertLayer = 0;
 
     {   Image sub = img.CreateSubImage(Point2u(0u), TEXTURE_SIZE);
         mudLayer = atlas.AddTextureLayer(std::move(sub));
@@ -46,6 +46,10 @@ void World::LoadProtoBlocks() {
     {
         Image sub = img.CreateSubImage(Point2u(64u, 0u), TEXTURE_SIZE);
         grassMudLayer = atlas.AddTextureLayer(std::move(sub));
+    }
+    {
+        Image sub = img.CreateSubImage(Point2u(96u, 0u), TEXTURE_SIZE);
+        desertLayer = atlas.AddTextureLayer(std::move(sub));
     }
 
     protoblocks.emplace(BlockType::MUD, BlockType::MUD);
@@ -62,6 +66,11 @@ void World::LoadProtoBlocks() {
             protoblocks.at(BlockType::GRASS).AddFace(dir, grassMudLayer);
         }
      }
+
+    protoblocks.emplace(BlockType::DESERT, BlockType::DESERT);
+    for (uint8_t i = 0; i < 6; i++) {
+        protoblocks.at(BlockType::DESERT).AddFace(GetDirection(i), desertLayer);
+    }
 }
 
 void World::Tick() {
