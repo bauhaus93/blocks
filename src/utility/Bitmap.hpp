@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <algorithm>
 
+#include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
 #include "utility/FileRead.hpp"
 #include "logger/GlobalLogger.hpp"

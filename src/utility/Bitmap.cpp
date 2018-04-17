@@ -31,16 +31,16 @@ Image ReadBitmap(const std::string& filePath) {
     const BmpFileHeader* fh = reinterpret_cast<const BmpFileHeader*>(buffer.data());
     const BmpInfoHeader* ih = reinterpret_cast<const BmpInfoHeader*>(buffer.data() + 14);
 
-    DEBUG("bmp size: ", ih->width, "/", ih->height);
-    DEBUG("bmp offset: ", fh->offBits);
+    DEBUG("Reading bmp: size = ", ih->width, "/", ih->height, ", offset = ", fh->offBits, ", depth = ", ih->bitCount);
     assert(ih->height > 0);
     assert(ih->bitCount == 24);
-    int32_t lineSize = ih->width * ih->bitCount / 8;
+    uint32_t lineSize = static_cast<uint32_t>(ih->width) * ih->bitCount / 8;
 
     imgData.reserve(lineSize * ih->height);
     imgData.insert(imgData.begin(),
                     buffer.begin() + fh->offBits,
                     buffer.end());
+    
 
     auto startLo = imgData.begin();
     auto startHi = imgData.end() - lineSize;
@@ -48,6 +48,10 @@ Image ReadBitmap(const std::string& filePath) {
         std::swap_ranges(startLo, startLo + lineSize, startHi);
         startLo += lineSize;
         startHi -= lineSize;
+    }
+
+    for (auto iter = imgData.begin(); iter != imgData.end(); iter += 3) {
+        std::swap(*iter, *(iter + 2));
     }
 
     return Image { std::move(imgData),

@@ -36,6 +36,10 @@ Image Image::CreateSubImage(Point2u origin, Point2u subSize) const {
                        start + subLineSize);
         start += lineSize;
     }
+    INFO("FIRST = ", static_cast<int32_t>(data[0]), "/",
+             static_cast<int32_t>(data[1]), "/",
+             static_cast<int32_t>(data[2]));
+
     return Image { std::move(subData), subSize, depth };
 }
 

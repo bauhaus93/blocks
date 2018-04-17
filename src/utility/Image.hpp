@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstdint>
 
+#include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
 
 namespace mc {
