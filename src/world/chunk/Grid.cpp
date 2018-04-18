@@ -6,10 +6,10 @@ namespace mc::world::chunk {
 
 Grid::Grid(const architect::Architect& architect_):
     drawDistance { 10 },
-    refreshDistance { drawDistance / 5 },
+    refreshDistance { drawDistance / 10 },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
-    chunkLoader { 50, architect } {
+    chunkLoader { 25, architect } {
     chunkLoader.Start();
 }
 
@@ -24,7 +24,7 @@ void Grid::GivePositionUpdate(Point3f worldPos) {
 
 void Grid::SetDrawDistance(int32_t drawDistance_) {
     drawDistance = drawDistance_;
-    refreshDistance = drawDistance / 5;
+    refreshDistance = drawDistance / 10;
     UnloadOldChunks();
     LoadNewChunks();
     TRACE("Set draw distance to ", drawDistance);

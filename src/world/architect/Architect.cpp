@@ -19,9 +19,9 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     mountainNoise { static_cast<uint32_t>(rng()) } {
 
     heightNoise.SetMin(0.0);
-    heightNoise.SetMax(50.0);
-    heightNoise.SetOctaves(6);
-    heightNoise.SetRoughness(0.50);
+    heightNoise.SetMax(25.0);
+    heightNoise.SetOctaves(5);
+    heightNoise.SetRoughness(0.5);
     heightNoise.SetScale(0.003);
 
     temperatureNoise.SetMin(-20.0);
@@ -36,17 +36,17 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     humidityNoise.SetRoughness(0.2);
     humidityNoise.SetScale(0.001);
 
-    hillNoise.SetMin(-4.0);
-    hillNoise.SetMax(2.0);
-    hillNoise.SetOctaves(10);
-    hillNoise.SetRoughness(2.0);
-    hillNoise.SetScale(0.000008);
+    hillNoise.SetMin(-1.0);
+    hillNoise.SetMax(1.0);
+    hillNoise.SetOctaves(2);
+    hillNoise.SetRoughness(7.0);
+    hillNoise.SetScale(0.0004);
 
-    mountainNoise.SetMin(-18.0);
-    mountainNoise.SetMax(8.0);
+    mountainNoise.SetMin(-2.0);
+    mountainNoise.SetMax(1.0);
     mountainNoise.SetOctaves(10);
     mountainNoise.SetRoughness(6.0);
-    mountainNoise.SetScale(0.000004);
+    mountainNoise.SetScale(0.000003);
 
     LoadBiomes();
 }
@@ -80,7 +80,7 @@ const Biome& Architect::GetBiome(Point2i globalPos) const {
     double hills = hillNoise.GetNoise(globalPos);
     double mountain = mountainNoise.GetNoise(globalPos);
 
-    if (mountain > 0.0) {
+    if (mountain > 0.0 && mountain > hills) {
         return biomes.at(BiomeType::MOUNTAIN);
     }
     if (hills > 0.0) {
@@ -156,12 +156,14 @@ int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
     double hHill = h, hMountain = h;
 
     if (hill > 0.0) {
-        hHill *= 1.0 + hill;
+        hHill *= 1.0 + (3.0 * hill);
+        hHill = pow(1.0 - hill, 1.0) * h + pow(hill, 1.0) * hHill;
     }
     if (mountain > 0.0) {
-        hMountain *= 1.0 + mountain;
+        hMountain *= 1.0 + (25.0 * mountain);
+        hMountain = pow((1.0 - mountain), 2.0) * h + pow(mountain, 2.0) * hMountain;
     }
-    return std::max(hHill, hMountain);
+    return std::max(std::max(hHill, hMountain), h);
 }
 
 int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {

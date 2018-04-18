@@ -16,7 +16,7 @@ World::World():
     INFO("Creating world");
     LoadProtoBlocks();
 
-    SetDrawDistance(15);
+    SetDrawDistance(30);
     grid.GivePositionUpdate(camera.GetPosition());
 }
 
