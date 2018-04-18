@@ -15,7 +15,9 @@ namespace mc::world::architect {
 enum class BiomeType {
     GRASSLANDS,
     MUDDY,
-    DESERT
+    DESERT,
+    MOUNTAIN,
+    HILLS
 };
 
 class Biome {

@@ -63,15 +63,29 @@ void Architect::LoadBiomes() {
     Biome desert;
     desert.SetBlockType(BlockType::DESERT);
     biomes.emplace(BiomeType::DESERT, desert);
+
+    Biome mountain;
+    mountain.SetBlockType(BlockType::ROCK);
+    biomes.emplace(BiomeType::MOUNTAIN, mountain);
+
+    Biome hills;
+    hills.SetBlockType(BlockType::MUD);
+    biomes.emplace(BiomeType::HILLS, hills);
 }
 
 const Biome& Architect::GetBiome(Point2i globalPos) const {
     //double height = heightNoise.GetNoise(globalPos);
     double temperature = temperatureNoise.GetNoise(globalPos);
     //double humidity = humidityNoise.GetNoise(globalPos);
-    //double hill = hillNoise.GetNoise(globalPos);
-    //double mountain = mountainNoise.GetNoise(globalPos);
+    double hills = hillNoise.GetNoise(globalPos);
+    double mountain = mountainNoise.GetNoise(globalPos);
 
+    if (mountain > 0.0) {
+        return biomes.at(BiomeType::MOUNTAIN);
+    }
+    if (hills > 0.0) {
+        return biomes.at(BiomeType::HILLS);
+    }
     if (temperature >= 30.0) {
         return biomes.at(BiomeType::DESERT);
     }
@@ -113,16 +127,22 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) co
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
-    /*double sum = 0;
-    int32_t count = 0;
+    
+    /* Could smooth mountain borders
+    double mn = mountainNoise.GetNoise(globalPos);
+    if (mn  > -0.5f && mn < 0.5f) {
+        constexpr int32_t DISTANCE = 4;
+        constexpr int32_t STEP = 2; 
+        double sum = 0;
+        int32_t count = 0;
 
-    for (int32_t y = -4; y <= 4; y +=2) {
-        sum += GetRawGlobalHeight(globalPos + Point2i(0, y));
-        count++;
-    }
-    for (int32_t x = -4; x <= 4; x += 2) {
-        sum += GetRawGlobalHeight(globalPos + Point2i(x, 0));
-        count++;
+        for (int32_t y = -DISTANCE; y <= DISTANCE; y += STEP) {
+            for (int32_t x = -DISTANCE; x <= DISTANCE; x += STEP) {
+                sum += GetRawGlobalHeight(globalPos + Point2i(x, y));
+                count++;
+            }
+        }
+        return sum / count;
     }*/
 
     return GetRawGlobalHeight(globalPos);
