@@ -6,8 +6,7 @@ in vec4 gl_FragCoord;
 out vec3 color;
 
 struct FogData {
-    float start;
-    float end;
+    float density;
     vec3 color;
 };
 
@@ -22,7 +21,7 @@ void main() {
     }
 
     float dist = gl_FragCoord.z / gl_FragCoord.w;
-    float fogFactor = (dist - fog.end) / (fog.end - fog.start);
-    fogFactor = 1.0 - clamp(fogFactor, 0.0, 1.0);
+    float fogFactor = 1.0 / exp(dist * fog.density);
+    //fogFactor = 1.0 - clamp(fogFactor, 0.0, 1.0);
     color = mix(fog.color, color, fogFactor);
 }

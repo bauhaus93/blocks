@@ -17,8 +17,7 @@
 namespace mc::graphics {
 
 struct FogData {
-    GLint start;
-    GLint end;
+    GLint density;
     GLint color;
 };
 
@@ -34,8 +33,7 @@ class ShaderProgram {
     void        MakeActive();
     void        MakeInactive() const;
     void        SetMVPMatrix(const glm::mat4& mvp) const;
-    void        SetFogStart(float start);
-    void        SetFogEnd(float end);
+    void        SetFogDensity(float density);
     void        SetFogColor(Color color);
     GLuint      GetId() const { return programId; }
 
