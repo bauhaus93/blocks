@@ -15,6 +15,7 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     heightNoise { static_cast<uint32_t>(rng()) },
     temperatureNoise { static_cast<uint32_t>(rng()) },
     humidityNoise { static_cast<uint32_t>(rng()) },
+    hillNoise { static_cast<uint32_t>(rng()) },
     mountainNoise { static_cast<uint32_t>(rng()) } {
 
     heightNoise.SetMin(0.0);
@@ -35,11 +36,17 @@ Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32
     humidityNoise.SetRoughness(0.2);
     humidityNoise.SetScale(0.001);
 
-    mountainNoise.SetMin(-4.0);
-    mountainNoise.SetMax(2.0);
+    hillNoise.SetMin(-4.0);
+    hillNoise.SetMax(2.0);
+    hillNoise.SetOctaves(10);
+    hillNoise.SetRoughness(2.0);
+    hillNoise.SetScale(0.000008);
+
+    mountainNoise.SetMin(-18.0);
+    mountainNoise.SetMax(8.0);
     mountainNoise.SetOctaves(10);
-    mountainNoise.SetRoughness(2.0);
-    mountainNoise.SetScale(0.000008);
+    mountainNoise.SetRoughness(6.0);
+    mountainNoise.SetScale(0.000004);
 
     LoadBiomes();
 }
@@ -121,12 +128,18 @@ int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
 
 int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
     //constexpr int32_t MAX_HEIGHT = 50;
-    double n = mountainNoise.GetNoise(globalPos);
+    double hill = hillNoise.GetNoise(globalPos);
+    double mountain = mountainNoise.GetNoise(globalPos);
     double h = heightNoise.GetNoise(globalPos);
-    if (n > 0.0) {
-        return (1.0 + n) * h;
+    double hHill = h, hMountain = h;
+
+    if (hill > 0.0) {
+        hHill *= 1.0 + hill;
     }
-    return h;
+    if (mountain > 0.0) {
+        hMountain *= 1.0 + mountain;
+    }
+    return std::max(hHill, hMountain);
 }
 
 int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
