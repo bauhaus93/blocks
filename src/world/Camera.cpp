@@ -23,6 +23,11 @@ Camera::Camera(const Point3f& position_, const Point3f& rotation_):
                             0.5f,
                             1000.0f) },
     frustum { view, projection } {
+    shader.MakeActive();
+    shader.SetFogStart(near);
+    shader.SetFogEnd(far * 0.5);
+    shader.SetFogColor(Color(0.0f, 0.0f, 0.0f));
+    shader.MakeInactive();
 }
 
 void Camera::SetFOV(float fovDegree) {
@@ -35,10 +40,16 @@ void Camera::SetAspectRatio(float ratio) {
 }
 void Camera::SetNear(float near_) {
     near = near_;
+    shader.MakeActive();
+    shader.SetFogStart(near);
+    shader.MakeInactive();
     UpdateProjection();
 }
 void Camera::SetFar(float far_) {
     far = far_;
+    shader.MakeActive();
+    shader.SetFogEnd(far * 0.5);
+    shader.MakeInactive();
     UpdateProjection();
 }
 

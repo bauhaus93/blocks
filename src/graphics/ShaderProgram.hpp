@@ -8,12 +8,19 @@
 
 #include "glad/Glad.h"
 #include "utility/FileRead.hpp"
+#include "utility/Color.hpp"
 
 #include "logger/GlobalLogger.hpp"
 #include "ShaderError.hpp"
 #include "ShaderProgramError.hpp"
 
 namespace mc::graphics {
+
+struct FogData {
+    GLint start;
+    GLint end;
+    GLint color;
+};
 
 class ShaderProgram {
 
@@ -27,6 +34,9 @@ class ShaderProgram {
     void        MakeActive();
     void        MakeInactive() const;
     void        SetMVPMatrix(const glm::mat4& mvp) const;
+    void        SetFogStart(float start);
+    void        SetFogEnd(float end);
+    void        SetFogColor(Color color);
     GLuint      GetId() const { return programId; }
 
  private:
@@ -35,11 +45,13 @@ class ShaderProgram {
     GLuint      fragmentShader;
     GLint       mvpHandle;
     GLint       uniformTexture;
+    FogData     fog;
 
     void        LinkSetup();
     void        LinkCleanup();
     void        LoadMVPHandle();
     void        LoadUniformTexture();
+    void        LoadUniformFog();
 
 };
 

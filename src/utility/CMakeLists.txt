@@ -9,6 +9,8 @@ add_sources(
   Point3.hpp
   Image.hpp
   Image.cpp
+  Color.hpp
+  Color.cpp
   PointTransformation.hpp
   PointTransformation.cpp
 )

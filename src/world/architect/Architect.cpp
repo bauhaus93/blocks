@@ -69,6 +69,8 @@ const Biome& Architect::GetBiome(Point2i globalPos) const {
     //double height = heightNoise.GetNoise(globalPos);
     double temperature = temperatureNoise.GetNoise(globalPos);
     //double humidity = humidityNoise.GetNoise(globalPos);
+    //double hill = hillNoise.GetNoise(globalPos);
+    //double mountain = mountainNoise.GetNoise(globalPos);
 
     if (temperature >= 30.0) {
         return biomes.at(BiomeType::DESERT);
