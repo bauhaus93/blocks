@@ -22,7 +22,7 @@ class Architect {
                         Architect(const std::map<BlockType, ProtoBlock>& protoblocks_);
     explicit            Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32_t seed_);
 
-    const ProtoBlock&   GetProtoBlock(Point3i chunkPos, Point3i localPos) const;
+    BlockType           GetBlockType(Point3i chunkPos, Point3i localPos) const;
 
     std::pair<int32_t, int32_t> GetMinMaxGlobalHeight(Point2i chunkPos) const;
     int32_t             GetGlobalHeight(Point2i globalPos) const;

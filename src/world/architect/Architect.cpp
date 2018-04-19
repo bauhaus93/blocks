@@ -96,10 +96,9 @@ const Biome& Architect::GetBiome(Point2i chunkPos, Point2i localPos) {
     return GetBiome(GetGlobalPosition(chunkPos, localPos));
 }
 
-const ProtoBlock& Architect::GetProtoBlock(Point3i chunkPos, Point3i localPos) const {
-    BlockType type = GetBiome(GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]),
-                                                Point2i(localPos[0], localPos[1]))).GetBlockType();
-    return protoblocks.at(type);
+BlockType Architect::GetBlockType(Point3i chunkPos, Point3i localPos) const {
+   return GetBiome(GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]),
+                                     Point2i(localPos[0], localPos[1]))).GetBlockType();
 }
 
 std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) const {

@@ -20,7 +20,7 @@
 #include "world/Direction.hpp"
 #include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
-#include "Block.hpp"
+#include "Blocktree.hpp"
 #include "CompositeMesh.hpp"
 
 namespace mc::world::chunk {
@@ -35,11 +35,7 @@ class Chunk {
 
     void            Generate(const architect::Architect& architect);
     const Point3i&  GetPosition() const { return chunkPos; }
-    bool            IsEmpty() const;
-    bool            IsFull() const;
     void            CreateMesh();
-    bool            operator<(const Chunk& rhs) const;
-    bool            operator<(const Point3i& rhsChunkPos) const;
     void            Draw(const Camera& camera) const;
 
  private:
@@ -50,7 +46,7 @@ class Chunk {
     Point3i                     chunkPos;
     Point3f                     origin;
     glm::mat4                   model;
-    std::vector<Block>          blocks;
+    std::unique_ptr<Blocktree>  blocktree;
     std::unique_ptr<mesh::Mesh> mesh;
 };
 

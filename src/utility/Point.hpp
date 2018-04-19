@@ -301,9 +301,10 @@ bool Point<T, N>::InBoundaries(const Point<T, N>& min,
 
 template<typename T, uint8_t N>
 std::ostream& operator<<(std::ostream& os, const Point<T, N>& point) {
-    os << point[0];
+    os.operator<<(point[0]);
     for (decltype(N) i = 1; i < N; i++) {
-        os << "/" << point[i];
+        os << "/";
+        os.operator<<(point[i]);
     }
     return os;
 }

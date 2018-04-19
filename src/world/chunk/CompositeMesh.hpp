@@ -14,12 +14,12 @@
 #include "mesh/Vertex.hpp"
 #include "mesh/Quad.hpp"
 #include "mesh/Triangle.hpp"
-#include "Block.hpp"
+#include "Blocktree.hpp"
 
 
 namespace mc::world::chunk {
 
-std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const std::vector<Block>& blocks);
+std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const Blocktree& blockTree);
 
 }       // namespace mc::world::chunk
 

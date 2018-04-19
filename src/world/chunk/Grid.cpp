@@ -6,7 +6,7 @@ namespace mc::world::chunk {
 
 Grid::Grid(const architect::Architect& architect_):
     drawDistance { 10 },
-    refreshDistance { drawDistance / 10 },
+    refreshDistance { 1 },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
     chunkLoader { 25, architect } {
@@ -24,7 +24,7 @@ void Grid::GivePositionUpdate(Point3f worldPos) {
 
 void Grid::SetDrawDistance(int32_t drawDistance_) {
     drawDistance = drawDistance_;
-    refreshDistance = drawDistance / 10;
+    refreshDistance = std::max(drawDistance / 10, 1);
     UnloadOldChunks();
     LoadNewChunks();
     TRACE("Set draw distance to ", drawDistance);

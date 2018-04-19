@@ -6,6 +6,6 @@
 namespace mc::world {
 
 constexpr float BLOCK_SIZE = 2.0f;
-constexpr int32_t CHUNK_SIZE = 16;
+constexpr int8_t CHUNK_SIZE = 16;
 
 };
