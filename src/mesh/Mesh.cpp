@@ -4,7 +4,8 @@
 
 namespace mc::mesh {
 
-//TODO texture stuff
+static std::vector<Triangle> CreateTriangles(std::vector<Quad> quads);
+
 Mesh::Mesh(std::vector<Triangle> triangles_):
     triangles { std::move(triangles_) },
     vao { 0 },
@@ -36,6 +37,10 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
         }
     }
     indexCount = unsavedData->indices.size();
+}
+
+Mesh::Mesh(std::vector<Quad> quads):
+    Mesh(CreateTriangles(std::move(quads))) {
 }
 
 Mesh::~Mesh() {
@@ -212,6 +217,18 @@ void Mesh::Draw() {
     );
     glBindVertexArray(0);
 }
+
+static std::vector<Triangle> CreateTriangles(std::vector<Quad> quads) {
+    std::vector<Triangle> triangles;
+    triangles.reserve(quads.size() * 2);
+
+    for (auto& quad: quads) {
+        triangles.emplace_back(quad.GetFirstTriangle());
+        triangles.emplace_back(quad.GetSecondTriangle());    
+    }
+    return triangles;
+}
+
 
 }       // namespace mc::mesh
 

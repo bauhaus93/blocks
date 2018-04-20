@@ -4,16 +4,7 @@
 
 namespace mc::world::chunk {
 
-static std::vector<mesh::Quad> CreateQuads(const Blocktree& blocktree);
-static std::vector<mesh::Triangle> CreateTriangles(std::vector<mesh::Quad> quads);
-
-std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const Blocktree& blocktree) {
-    std::vector<mesh::Triangle> triangles = CreateTriangles(CreateQuads(blocktree));
-
-    TRACE("Created ", triangles.size(), " triangles for ", blocks.size(), " blocks");
-    return std::make_unique<mesh::Mesh>(std::move(triangles));
-}
-
+/*
 static std::vector<mesh::Quad> CreateQuads(const Blocktree& blocktree) {
     std::vector<mesh::Quad> quads;
     quads.reserve(blocks.size() * 6);
@@ -87,18 +78,6 @@ static std::vector<mesh::Quad> CreateQuads(const Blocktree& blocktree) {
     }
     return quads; 
 }
-
-static std::vector<mesh::Triangle> CreateTriangles(std::vector<mesh::Quad> quads) {
-    std::vector<mesh::Triangle> triangles;
-    triangles.reserve(quads.size() * 2);
-
-    for (auto& quad: quads) {
-        triangles.emplace_back(quad.GetFirstTriangle());
-        triangles.emplace_back(quad.GetSecondTriangle());    
-    }
-    return triangles;
-}
-
-
+*/
 }       // namespace mc::world::chunk
 

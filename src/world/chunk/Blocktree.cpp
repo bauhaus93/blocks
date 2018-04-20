@@ -70,23 +70,40 @@ void Blocktree::ClearChildren() {
     }
 }
 
+
+
 mesh::Mesh Blocktree::CreateMesh() const {
     std::vector<mesh::Quad> quads;
+    std::vector<Face> knownFaces;
 
+    //TODO: handle when root is leaf
     for (uint8_t i = 0; i < 8; i++) {
-        for (uint8_t j = 0; j < 6; j++) {
-            
+        if (children[i] != nullptr) {
+            children[i]->CollectQuads(*this, knownFaces, quads);
         }
     }
-
+    return mesh::Mesh(std::move(quads));
 }
 
-void Blocktree::CollectQuads(Direction dir, Blocktree& neighbour, std::vector<mesh::Quad>& quads) {
+void Blocktree::CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const {
+    if (type != BlockType::NONE) {  //Leaf
+        for (uint8_t i = 0; i < 6; i++) {
+            Face f { origin, Point3i(0) };
+            switch(GetDirection(i)) {
+                case Direction::NORTH:
+                case Direction::EAST:
+                case Direction::SOUTH:
+                case Direction::WEST:
+            }
+        }
 
-}
-
-void Blocktree::CollectQuads(Direction dir, std::vector<mesh::Quad>& quads) {
-    
+    } else {
+        for (uint8_t i = 0; i < 8; i++) {
+            if (children[i] != nullptr) {
+                children[i]->CollectQuads(*this, knownFaces, quads);
+            }
+        }
+    }
 }
 
 

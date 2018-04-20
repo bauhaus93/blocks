@@ -17,6 +17,12 @@ namespace mc::world::chunk {
 
 class Blocktree;
 
+struct Face {
+    Point3i8    origin;
+    Point3i8    extent;
+};
+
+
 typedef std::array<std::unique_ptr<Blocktree>, 8> BlocktreeArray;
 typedef std::pair<Point3i8, BlockType> BlockElement;
 
@@ -34,8 +40,7 @@ class Blocktree {
     void            AssignChildBlocks(int8_t index, std::vector<BlockElement> blocks);
     BlockType       IsMergeable() const;
     void            ClearChildren();
-    void            CollectQuads(Direction dir, Blocktree& neighbour, std::vector<mesh::Quad>& quads);
-    void            CollectQuads(Direction dir, std::vector<mesh::Quad>& quads);
+    void            CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const;
 
     Point3i8        origin;
     int8_t          size;

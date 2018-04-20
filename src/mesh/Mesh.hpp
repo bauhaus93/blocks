@@ -1,5 +1,7 @@
 /* Copyright 2018 Jakob Fischer <JakobFischer93@gmail.com> */
 
+#pragma once
+
 #include <vector>
 #include <map>
 #include <memory>
@@ -12,6 +14,7 @@
 #include "utility/Point3.hpp"
 
 #include "Vertex.hpp"
+#include "Quad.hpp"
 #include "Triangle.hpp"
 
 namespace mc::mesh {
@@ -26,6 +29,7 @@ struct VBOData {
 class Mesh {
  public:
     explicit    Mesh(std::vector<Triangle> triangles_);
+    explicit    Mesh(std::vector<Quad> quads);
                 ~Mesh();
                 Mesh(Mesh&& other);
     Mesh&       operator=(Mesh&& other);

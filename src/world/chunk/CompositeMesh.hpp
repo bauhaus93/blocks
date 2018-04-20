@@ -19,7 +19,5 @@
 
 namespace mc::world::chunk {
 
-std::unique_ptr<mesh::Mesh> CreateCompositeMesh(const Blocktree& blockTree);
-
 }       // namespace mc::world::chunk
 
