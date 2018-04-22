@@ -3,6 +3,8 @@ add_sources(
   Chunk.cpp
   Blocktree.hpp
   Blocktree.cpp
+  Facetree.hpp
+  Facetree.cpp
   Grid.hpp
   Grid.cpp
   ChunkLoader.hpp

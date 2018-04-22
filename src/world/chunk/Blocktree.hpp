@@ -13,14 +13,15 @@
 #include "world/Direction.hpp"
 #include "mesh/Quad.hpp"
 #include "mesh/Mesh.hpp"
+#include "Facetree.hpp"
 
 namespace mc::world::chunk {
 
 class Blocktree;
 
 struct Face {
-    Point3i8    origin;
-    Point3i8    extent;
+    Point3i8    min;
+    Point3i8    max;
 };
 
 

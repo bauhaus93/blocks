@@ -74,41 +74,40 @@ void Blocktree::ClearChildren() {
 
 mesh::Mesh Blocktree::CreateMesh() const {
     std::vector<mesh::Quad> quads;
-    std::vector<Face> knownFaces;
 
-    //TODO: handle when root is leaf
-    for (uint8_t i = 0; i < 8; i++) {
-        if (children[i] != nullptr) {
-            children[i]->CollectQuads(*this, knownFaces, quads);
+    for (uint8_t axis = 0; axis < 3; axis++) {
+        for (uint8_t layer = 0; layer < CHUNK_SIZE; layer++) {
+            
         }
     }
+
     return mesh::Mesh(std::move(quads));
 }
 
 void Blocktree::CollectFaces(std::vector<Face>& faces) const {
         if (type != BlockType::NONE) {  //Leaf
         for (uint8_t i = 0; i < 6; i++) {
-            Face f { origin, Point3i8::Full(0) };
+            Face f { origin, origin };
             switch(GetDirection(i)) {
                 case Direction::NORTH:
-                    f.extent += Point3i8(size, 0, size);
+                    f.max += Point3i8(size, 0, size);
                     break;
                 case Direction::EAST:
-                    f.origin[0] += size;
-                    f.extent += Point3i8(0, size, size);
+                    f.min[0] += size;
+                    f.max += Point3i8(0, size, size);
                     break;
                 case Direction::SOUTH:
-                    f.origin[1] += size;
-                    f.extent += Point3i8(size, 0, size);
+                    f.min[1] += size;
+                    f.max += Point3i8(size, 0, size);
                 case Direction::WEST:
-                    f.extent += Point3i8(0, size, size);
+                    f.max += Point3i8(0, size, size);
                     break;
                 case Direction::UP:
-                    f.origin[2] += size;
-                    f.extent += size;
+                    f.min[2] += size;
+                    f.max += size;
                     break;
                 case Direction::DOWN:
-                    f.extent += size;
+                    f.max += size;
                     break;
                 default:
                     assert(0);
