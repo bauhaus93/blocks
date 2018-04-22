@@ -4,7 +4,7 @@
 
 namespace mc::world::architect {
 
-Point2i GetGlobalPosition(Point2i chunkPos, Point2i localPos) {
+Point2i GetGlobalPosition(Point2i chunkPos, Point2i8 localPos) {
     return chunkPos * CHUNK_SIZE + localPos;
 }
 

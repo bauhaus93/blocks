@@ -85,25 +85,47 @@ mesh::Mesh Blocktree::CreateMesh() const {
     return mesh::Mesh(std::move(quads));
 }
 
-void Blocktree::CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const {
-    if (type != BlockType::NONE) {  //Leaf
+void Blocktree::CollectFaces(std::vector<Face>& faces) const {
+        if (type != BlockType::NONE) {  //Leaf
         for (uint8_t i = 0; i < 6; i++) {
-            Face f { origin, Point3i(0) };
+            Face f { origin, Point3i8::Full(0) };
             switch(GetDirection(i)) {
                 case Direction::NORTH:
+                    f.extent += Point3i8(size, 0, size);
+                    break;
                 case Direction::EAST:
+                    f.origin[0] += size;
+                    f.extent += Point3i8(0, size, size);
+                    break;
                 case Direction::SOUTH:
+                    f.origin[1] += size;
+                    f.extent += Point3i8(size, 0, size);
                 case Direction::WEST:
+                    f.extent += Point3i8(0, size, size);
+                    break;
+                case Direction::UP:
+                    f.origin[2] += size;
+                    f.extent += size;
+                    break;
+                case Direction::DOWN:
+                    f.extent += size;
+                    break;
+                default:
+                    assert(0);
             }
+            faces.push_back(f);
         }
-
     } else {
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
-                children[i]->CollectQuads(*this, knownFaces, quads);
+                children[i]->CollectFaces(faces);
             }
         }
     }
+}
+
+void Blocktree::CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const {
+
 }
 
 

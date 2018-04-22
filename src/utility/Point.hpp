@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <initializer_list>
+#include <forward_list>
 #include <cassert>
 #include <array>
 
@@ -15,14 +16,20 @@ template<typename T, uint8_t N>
 class Point {
 
  public:
-                template<typename... Args>
-    explicit    Point(Args... args);
-    explicit    Point(T value_);
-    //explicit    Point(std::initializer_list<T> l);
-                Point(const Point<T, N>& other);
+                        Point() = default;
+    explicit            Point(std::initializer_list<T> il);
 
-                template<typename T2>
-                Point(const Point<T2, N>& other);
+                        template<typename... Args>
+                        Point(T v, Args... args);
+    explicit            Point(T v);
+
+                        Point(const Point<T, N>& other);
+                        template<typename T2>
+                        Point(const Point<T2, N>& other);
+
+    static Point<T, N>  Full(T value);
+                        template<typename T2>
+    static Point<T, N>  Full(T2 value); //order matters!
 
     Point<T, N>&    operator=(const Point<T, N>& other);
     Point<T, N>&    operator+=(const Point<T, N>& other);
@@ -58,18 +65,37 @@ class Point {
     std::array<T, N>    value;
 };
 
-//TODO type check of args elements
 template<typename T, uint8_t N>
-template<typename... Args>
-Point<T, N>::Point(Args... args):
-    value { { args... } } {
+Point<T, N> Point<T, N>::Full(T value) {
+    Point<T, N> p;
+    p.value.fill(value);
+    return p;
 }
 
 template<typename T, uint8_t N>
-Point<T, N>::Point(T value_) {
-    for (decltype(N) i = 0; i < N; i++) {
-        value[i] = value_;
-    }
+template<typename T2>
+Point<T, N> Point<T, N>::Full(T2 value) {
+    Point<T, N> p;
+    p.value.fill(static_cast<T>(value));
+    return p;
+}
+
+template<typename T, uint8_t N>
+Point<T, N>::Point(std::initializer_list<T> il) {
+    assert(il.size() == N);
+    std::copy(il.begin(), il.end(), value.begin());
+}
+
+template<typename T, uint8_t N>
+template<typename ...Args>
+Point<T, N>::Point(T v, Args... args) {
+    value[N - sizeof...(args) - 1] = v;
+    Point(args...);
+}
+
+template<typename T, uint8_t N>
+Point<T, N>::Point(T v) {
+    value[N - 1] = v;
 }
 
 template<typename T, uint8_t N>

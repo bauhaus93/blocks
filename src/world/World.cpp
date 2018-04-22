@@ -4,8 +4,8 @@
 
 namespace mc::world {
 
-const Point2u TEXTURE_SIZE(32u);
-const uint32_t ATLAS_DEPTH(5u);
+const Point2u TEXTURE_SIZE = Point2u::Full(32);
+const uint32_t ATLAS_DEPTH(5);
 
 World::World():
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
@@ -37,7 +37,7 @@ void World::LoadProtoBlocks() {
     uint32_t desertLayer = 0;
     uint32_t rockLayer = 0;
 
-    {   Image sub = img.CreateSubImage(Point2u(0u), TEXTURE_SIZE);
+    {   Image sub = img.CreateSubImage(Point2u::Full(0), TEXTURE_SIZE);
         mudLayer = atlas.AddTextureLayer(std::move(sub));
     }
     {

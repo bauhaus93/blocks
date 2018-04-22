@@ -92,23 +92,23 @@ const Biome& Architect::GetBiome(Point2i globalPos) const {
     return biomes.at(BiomeType::GRASSLANDS);
 }
 
-const Biome& Architect::GetBiome(Point2i chunkPos, Point2i localPos) {
+const Biome& Architect::GetBiome(Point2i chunkPos, Point2i8 localPos) {
     return GetBiome(GetGlobalPosition(chunkPos, localPos));
 }
 
-BlockType Architect::GetBlockType(Point3i chunkPos, Point3i localPos) const {
+BlockType Architect::GetBlockType(Point3i chunkPos, Point3i8 localPos) const {
    return GetBiome(GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]),
                                      Point2i(localPos[0], localPos[1]))).GetBlockType();
 }
 
 std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) const {
-    static const std::array<Point2i, 7> localPos { { Point2i(CHUNK_SIZE / 2),
-                                                     Point2i(0),
-                                                     Point2i(0, CHUNK_SIZE - 1),
-                                                     Point2i(CHUNK_SIZE - 1, 0),
-                                                     Point2i(CHUNK_SIZE - 1),
-                                                     Point2i(CHUNK_SIZE / 2, 0),
-                                                     Point2i(0, CHUNK_SIZE / 2) } };
+    static const std::array<Point2i, 7> localPos { { Point2i8::Full(CHUNK_SIZE / 2),
+                                                     Point2i8::Full(0),
+                                                     Point2i8(0, CHUNK_SIZE - 1),
+                                                     Point2i8(CHUNK_SIZE - 1, 0),
+                                                     Point2i8::Full(CHUNK_SIZE - 1),
+                                                     Point2i8(CHUNK_SIZE / 2, 0),
+                                                     Point2i8(0, CHUNK_SIZE / 2) } };
     int32_t min = std::numeric_limits<int32_t>::max();
     int32_t max = 0;
     for (uint8_t i = 0; i < 7; i++) {
@@ -120,7 +120,7 @@ std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) c
 }
 
 
-int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) const {
+int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) const {
     Point2i globalPos = GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]), localPos);
     return std::min(CHUNK_SIZE - 1, GetGlobalHeight(globalPos) - chunkPos[2] * CHUNK_SIZE - 1);
 }
@@ -165,7 +165,7 @@ int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
     return std::max(std::max(hHill, hMountain), h);
 }
 
-int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i localPos) const {
+int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i8 localPos) const {
     return GetGlobalHeight(GetGlobalPosition(chunkPos, localPos));
 }
 

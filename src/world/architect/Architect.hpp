@@ -22,12 +22,12 @@ class Architect {
                         Architect(const std::map<BlockType, ProtoBlock>& protoblocks_);
     explicit            Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32_t seed_);
 
-    BlockType           GetBlockType(Point3i chunkPos, Point3i localPos) const;
+    BlockType           GetBlockType(Point3i chunkPos, Point3i8 localPos) const;
 
     std::pair<int32_t, int32_t> GetMinMaxGlobalHeight(Point2i chunkPos) const;
     int32_t             GetGlobalHeight(Point2i globalPos) const;
-    int32_t             GetGlobalHeight(Point2i chunkPos, Point2i localPos) const;
-    int32_t             GetChunkRelativeHeight(Point3i chunkPos, Point2i localPos) const;
+    int32_t             GetGlobalHeight(Point2i chunkPos, Point2i8 localPos) const;
+    int32_t             GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) const;
 
  private:
     const std::map<BlockType, ProtoBlock>&  protoblocks;
@@ -42,7 +42,7 @@ class Architect {
 
     void                                    LoadBiomes();
     int32_t                                 GetRawGlobalHeight(Point2i globalPos) const;
-    const Biome&        GetBiome(Point2i chunkPos, Point2i localPos);
+    const Biome&        GetBiome(Point2i chunkPos, Point2i8 localPos);
     const Biome&        GetBiome(Point2i globalPos) const;
 
 };

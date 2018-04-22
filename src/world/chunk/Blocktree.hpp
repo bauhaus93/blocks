@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <cstdint>
+#include <cassert>
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point3.hpp"
@@ -40,6 +41,7 @@ class Blocktree {
     void            AssignChildBlocks(int8_t index, std::vector<BlockElement> blocks);
     BlockType       IsMergeable() const;
     void            ClearChildren();
+    void            CollectFaces(std::vector<Face>& faces) const;
     void            CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const;
 
     Point3i8        origin;

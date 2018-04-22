@@ -6,7 +6,7 @@ namespace mc::world::chunk {
 
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
-    origin { chunkPos * static_cast<float>(CHUNK_SIZE * BLOCK_SIZE) },
+    origin { chunkPos * static_cast<float>(CHUNK_SIZE) * BLOCK_SIZE },
     model {  CreateTranslationMatrix(origin) * glm::mat4(1.0f) },
     blocktree { nullptr },
     mesh { nullptr } {
@@ -35,9 +35,9 @@ void Chunk::Generate(const architect::Architect& architect) {
 
     for (int8_t y = 0; y < CHUNK_SIZE; y++) {
         for (int8_t x = 0; x < CHUNK_SIZE; x++) {
-            int8_t height = static_cast<int8_t>(architect.GetChunkRelativeHeight(chunkPos, Point2i(x, y)));
+            int8_t height = static_cast<int8_t>(architect.GetChunkRelativeHeight(chunkPos, Point2i8{ x, y } ));
             if (height >= 0) {
-                Point3i8 curr(x, y, static_cast<int8_t>(height));
+                Point3i8 curr { x, y, height };
                 while (curr[2] >= 0) {
                     BlockType type = architect.GetBlockType(chunkPos, curr);
                     blockQueue.emplace_back(std::make_pair(curr, type));
@@ -50,7 +50,7 @@ void Chunk::Generate(const architect::Architect& architect) {
     if (blockQueue.size() > 0) {
         INFO("Inserting blocks = ", blockQueue.size());
         if (blocktree == nullptr) {
-            blocktree = std::make_unique<Blocktree>(Point3i8(static_cast<int8_t>(0)), CHUNK_SIZE);
+            blocktree = std::make_unique<Blocktree>(Point3i8::Full(0), CHUNK_SIZE);
         }
         blocktree->InsertBlocks(blockQueue);
     }
