@@ -18,14 +18,14 @@ class Point {
  public:
                         Point() = default;
     explicit            Point(std::initializer_list<T> il);
-    explicit            Point(T v);
+                        Point(T v);
 
                         Point(const Point<T, N>& other);
                         template<typename T2>
                         Point(const Point<T2, N>& other);
 
                         template<typename... Args>
-                        Point(Args... args);
+                        Point(T v, Args... args);
 
     Point<T, N>&    operator=(const Point<T, N>& other);
     Point<T, N>&    operator+=(const Point<T, N>& other);
@@ -78,7 +78,9 @@ Point<T, N>::Point(std::initializer_list<T> il) {
 
 template<typename T, uint8_t N>
 template<typename ...Args>
-Point<T, N>::Point(Args... args) {
+Point<T, N>::Point(T v, Args... args) {
+    assert(sizeof...(args) == N - 1);
+    value[0] = v;
     SetValues(args...);
 }
 

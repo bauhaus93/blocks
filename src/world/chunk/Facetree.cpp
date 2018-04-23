@@ -111,13 +111,14 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
         if (f.origin == origin && f.size == size) {
             if (faceInfo != nullptr) {
                 SetFaceNone();
+                break;
             } else {
                 SplitInsertFace(f.info);
             }
         } else {
             uint8_t index = 0;
             for (uint8_t i = 0; i < 2; i++) {
-                if (f.origin[i] > origin[i] + size / 2) {
+                if (f.origin[i] >= origin[i] + size / 2) {
                     index |= (1 << i);
                 }
             }
@@ -171,6 +172,7 @@ bool Facetree::IsFace() const {
 
 void Facetree::CreateChild(uint8_t index) {
     assert(children[index] == nullptr);
+    assert(size / 2 > 0);
     Point2i8 childOrigin(origin);
     for (int8_t j = 0; j < 2; j++) {
         if (((index >> j) & 1) != 0) {
@@ -188,14 +190,6 @@ void Facetree::DeleteChildren() {
     for (uint8_t i = 0; i < 4; i++) {
         DeleteChild(i);
     }
-}
-
-Facetree Facetree::Merge(const Facetree& treeA, const Facetree& treeB) {
-    assert(treeA.origin == treeB.origin);
-    assert(treeA.size == treeB.size);
-    Facetree merged(treeA.origin, treeA.size);
-
-    return merged;
 }
 
 }   // mc::world::chunk

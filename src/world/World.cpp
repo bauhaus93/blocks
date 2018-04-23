@@ -10,7 +10,7 @@ const uint32_t ATLAS_DEPTH(5);
 World::World():
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
     protoblocks { },
-    camera { Point3f(0.0f, 0.0f, 400.0f), Point3f(0.0f, 0.0f, 0.0f) },
+    camera { Point3f(0.0f, 0.0f, 000.0f), Point3f(0.0f, 0.0f, 0.0f) },
     architect { protoblocks },
     grid { architect } {
     INFO("Creating world");

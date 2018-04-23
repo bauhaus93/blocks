@@ -4,10 +4,10 @@
 
 namespace mc::world::chunk {
 
-static std::array<std::vector<BlockElement>, 8> SplitToChildren(Point3i8 origin, const std::vector<BlockElement>& blocks);
+
 
 Blocktree::Blocktree(Point3i8 origin_, int8_t size_):
-    origin (origin_ ),
+    origin { origin_ },
     size { size_ },
     type { BlockType::NONE },
     children { { nullptr, nullptr, nullptr, nullptr,
@@ -15,14 +15,19 @@ Blocktree::Blocktree(Point3i8 origin_, int8_t size_):
 }
 
 void Blocktree::InsertBlocks(std::vector<BlockElement> blocks) {
+    //INFO("Inserting blocks @ ", origin, ", size = ", static_cast<uint32_t>(size), ", count = ", blocks.size());
+
     if (size == 1) {
         assert(blocks.size() == 1);
         type = blocks[0].second;
     } else {
-        auto childBlocks = SplitToChildren(origin, blocks);
+        auto childBlocks = SplitToChildren(blocks);
         for (uint8_t i = 0; i < 8; i++) {
             if (childBlocks[i].size() > 0) {
-                AssignChildBlocks(i, std::move(childBlocks[i]));
+                if (children[i] == nullptr) {
+                    CreateChildren(i);
+                }
+                children[i]->InsertBlocks(std::move(childBlocks[i]));
             }
         }
         type = IsMergeable();
@@ -33,33 +38,37 @@ void Blocktree::InsertBlocks(std::vector<BlockElement> blocks) {
     }
 }
 
-void Blocktree::AssignChildBlocks(int8_t index, std::vector<BlockElement> blocks) {
-    if (children[index] == nullptr) {
-        Point3i8 childOrigin(origin);
-        for (int8_t j = 0; j < 3; j++) {
-            if (((index >> j) & 1) != 0) {
-                childOrigin[j] += size / 2;
-            }
-        }
-        children[index] = std::make_unique<Blocktree>(childOrigin, size / 2);
-    }
-    children[index]->InsertBlocks(std::move(blocks));
-}
-
 BlockType Blocktree::IsMergeable() const {
+    bool foundOne = false;
     BlockType mergeType = BlockType::NONE;
     for (uint8_t i = 0; i < 8; i++) {
         if (children[i] == nullptr) {
             return BlockType::NONE;
         }
         BlockType curr = children[i]->GetBlockType();
-        if (mergeType == BlockType::NONE) {
-            mergeType = curr;
+        if (!foundOne) {
+            if (curr != BlockType::NONE) {
+                foundOne = true;
+                mergeType = curr;
+            } else {
+                return BlockType::NONE;
+            }
         } else if (curr != mergeType) {
             return BlockType::NONE;
         }
     }
     return mergeType;
+}
+
+void Blocktree::CreateChildren(uint8_t index) {
+    assert(children[index] == nullptr);
+    Point3i8 childOrigin(origin);
+    for (int8_t j = 0; j < 3; j++) {
+        if (((index >> j) & 1) != 0) {
+            childOrigin[j] += size / 2;
+        }
+    }
+    children[index] = std::make_unique<Blocktree>(childOrigin, size / 2);
 }
 
 void Blocktree::ClearChildren() {
@@ -93,9 +102,13 @@ mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblo
                       [](const Face& a, const Face& b) {
                           return a.size > b.size;
                       });
+
             Facetree tree(Point2i8(0), CHUNK_SIZE);
             tree.InsertFaces(std::move(faces));
             tree.CreateQuads(protoblocks, axis, layer, quads);
+            if (quads.size() > 0) {
+                INFO("Axis = ", static_cast<int>(axis), ", layer = ", static_cast<int>(layer), ", quadcount: ", quads.size());
+            }
          }
     }
 
@@ -103,7 +116,6 @@ mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblo
 }
 
 void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const {
-
     if (type != BlockType::NONE) {
         Point2i8 faceOrigin;
         switch (dir) {
@@ -115,7 +127,7 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction 
             case Direction::NORTH:
             case Direction::SOUTH:
                 faceOrigin[0] = origin[0];
-                faceOrigin[2] = origin[2];
+                faceOrigin[1] = origin[2];
                 break;
             case Direction::UP:
             case Direction::DOWN:
@@ -145,8 +157,8 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction 
         }
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
-                if (children[i]->origin[axis] >= layer &&
-                    children[i]->origin[axis] + children[i]->size  <= layer) {
+                if (layer >= children[i]->origin[axis] &&
+                    layer <= children[i]->origin[axis] + children[i]->size) {
                         children[i]->CollectFaces(faces, layer, dir);
                 }
             }
@@ -154,21 +166,21 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction 
     }
 }
 
-
-
-
-static std::array<std::vector<BlockElement>, 8> SplitToChildren(Point3i8 origin, const std::vector<BlockElement>& blocks) {
+std::array<std::vector<BlockElement>, 8> Blocktree::SplitToChildren(const std::vector<BlockElement>& blocks) {
     std::array<std::vector<BlockElement>, 8> queue;
+
     for (auto& element: blocks) {
         const Point3i8& pos = element.first;
         uint8_t index = 0;
         for (uint8_t i = 0; i < 3; i++) {
-            if (pos[i] != origin[0]) {
+            if (pos[i] >= origin[i] + size / 2) {
                 index |= (1 << i);
             }
         }
+
         queue[index].emplace_back(element);
     }
+
     return queue;
 }
 

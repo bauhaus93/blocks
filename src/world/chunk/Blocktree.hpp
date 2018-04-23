@@ -35,7 +35,9 @@ class Blocktree {
 
  private:
     void            AssignChildBlocks(int8_t index, std::vector<BlockElement> blocks);
+    std::array<std::vector<BlockElement>, 8> SplitToChildren(const std::vector<BlockElement>& blocks);
     BlockType       IsMergeable() const;
+    void            CreateChildren(uint8_t index);
     void            ClearChildren();
     void            CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const;
 

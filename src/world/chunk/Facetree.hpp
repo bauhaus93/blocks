@@ -47,7 +47,6 @@ struct Face {
 
 class Facetree {
  public:
-    static Facetree Merge(const Facetree& treeA, const Facetree& treeB);
                     Facetree(Point2i8 origin_, int8_t size_);
                     Facetree(Facetree&& other) = default;
     void            InsertFaces(std::vector<Face> faces);

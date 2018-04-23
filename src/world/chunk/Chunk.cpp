@@ -21,18 +21,19 @@ Chunk::Chunk(Chunk&& other):
 }
 
 Chunk& Chunk::operator=(Chunk&& other) {
-    chunkPos = other.chunkPos;
-    origin = other.origin;
-    model = std::move(other.model);
-    blocktree = std::move(other.blocktree);
-    mesh = std::move(other.mesh);
+    if (this != &other) {
+        chunkPos = other.chunkPos;
+        origin = other.origin;
+        model = std::move(other.model);
+        blocktree = std::move(other.blocktree);
+        mesh = std::move(other.mesh);
+    }
     return *this;
 }
 
 void Chunk::Generate(const architect::Architect& architect) {
     sf::Clock clock;
     std::vector<BlockElement> blockQueue;
-    DEBUG("Generating block @ ", chunkPos);
 
     for (int8_t y = 0; y < CHUNK_SIZE; y++) {
         for (int8_t x = 0; x < CHUNK_SIZE; x++) {
@@ -49,10 +50,7 @@ void Chunk::Generate(const architect::Architect& architect) {
     }
 
     if (blockQueue.size() > 0) {
-        INFO("Inserting blocks = ", blockQueue.size());
-        if (blocktree == nullptr) {
-            blocktree = std::make_unique<Blocktree>(Point3i8(0), CHUNK_SIZE);
-        }
+        blocktree = std::make_unique<Blocktree>(Point3i8(0), CHUNK_SIZE);
         blocktree->InsertBlocks(blockQueue);
         mesh = std::make_unique<mesh::Mesh>(std::move(blocktree->CreateMesh(architect.GetProtoBlocks())));
     }
