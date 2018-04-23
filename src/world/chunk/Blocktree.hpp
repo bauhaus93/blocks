@@ -11,6 +11,7 @@
 #include "utility/Point3.hpp"
 #include "world/BlockType.hpp"
 #include "world/Direction.hpp"
+#include "world/ProtoBlock.hpp"
 #include "mesh/Quad.hpp"
 #include "mesh/Mesh.hpp"
 #include "Facetree.hpp"
@@ -18,12 +19,6 @@
 namespace mc::world::chunk {
 
 class Blocktree;
-
-struct Face {
-    Point3i8    min;
-    Point3i8    max;
-};
-
 
 typedef std::array<std::unique_ptr<Blocktree>, 8> BlocktreeArray;
 typedef std::pair<Point3i8, BlockType> BlockElement;
@@ -35,15 +30,14 @@ class Blocktree {
     Blocktree&  operator=(Blocktree&& rhs) = default;
     void        InsertBlocks(std::vector<BlockElement> blocks);
     BlockType   GetBlockType() const { return type; }
-    mesh::Mesh  CreateMesh() const;
+    mesh::Mesh  CreateMesh(const std::map<BlockType, ProtoBlock>& protoblocks) const;
 
 
  private:
     void            AssignChildBlocks(int8_t index, std::vector<BlockElement> blocks);
     BlockType       IsMergeable() const;
     void            ClearChildren();
-    void            CollectFaces(std::vector<Face>& faces) const;
-    void            CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const;
+    void            CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const;
 
     Point3i8        origin;
     int8_t          size;

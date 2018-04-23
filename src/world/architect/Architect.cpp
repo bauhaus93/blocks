@@ -102,11 +102,11 @@ BlockType Architect::GetBlockType(Point3i chunkPos, Point3i8 localPos) const {
 }
 
 std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) const {
-    static const std::array<Point2i, 7> localPos { { Point2i8::Full(CHUNK_SIZE / 2),
-                                                     Point2i8::Full(0),
+    static const std::array<Point2i, 7> localPos { { Point2i8(CHUNK_SIZE / 2),
+                                                     Point2i8(0),
                                                      Point2i8(0, CHUNK_SIZE - 1),
                                                      Point2i8(CHUNK_SIZE - 1, 0),
-                                                     Point2i8::Full(CHUNK_SIZE - 1),
+                                                     Point2i8(CHUNK_SIZE - 1),
                                                      Point2i8(CHUNK_SIZE / 2, 0),
                                                      Point2i8(0, CHUNK_SIZE / 2) } };
     int32_t min = std::numeric_limits<int32_t>::max();
@@ -126,29 +126,10 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) c
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
-    
-    /* Could smooth mountain borders
-    double mn = mountainNoise.GetNoise(globalPos);
-    if (mn  > -0.5f && mn < 0.5f) {
-        constexpr int32_t DISTANCE = 4;
-        constexpr int32_t STEP = 2; 
-        double sum = 0;
-        int32_t count = 0;
-
-        for (int32_t y = -DISTANCE; y <= DISTANCE; y += STEP) {
-            for (int32_t x = -DISTANCE; x <= DISTANCE; x += STEP) {
-                sum += GetRawGlobalHeight(globalPos + Point2i(x, y));
-                count++;
-            }
-        }
-        return sum / count;
-    }*/
-
     return GetRawGlobalHeight(globalPos);
 }
 
 int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
-    //constexpr int32_t MAX_HEIGHT = 50;
     double hill = hillNoise.GetNoise(globalPos);
     double mountain = mountainNoise.GetNoise(globalPos);
     double h = heightNoise.GetNoise(globalPos);

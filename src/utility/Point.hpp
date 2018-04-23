@@ -18,18 +18,14 @@ class Point {
  public:
                         Point() = default;
     explicit            Point(std::initializer_list<T> il);
-
-                        template<typename... Args>
-                        Point(T v, Args... args);
     explicit            Point(T v);
 
                         Point(const Point<T, N>& other);
                         template<typename T2>
                         Point(const Point<T2, N>& other);
 
-    static Point<T, N>  Full(T value);
-                        template<typename T2>
-    static Point<T, N>  Full(T2 value); //order matters!
+                        template<typename... Args>
+                        Point(Args... args);
 
     Point<T, N>&    operator=(const Point<T, N>& other);
     Point<T, N>&    operator+=(const Point<T, N>& other);
@@ -61,23 +57,17 @@ class Point {
 
     bool        InBoundaries(const Point<T, N>& min,
                              const Point<T, N>& max) const;
- protected:
+ private:
     std::array<T, N>    value;
+
+                        template<typename ...Args>
+    void                SetValues(T v, Args... args);
+    void                SetValues(T v);
 };
 
 template<typename T, uint8_t N>
-Point<T, N> Point<T, N>::Full(T value) {
-    Point<T, N> p;
-    p.value.fill(value);
-    return p;
-}
-
-template<typename T, uint8_t N>
-template<typename T2>
-Point<T, N> Point<T, N>::Full(T2 value) {
-    Point<T, N> p;
-    p.value.fill(static_cast<T>(value));
-    return p;
+Point<T, N>::Point(T v) {
+    value.fill(v);
 }
 
 template<typename T, uint8_t N>
@@ -88,13 +78,19 @@ Point<T, N>::Point(std::initializer_list<T> il) {
 
 template<typename T, uint8_t N>
 template<typename ...Args>
-Point<T, N>::Point(T v, Args... args) {
-    value[N - sizeof...(args) - 1] = v;
-    Point(args...);
+Point<T, N>::Point(Args... args) {
+    SetValues(args...);
 }
 
 template<typename T, uint8_t N>
-Point<T, N>::Point(T v) {
+template<typename ...Args>
+void Point<T, N>::SetValues(T v, Args... args) {
+    value[N - sizeof...(args) - 1] = v;
+    SetValues(args...);
+}
+
+template<typename T, uint8_t N>
+void Point<T, N>::SetValues(T v) {
     value[N - 1] = v;
 }
 
@@ -114,6 +110,7 @@ Point<T, N>::Point(const Point<T2, N>& other) {
 template<typename T, uint8_t N>
 Point<T, N>& Point<T, N>::operator=(const Point<T, N>& other) {
     value = other.value;
+
     return *this;
 }
 

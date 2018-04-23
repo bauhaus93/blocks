@@ -9,28 +9,129 @@ Facetree::Facetree(Point2i8 origin_, int8_t size_):
     size { size_ },
     faceInfo { nullptr },
     children { nullptr, nullptr, nullptr, nullptr } {
-
 }
 
-void Facetree::InsertFace(const FaceInfo& info, Point2i8 faceOrigin, int8_t faceSize) {
-    if (faceOrigin == origin && size == faceSize) {
-        if (faceInfo != nullptr) {
-            SetFaceNone();
-        } else {
-            SplitInsertFace(info);
+void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
+    uint8_t axis,
+    uint8_t layer,
+    std::vector<mesh::Quad>& quads) const {
+
+    static const std::array<std::array<Point3f, 4>, 6> vertexOffset = { {
+        // Direction::NORTH
+        { { Point3f(0.0f),
+            Point3f(BLOCK_SIZE, 0.0f, 0.0f),
+            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
+            Point3f(0.0f, 0.0f, BLOCK_SIZE) } },
+        // Direction::EAST
+        { { Point3f(BLOCK_SIZE, 0.0f, 0.0f),
+            Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
+            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE ) } },
+        // Direction::SOUTH
+        { { Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
+            Point3f(0.0f, BLOCK_SIZE, 0.0f),
+            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE),
+            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) } },
+        // Direction::WEST
+        { { Point3f(0.0f, BLOCK_SIZE, 0.0f),
+            Point3f(0.0f, 0.0f, 0.0f),
+            Point3f(0.0f, 0.0f, BLOCK_SIZE),
+            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) } },
+        // Direction::UP
+        { {  Point3f(0.0f, 0.0f, BLOCK_SIZE),
+            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
+            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) } },
+        // Direction::DOWN
+        { {  Point3f(0.0f, BLOCK_SIZE, 0.0f),
+            Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
+            Point3f(BLOCK_SIZE, 0.0f, 0.0f),
+            Point3f(0.0f) } }
+    } };
+    static const std::array<Point2f, 4> vertexUV = { { 
+        Point2f(1.0f, 1.0f),
+        Point2f(0.0f, 1.0f),
+        Point2f(0.0f),
+        Point2f(1.0f, 0.0f)
+    } };
+    static const std::array<Point3f, 6> vertexNormal = { {
+        Point3f(0.0f, -1.0f, 0.0f), // Direction::NORTH
+        Point3f(1.0f, 0.0f, 0.0f),  // Direction::EAST
+        Point3f(0.0f, 1.0f, 0.0f),  // Direction::SOUTH
+        Point3f(-1.0f, 0.0f, 0.0f), // Direction::WEST
+        Point3f(0.0f, 0.0f, 1.0f),  // Direction::UP
+        Point3f(0.0f, 0.0f, -1.0f)  // Direction::DOWN
+    } };
+
+    if (faceInfo != nullptr) {
+        if (faceInfo->type != BlockType::NONE) {
+            mesh::Quad quad;
+            for (uint8_t i = 0; i < 4; i++) {
+                Point3f pos;
+                Point3f uv { vertexUV[i][0],
+                             vertexUV[i][1],
+                             static_cast<float>(protoblocks.at(faceInfo->type).GetFace(faceInfo->dir))
+                };
+                switch (axis) {
+                    case 0:
+                        pos[0] = static_cast<float>(layer);
+                        pos[1] = origin[0];
+                        pos[2] = origin[1];
+                        break;
+                    case 1:
+                        pos[0] = origin[0];
+                        pos[1] = static_cast<float>(layer);
+                        pos[2] = origin[1];
+                        break;
+                    case 2:
+                        pos[0] = origin[0];
+                        pos[1] = origin[1];
+                        pos[2] = static_cast<float>(layer);
+                        break;
+                    default:    assert(0);
+                }
+                pos += vertexOffset[GetIndex(faceInfo->dir)][i] * static_cast<float>(size);
+                quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[i]));
+            }
+            quads.emplace_back(std::move(quad));
         }
     } else {
-        uint8_t index = 0;
-        for (uint8_t i = 0; i < 2; i++) {
-            if (faceOrigin[i] > origin[i] + size / 2) {
-                index |= (1 << i);
+        for (auto& child: children) {
+            if (child != nullptr) {
+                child->CreateQuads(protoblocks, axis, layer, quads);
             }
         }
-        if (children[index] == nullptr) {
-            CreateChild(index);
-            children[index]->InsertFace(info, faceOrigin, faceSize);
-        } else if (!children[index]->IsFace()) {
-            children[index]->InsertFace(info, faceOrigin, faceSize);
+    }
+}
+
+void Facetree::InsertFaces(std::vector<Face> faces) {
+    std::array<std::vector<Face>, 4> subSplit;
+
+    for (auto& f : faces) {
+        if (f.origin == origin && f.size == size) {
+            if (faceInfo != nullptr) {
+                SetFaceNone();
+            } else {
+                SplitInsertFace(f.info);
+            }
+        } else {
+            uint8_t index = 0;
+            for (uint8_t i = 0; i < 2; i++) {
+                if (f.origin[i] > origin[i] + size / 2) {
+                    index |= (1 << i);
+                }
+            }
+            if (children[index] == nullptr) {
+                CreateChild(index);
+                subSplit[index].emplace_back(std::move(f));
+            } else if (!children[index]->IsFace()) {
+                subSplit[index].emplace_back(std::move(f));
+            }
+        }
+    }
+    for (uint8_t i = 0; i < 4; i++) {
+        if (subSplit[i].size() > 0) {
+            children[i]->InsertFaces(std::move(subSplit[i]));
         }
     }
 }
@@ -87,6 +188,14 @@ void Facetree::DeleteChildren() {
     for (uint8_t i = 0; i < 4; i++) {
         DeleteChild(i);
     }
+}
+
+Facetree Facetree::Merge(const Facetree& treeA, const Facetree& treeB) {
+    assert(treeA.origin == treeB.origin);
+    assert(treeA.size == treeB.size);
+    Facetree merged(treeA.origin, treeA.size);
+
+    return merged;
 }
 
 }   // mc::world::chunk

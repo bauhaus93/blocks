@@ -9,7 +9,7 @@ Grid::Grid(const architect::Architect& architect_):
     refreshDistance { 1 },
     architect { architect_ },
     centerPos(1337, 1337, 1337),
-    chunkLoader { 25, architect } {
+    chunkLoader { 1, architect } {
     chunkLoader.Start();
 }
 

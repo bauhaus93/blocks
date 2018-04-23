@@ -3,15 +3,21 @@
 #pragma once
 
 #include <memory>
+#include <map>
 #include <cstdint>
 #include <cassert>
 #include <algorithm>
+#include <vector>
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
+#include "utility/Point3.hpp"
 #include "world/Size.hpp"
 #include "world/Direction.hpp"
 #include "world/BlockType.hpp"
+#include "world/ProtoBlock.hpp"
+#include "mesh/Quad.hpp"
+#include "mesh/Vertex.hpp"
 
 namespace mc::world::chunk {
 
@@ -28,11 +34,27 @@ struct FaceInfo {
     }
 };
 
+struct Face {
+    FaceInfo info;
+    Point2i8 origin;
+    int8_t   size;
+    Face(BlockType type_, Direction dir_, Point2i8 origin_, int8_t size_):
+        info { type_, dir_ },
+        origin { origin_ },
+        size { size_ } {
+    }
+};
+
 class Facetree {
  public:
-            Facetree(Point2i8 origin_, int8_t size_);
-            Facetree(Facetree&& other) = default;
-    void    InsertFace(const FaceInfo& info, Point2i8 faceOrigin, int8_t faceSize);
+    static Facetree Merge(const Facetree& treeA, const Facetree& treeB);
+                    Facetree(Point2i8 origin_, int8_t size_);
+                    Facetree(Facetree&& other) = default;
+    void            InsertFaces(std::vector<Face> faces);
+    void            CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
+                                uint8_t axis,
+                                uint8_t layer,
+                                std::vector<mesh::Quad>& quads) const;
 
  private:
 

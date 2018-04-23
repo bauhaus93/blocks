@@ -58,7 +58,7 @@ Point3i GetOffset(Direction dir) {
         case Direction::DOWN:   return Point3i(0, 0, -1);
         default: assert(0);
     }
-    return Point3i::Full(0);
+    return Point3i(0);
 }
 
 }       // namespace mc::world

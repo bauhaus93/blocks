@@ -28,6 +28,7 @@ class Architect {
     int32_t             GetGlobalHeight(Point2i globalPos) const;
     int32_t             GetGlobalHeight(Point2i chunkPos, Point2i8 localPos) const;
     int32_t             GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) const;
+    const std::map<BlockType, ProtoBlock>&  GetProtoBlocks() const { return protoblocks; }
 
  private:
     const std::map<BlockType, ProtoBlock>&  protoblocks;

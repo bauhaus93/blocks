@@ -70,62 +70,91 @@ void Blocktree::ClearChildren() {
     }
 }
 
-
-
-mesh::Mesh Blocktree::CreateMesh() const {
+mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblocks) const {
     std::vector<mesh::Quad> quads;
 
     for (uint8_t axis = 0; axis < 3; axis++) {
         for (uint8_t layer = 0; layer < CHUNK_SIZE; layer++) {
-            
-        }
+            std::vector<Face> faces;
+            switch (axis) {
+                case 0:     CollectFaces(faces, layer, Direction::EAST);
+                            CollectFaces(faces, layer, Direction::WEST);
+                            break;
+                case 1:     CollectFaces(faces, layer, Direction::NORTH);
+                            CollectFaces(faces, layer, Direction::SOUTH);
+                            break;
+                case 2:     CollectFaces(faces, layer, Direction::UP);
+                            CollectFaces(faces, layer, Direction::DOWN);
+                            break;
+                default:    assert(0);
+            }
+            std::sort(faces.begin(),
+                      faces.end(),
+                      [](const Face& a, const Face& b) {
+                          return a.size > b.size;
+                      });
+            Facetree tree(Point2i8(0), CHUNK_SIZE);
+            tree.InsertFaces(std::move(faces));
+            tree.CreateQuads(protoblocks, axis, layer, quads);
+         }
     }
 
     return mesh::Mesh(std::move(quads));
 }
 
-void Blocktree::CollectFaces(std::vector<Face>& faces) const {
-        if (type != BlockType::NONE) {  //Leaf
-        for (uint8_t i = 0; i < 6; i++) {
-            Face f { origin, origin };
-            switch(GetDirection(i)) {
-                case Direction::NORTH:
-                    f.max += Point3i8(size, 0, size);
-                    break;
-                case Direction::EAST:
-                    f.min[0] += size;
-                    f.max += Point3i8(0, size, size);
-                    break;
-                case Direction::SOUTH:
-                    f.min[1] += size;
-                    f.max += Point3i8(size, 0, size);
-                case Direction::WEST:
-                    f.max += Point3i8(0, size, size);
-                    break;
-                case Direction::UP:
-                    f.min[2] += size;
-                    f.max += size;
-                    break;
-                case Direction::DOWN:
-                    f.max += size;
-                    break;
-                default:
-                    assert(0);
-            }
-            faces.push_back(f);
+void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const {
+
+    if (type != BlockType::NONE) {
+        Point2i8 faceOrigin;
+        switch (dir) {
+            case Direction::EAST:
+            case Direction::WEST:
+                faceOrigin[0] = origin[1];
+                faceOrigin[1] = origin[2];
+                break;
+            case Direction::NORTH:
+            case Direction::SOUTH:
+                faceOrigin[0] = origin[0];
+                faceOrigin[2] = origin[2];
+                break;
+            case Direction::UP:
+            case Direction::DOWN:
+                faceOrigin[0] = origin[0];
+                faceOrigin[1] = origin[1];
+                break;
+            default:    assert(0);
         }
+
+        faces.emplace_back(type, dir, faceOrigin, size);
     } else {
+        uint8_t axis = 0;
+        switch (dir) {
+            case Direction::EAST:
+            case Direction::WEST:
+                axis = 0;
+                break;
+            case Direction::NORTH:
+            case Direction::SOUTH:
+                axis = 1;
+                break;
+            case Direction::UP:
+            case Direction::DOWN:
+                axis = 2;
+                break;
+            default:    assert(0);
+        }
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
-                children[i]->CollectFaces(faces);
+                if (children[i]->origin[axis] >= layer &&
+                    children[i]->origin[axis] + children[i]->size  <= layer) {
+                        children[i]->CollectFaces(faces, layer, dir);
+                }
             }
         }
     }
 }
 
-void Blocktree::CollectQuads(const Blocktree& parent, std::vector<Face>& knownFaces, std::vector<mesh::Quad>& quads) const {
 
-}
 
 
 static std::array<std::vector<BlockElement>, 8> SplitToChildren(Point3i8 origin, const std::vector<BlockElement>& blocks) {
