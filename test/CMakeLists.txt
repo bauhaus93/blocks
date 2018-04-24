@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-
-project(googletest-download NONE)
+project(testblocks CXX)
 
 include(ExternalProject)
 ExternalProject_Add(googletest
@@ -14,5 +13,6 @@ ExternalProject_Add(googletest
     TEST_COMMAND ""
 )
 
-add_subdirectory("${CMAKE_BINARY_DIR}/googletest-src"
-                 "${CMAKE_BINARY_DIR}/googletest-build")
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+add_subdirectory(test_point)
