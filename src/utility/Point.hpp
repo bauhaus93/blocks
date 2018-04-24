@@ -191,6 +191,7 @@ template<typename T, uint8_t N>
 Point<T, N> Point<T, N>::operator/(const Point<T, N>& rhs) const {
     Point<T, N> result = *this;
     for (decltype(N) i = 0; i < N; i++) {
+        assert(rhs[i] != 0);
         result[i] /= rhs[i];
     }
     return result;
@@ -227,6 +228,7 @@ template<typename T, uint8_t N>
 Point<T, N> Point<T, N>::operator/(T scalar) const {
     Point<T, N> result = *this;
     for (decltype(N) i = 0; i < N; i++) {
+        assert(scalar != 0);
         result[i] /= scalar;
     }
     return result;
