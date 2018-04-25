@@ -8,7 +8,7 @@ Facetree::Facetree(Point2i8 origin_, int8_t size_):
     origin { origin_ },
     size { size_ },
     faceInfo { nullptr },
-    children { nullptr, nullptr, nullptr, nullptr } {
+    children { { nullptr, nullptr, nullptr, nullptr } } {
 }
 
 void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,

@@ -24,7 +24,6 @@ add_executable(${EXECUTABLE_NAME} "src/Main.cpp")
 add_library(${LIBRARY_NAME} "")
 
 target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME})
-target_include_directories(${EXECUTABLE_NAME} PRIVATE src)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         target_compile_options(${LIBRARY_NAME} PRIVATE -Wall -fmax-errors=1 -Werror)
@@ -40,6 +39,7 @@ get_property(SRCS TARGET ${LIBRARY_NAME} PROPERTY SRC_LIST)
 target_sources(${LIBRARY_NAME} PRIVATE ${SRCS})
 
 target_include_directories(${LIBRARY_NAME} PRIVATE src)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE src)
 
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${CMAKE_DL_LIBS})
 
@@ -48,11 +48,15 @@ target_link_libraries(${LIBRARY_NAME} PRIVATE Threads::Threads)
 
 find_package(SFML 2 REQUIRED COMPONENTS network audio graphics window system)
 target_include_directories(${LIBRARY_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 find_package(OpenGL REQUIRED)
 target_include_directories(${LIBRARY_NAME} SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${OPENGL_LIBRARIES})
+
+execute_process(COMMAND ${CMAKE_COMMAND} --build . ${CMAKE_SOURCE_DIR}/test
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V)
 enable_testing()
