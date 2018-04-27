@@ -9,7 +9,9 @@
                 "/usr/include/c++/7.3.0",
                 "/usr/include/c++/7.3.0/x86_64-pc-linux-gnu",
                 "/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.0/include",
-                "${workspaceRoot}/src"
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/debug/googletest-src/googletest/include",
+                "${workspaceRoot}/debug/googletest-src/googlemock/include"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",

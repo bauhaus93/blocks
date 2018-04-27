@@ -3,6 +3,9 @@ set(TEST_NAME "testpoint")
 set(SRCS Main.cpp
          TestPoint.cpp)
 
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-src/googletest/include")
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-src/googlemock/include")
+
 add_executable(${TEST_NAME} ${SRCS})
 target_link_libraries(${TEST_NAME} libblocks gtest gmock)
 target_include_directories(${TEST_NAME} PRIVATE "${CMAKE_BINARY_DIR}/googletest-src/googletest/include"
