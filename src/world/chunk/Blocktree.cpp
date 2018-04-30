@@ -169,7 +169,7 @@ mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblo
 
 void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const {
     if (type != BlockType::NONE) {
-        Point2i8 faceOrigin;
+        Point2i8 faceOrigin(0);
         switch (dir) {
             case Direction::EAST:
             case Direction::WEST:
