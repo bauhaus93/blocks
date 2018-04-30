@@ -35,8 +35,7 @@ target_link_libraries(${EXEC_NAME} libblocks gtest gmock)
 
 set_property(TARGET testblocks PROPERTY EXEC_NAME ${EXEC_NAME}) 
 
-target_include_directories(${EXEC_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/googletest/install/include")
-
+target_include_directories(${EXEC_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/googletest/install/include" "/usr/local/include")
 add_subdirectory(test_point)
 add_subdirectory(test_blocktree)
 
