@@ -15,12 +15,12 @@ endmacro()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(EXECUTABLE_NAME "blocks")
 set(LIBRARY_NAME "libblocks")
 
 add_executable(${EXECUTABLE_NAME} "src/Main.cpp")
-
 add_library(${LIBRARY_NAME} "")
 
 target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME})
@@ -55,7 +55,7 @@ find_package(OpenGL REQUIRED)
 target_include_directories(${LIBRARY_NAME} SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V)
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 enable_testing()
 add_subdirectory(test)
 

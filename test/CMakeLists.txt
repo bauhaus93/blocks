@@ -24,8 +24,7 @@ ExternalProject_Add(googletest
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(EXEC_NAME "testblocks")
-
-link_directories(${CMAKE_BINARY_DIR}/googletest/install/lib)
+link_directories(${CMAKE_BINARY_DIR}/googletest/install/lib ${CMAKE_BINARY_DIR}/googletest/install/lib64)
 
 add_executable(${EXEC_NAME} "Main.cpp")
 add_dependencies(check testblocks)
@@ -39,6 +38,7 @@ set_property(TARGET testblocks PROPERTY EXEC_NAME ${EXEC_NAME})
 target_include_directories(${EXEC_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/googletest/install/include")
 
 add_subdirectory(test_point)
+add_subdirectory(test_blocktree)
 
 get_property(SRCS TARGET ${EXEC_NAME} PROPERTY SRC_LIST)
 target_sources(${EXEC_NAME} PRIVATE ${SRCS})
