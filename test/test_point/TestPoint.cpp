@@ -1,3 +1,5 @@
+/* Copyright 2018 Jakob Fischer <JakobFischer93@gmail.com> */
+
 #include "gtest/gtest.h"
 
 #include "utility/Point3.hpp"

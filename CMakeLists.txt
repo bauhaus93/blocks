@@ -55,7 +55,8 @@ find_package(OpenGL REQUIRED)
 target_include_directories(${LIBRARY_NAME} SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -V)
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+add_custom_target(check_verbose COMMAND ${CMAKE_CTEST_COMMAND} -V)
 enable_testing()
 add_subdirectory(test)
 
