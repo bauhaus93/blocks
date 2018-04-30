@@ -29,17 +29,23 @@ class Blocktree {
                 Blocktree(Blocktree&& other) = default;
     Blocktree&  operator=(Blocktree&& rhs) = default;
     void        InsertBlocks(std::vector<BlockElement> blocks);
-    BlockType   GetBlockType() const { return type; }
-    mesh::Mesh  CreateMesh(const std::map<BlockType, ProtoBlock>& protoblocks) const;
 
+    mesh::Mesh  CreateMesh(const std::map<BlockType, ProtoBlock>& protoblocks) const;
+    bool        HasChild(uint8_t octant) const;
+    const Blocktree& GetChild(uint8_t octant) const;
+    uint32_t    MaxDepth() const;
+    BlockType   GetBlockType() const { return type; }
+    BlockType   GetBlockType(Point3i8 pos) const;
+    bool        IsLeaf() const;
+    bool        IsEmpty() const;
 
  private:
-    void            AssignChildBlocks(int8_t index, std::vector<BlockElement> blocks);
     std::array<std::vector<BlockElement>, 8> SplitToChildren(const std::vector<BlockElement>& blocks);
     BlockType       IsMergeable() const;
-    void            CreateChildren(uint8_t index);
+    void            CreateChild(uint8_t octant);
     void            ClearChildren();
     void            CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const;
+    uint8_t         GetOctant(Point3i8 pos) const;
 
     Point3i8        origin;
     int8_t          size;
