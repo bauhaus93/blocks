@@ -13,7 +13,7 @@ namespace mc::world {
 
 class ProtoBlock {
  public:
-                        ProtoBlock(BlockType type_);
+    explicit            ProtoBlock(BlockType type_);
 
     BlockType           GetType() const { return type; }
     void                AddFace(Direction dir, uint32_t atlasIndex);

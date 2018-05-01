@@ -1,12 +1,27 @@
 /* Copyright 2018 Jakob Fischer <JakobFischer93@gmail.com> */
 
-#include <cmath>
-#include <algorithm>
-#include <random>
-
-#include "utility/Point3.hpp"
-#include "world/chunk/Blocktree.hpp"
-#include "world/BlockType.hpp"
+#include "TestBlocktreeMeshCreation.hpp"
 
 using namespace mc;
 using namespace mc::world;
+
+void TestBlocktreeMeshCreation::SetUp() {
+    std::array<BlockType, 2> types { { BlockType::MUD, BlockType::GRASS } };
+    for (uint8_t i = 0; i < 2; i++) {
+        protoblocks.emplace(types[i], types[i]);
+        for (uint8_t j = 0; j < 6; j++) {
+            protoblocks.at(types[i]).AddFace(GetDirection(j), i);
+        }
+    }
+    bt = chunk::Blocktree(Point3i8(0), CHUNK_SIZE);
+}
+
+
+
+TEST_F(TestBlocktreeMeshCreation, SingleBlockCheckFaces) {
+    std::vector<chunk::BlockElement> blocks;
+    blocks.emplace_back(Point3i8(1), BlockType::MUD);
+
+    bt.InsertBlocks(std::move(blocks));
+    
+}

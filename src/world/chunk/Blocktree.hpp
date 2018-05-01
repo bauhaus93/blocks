@@ -25,6 +25,7 @@ typedef std::pair<Point3i8, BlockType> BlockElement;
 
 class Blocktree {
  public:
+                Blocktree();
                 Blocktree(Point3i8 origin_, int8_t size_);
                 Blocktree(Blocktree&& other) = default;
     Blocktree&  operator=(Blocktree&& rhs) = default;

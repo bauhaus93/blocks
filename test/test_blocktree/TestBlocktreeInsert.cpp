@@ -9,6 +9,7 @@
 #include "utility/Point3.hpp"
 #include "world/chunk/Blocktree.hpp"
 #include "world/BlockType.hpp"
+#include "world/Size.hpp"
 
 using namespace mc;
 using namespace mc::world;
@@ -26,7 +27,7 @@ TEST(TestBlocktreeInsert, SingleBlockCheckTopLevelOctantAndDepth) {
     } };
 
     for (uint8_t i = 0; i < 8; i++) {
-        chunk::Blocktree bt(Point3i(0), 16);
+        chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
         std::vector<chunk::BlockElement> e;
         e.emplace_back(positions.at(i), BlockType::MUD);
         bt.InsertBlocks(e);
@@ -46,7 +47,7 @@ TEST(TestBlocktreeInsert, FullCheckMerge) {
             }
         }
     }
-    chunk::Blocktree bt(Point3i(0), 16);
+    chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
     ASSERT_TRUE(bt.IsEmpty());
     bt.InsertBlocks(std::move(elements));
     ASSERT_FALSE(bt.IsEmpty());
@@ -71,7 +72,7 @@ TEST(TestBlocktreeInsert, FullRandomOrderCheckMerge) {
                  elements.end(),
                  std::default_random_engine(seed));
 
-    chunk::Blocktree bt(Point3i(0), 16);
+    chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
     ASSERT_TRUE(bt.IsEmpty());
     bt.InsertBlocks(std::move(elements));
     ASSERT_FALSE(bt.IsEmpty());
@@ -95,7 +96,7 @@ TEST(TestBlocktreeInsert, Full2DiffBlocksTopBotCheckMerge) {
             }
         }
     }
-    chunk::Blocktree bt(Point3i(0), 16);
+    chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
     ASSERT_TRUE(bt.IsEmpty());
     bt.InsertBlocks(std::move(elements));
     ASSERT_FALSE(bt.IsEmpty());
@@ -134,7 +135,7 @@ TEST(TestBlocktreeInsert, 4DiffCols1EmptyCheckMerge) {
             }
         }
     }
-    chunk::Blocktree bt(Point3i(0), 16);
+    chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
     bt.InsertBlocks(std::move(elements));
     ASSERT_FALSE(bt.IsEmpty());
     ASSERT_FALSE(bt.IsLeaf());
@@ -198,7 +199,7 @@ TEST(TestBlocktreeInsert, 4DiffCols1EmptyRandomOrderCheckMerge) {
                  elements.end(),
                  std::default_random_engine(seed));
 
-    chunk::Blocktree bt(Point3i(0), 16);
+    chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
     bt.InsertBlocks(std::move(elements));
     ASSERT_FALSE(bt.IsEmpty());
     ASSERT_FALSE(bt.IsLeaf());
@@ -260,7 +261,7 @@ TEST(TestBlocktreeInsert, 4DiffCols1EmptyMultipleInsertsRandomOrderCheckMerge) {
             }
         }
     }
-    chunk::Blocktree bt(Point3i(0), 16);
+    chunk::Blocktree bt(Point3i(0), CHUNK_SIZE);
     for (auto& e: elements) {
         std::shuffle(e.begin(),
                      e.end(),

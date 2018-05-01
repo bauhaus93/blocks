@@ -4,6 +4,13 @@
 
 namespace mc::world::chunk {
 
+Blocktree::Blocktree():
+    origin { 0, 0, 0 },
+    size { CHUNK_SIZE },
+    type { BlockType::NONE },
+    children { { nullptr, nullptr, nullptr, nullptr,
+                 nullptr, nullptr, nullptr, nullptr } } {
+}
 
 Blocktree::Blocktree(Point3i8 origin_, int8_t size_):
     origin { origin_ },
@@ -67,8 +74,6 @@ uint8_t Blocktree::GetOctant(Point3i8 pos) const {
 }
 
 void Blocktree::InsertBlocks(std::vector<BlockElement> blocks) {
-    //INFO("Inserting blocks @ ", origin, ", size = ", static_cast<uint32_t>(size), ", count = ", blocks.size());
-
     if (size == 1) {
         assert(blocks.size() == 1);
         type = blocks[0].second;
@@ -84,7 +89,6 @@ void Blocktree::InsertBlocks(std::vector<BlockElement> blocks) {
         }
         type = IsMergeable();
         if (type != BlockType::NONE) {
-            //INFO("Tree ", origin, ", size = ", static_cast<int32_t>(size), " will be merged!");
             ClearChildren();
         }
     }

@@ -1,3 +1,3 @@
-add_test_sources(
+add_test_suites(
     TestPoint.cpp
 )
