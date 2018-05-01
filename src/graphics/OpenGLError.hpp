@@ -7,7 +7,7 @@
 
 #include "glad/Glad.h"
 
-#include "ApplicationError.hpp"
+#include "application/ApplicationError.hpp"
 
 namespace mc::graphics {
 

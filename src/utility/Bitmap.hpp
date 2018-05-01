@@ -12,7 +12,7 @@
 #include "utility/Point2.hpp"
 #include "utility/FileRead.hpp"
 #include "logger/GlobalLogger.hpp"
-#include "ApplicationError.hpp"
+#include "application/ApplicationError.hpp"
 #include "Image.hpp"
 
 namespace mc {

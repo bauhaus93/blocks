@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "ApplicationError.hpp"
+#include "application/ApplicationError.hpp"
 
 namespace mc {
 

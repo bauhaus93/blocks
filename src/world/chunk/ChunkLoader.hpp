@@ -17,7 +17,6 @@
 #include "logger/GlobalLogger.hpp"
 #include "world/architect/Architect.hpp"
 #include "graphics/TextureAtlas.hpp"
-#include "ApplicationError.hpp"
 #include "Chunk.hpp"
 
 namespace mc::world::chunk {

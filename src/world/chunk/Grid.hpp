@@ -14,7 +14,6 @@
 #include "world/Octree.hpp"
 #include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
-#include "ApplicationError.hpp"
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
 
