@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <cstdint>
 #include <cassert>
 
@@ -24,5 +25,6 @@ uint8_t GetValue(Direction dir);
 Direction GetOpposite(Direction dir);
 Point3i GetOffset(Direction dir);
 
-}       // namespace mc::world
+std::ostream& operator<<(std::ostream& os, Direction dir);
 
+}       // namespace mc::world

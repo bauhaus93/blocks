@@ -77,31 +77,33 @@ Mesh::Mesh(Mesh&& other):
 }
 
 Mesh& Mesh::operator=(Mesh&& other) {
-    assert(vao == 0);
-    assert(vertexBuffer == 0);
-    assert(uvBuffer == 0);
-    assert(normalBuffer == 0);
-    assert(indexBuffer == 0);
-    triangles = std::move(other.triangles);
-    vao = other.vao;
-    vertexBuffer = other.vertexBuffer;
-    uvBuffer = other.uvBuffer;
-    normalBuffer = other.normalBuffer;
-    indexBuffer = other.indexBuffer;
-    indexCount = other.indexCount;
-    unsavedData = std::move(other.unsavedData);
-    other.vao = 0;
-    other.vertexBuffer = 0;
-    other.uvBuffer = 0;
-    other.normalBuffer = 0;
-    other.indexBuffer = 0;
-    other.unsavedData = nullptr;
-    assert(vao != 0);
-    assert(vertexBuffer != 0);
-    assert(uvBuffer != 0);
-    assert(normalBuffer != 0);
-    assert(indexBuffer != 0);
-    return *this; 
+    if(this != &other) {
+        assert(vao == 0);
+        assert(vertexBuffer == 0);
+        assert(uvBuffer == 0);
+        assert(normalBuffer == 0);
+        assert(indexBuffer == 0);
+        triangles = std::move(other.triangles);
+        vao = other.vao;
+        vertexBuffer = other.vertexBuffer;
+        uvBuffer = other.uvBuffer;
+        normalBuffer = other.normalBuffer;
+        indexBuffer = other.indexBuffer;
+        indexCount = other.indexCount;
+        unsavedData = std::move(other.unsavedData);
+        other.vao = 0;
+        other.vertexBuffer = 0;
+        other.uvBuffer = 0;
+        other.normalBuffer = 0;
+        other.indexBuffer = 0;
+        other.unsavedData = nullptr;
+        assert(vao != 0);
+        assert(vertexBuffer != 0);
+        assert(uvBuffer != 0);
+        assert(normalBuffer != 0);
+        assert(indexBuffer != 0);
+    }
+    return *this;
 }
 
 
@@ -129,7 +131,7 @@ void Mesh::LoadVBOs() {
         unsavedData->uvs.size() * sizeof(glm::vec3),
         unsavedData->uvs.data(),
         GL_STATIC_DRAW
-    );  
+    );
 
     glGenBuffers(1, &normalBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
@@ -144,7 +146,7 @@ void Mesh::LoadVBOs() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
-        unsavedData->indices.size() * sizeof(uint32_t), 
+        unsavedData->indices.size() * sizeof(uint32_t),
         unsavedData->indices.data(),
         GL_STATIC_DRAW
     );
@@ -224,11 +226,10 @@ static std::vector<Triangle> CreateTriangles(std::vector<Quad> quads) {
 
     for (auto& quad: quads) {
         triangles.emplace_back(quad.GetFirstTriangle());
-        triangles.emplace_back(quad.GetSecondTriangle());    
+        triangles.emplace_back(quad.GetSecondTriangle());
     }
     return triangles;
 }
 
 
 }       // namespace mc::mesh
-

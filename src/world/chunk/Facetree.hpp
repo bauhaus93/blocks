@@ -57,12 +57,13 @@ class Facetree {
 
  private:
 
-    void    SplitInsertFace(const FaceInfo& info);
+    uint8_t GetQuadrant(Point2i8 pos) const;
+    void    SplitFaceToChildren(const FaceInfo& info);
     void    SetFace(const FaceInfo& info);
-    void    SetFaceNone();
+    void    SetFaceNull();
     bool    IsFace() const;
-    void    CreateChild(uint8_t index);
-    void    DeleteChild(uint8_t index);
+    void    CreateChild(uint8_t quadrant);
+    void    DeleteChild(uint8_t quadrant);
     void    DeleteChildren();
 
     Point2i8                    origin;

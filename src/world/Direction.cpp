@@ -61,4 +61,17 @@ Point3i GetOffset(Direction dir) {
     return Point3i(0);
 }
 
+std::ostream& operator<<(std::ostream& os, Direction dir) {
+    switch (dir) {
+        case Direction::NORTH:  os << "North";  break;
+        case Direction::EAST:   os << "East";   break;
+        case Direction::SOUTH:  os << "South";  break;
+        case Direction::WEST:   os << "West";   break;
+        case Direction::UP:     os << "Up";     break;
+        case Direction::DOWN:   os << "Down";   break;
+        default: assert(0);
+    }
+    return os;
+}
+
 }       // namespace mc::world

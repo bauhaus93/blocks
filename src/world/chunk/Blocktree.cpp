@@ -140,17 +140,27 @@ mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblo
 
     for (uint8_t axis = 0; axis < 3; axis++) {
         for (uint8_t layer = 0; layer < CHUNK_SIZE; layer++) {
+            INFO("Axis = ", static_cast<int>(axis), ", layer: ", static_cast<int>(layer), "/", static_cast<int>(layer + 1));
             std::vector<Face> faces;
             switch (axis) {
-                case 0:     CollectFaces(faces, layer, Direction::EAST);
-                            CollectFaces(faces, layer, Direction::WEST);
-                            break;
-                case 1:     CollectFaces(faces, layer, Direction::NORTH);
-                            CollectFaces(faces, layer, Direction::SOUTH);
-                            break;
-                case 2:     CollectFaces(faces, layer, Direction::UP);
-                            CollectFaces(faces, layer, Direction::DOWN);
-                            break;
+                case 0:
+                    if (layer > 0) {
+                        CollectFaces(faces, layer - 1, Direction::EAST);
+                    }
+                    CollectFaces(faces, layer, Direction::WEST);
+                    break;
+                case 1:
+                    if (layer > 0) {
+                        CollectFaces(faces, layer - 1, Direction::NORTH);
+                    }
+                    CollectFaces(faces, layer, Direction::SOUTH);
+                    break;
+                case 2:
+                    if (layer > 0) {
+                        CollectFaces(faces, layer - 1, Direction::UP);
+                    }
+                    CollectFaces(faces, layer, Direction::DOWN);
+                    break;
                 default:    assert(0);
             }
             std::sort(faces.begin(),
@@ -158,12 +168,13 @@ mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblo
                       [](const Face& a, const Face& b) {
                           return a.size > b.size;
                       });
+            INFO("Faces: ", faces.size());
 
             Facetree tree(Point2i8(0), CHUNK_SIZE);
             tree.InsertFaces(std::move(faces));
             tree.CreateQuads(protoblocks, axis, layer, quads);
             if (quads.size() > 0) {
-                INFO("Axis = ", static_cast<int>(axis), ", layer = ", static_cast<int>(layer), ", quadcount: ", quads.size());
+                INFO("Quadcount: ", quads.size());
             }
          }
     }
@@ -171,7 +182,7 @@ mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblo
     return mesh::Mesh(std::move(quads));
 }
 
-void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const {
+void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t index, Direction dir) const {
     if (type != BlockType::NONE) {
         Point2i8 faceOrigin(0);
         switch (dir) {
@@ -192,7 +203,6 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction 
                 break;
             default:    assert(0);
         }
-
         faces.emplace_back(type, dir, faceOrigin, size);
     } else {
         uint8_t axis = 0;
@@ -213,9 +223,9 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction 
         }
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
-                if (layer >= children[i]->origin[axis] &&
-                    layer <= children[i]->origin[axis] + children[i]->size) {
-                        children[i]->CollectFaces(faces, layer, dir);
+                if (index >= children[i]->origin[axis] &&
+                    index < children[i]->origin[axis] + children[i]->size) {
+                        children[i]->CollectFaces(faces, index, dir);
                 }
             }
         }

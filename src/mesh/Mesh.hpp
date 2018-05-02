@@ -28,15 +28,16 @@ struct VBOData {
 
 class Mesh {
  public:
-    explicit    Mesh(std::vector<Triangle> triangles_);
-    explicit    Mesh(std::vector<Quad> quads);
-                ~Mesh();
-                Mesh(Mesh&& other);
-    Mesh&       operator=(Mesh&& other);
+    explicit                        Mesh(std::vector<Triangle> triangles_);
+    explicit                        Mesh(std::vector<Quad> quads);
+                                    ~Mesh();
+                                    Mesh(Mesh&& other);
+    Mesh&                           operator=(Mesh&& other);
 
-    std::size_t GetTriangleCount() const { return triangles.size(); }
-    bool        IsEmpty() const { return triangles.empty(); }
-    void        Draw();
+    std::size_t                     GetTriangleCount() const { return triangles.size(); }
+    const std::vector<Triangle>&    GetTriangles() const { return triangles; }
+    bool                            IsEmpty() const { return triangles.empty(); }
+    void                            Draw();
 
  private:
 

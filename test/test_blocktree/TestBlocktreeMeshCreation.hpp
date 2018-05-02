@@ -13,6 +13,7 @@
 #include "world/ProtoBlock.hpp"
 #include "world/Direction.hpp"
 #include "world/Size.hpp"
+#include "mesh/Mesh.hpp"
 
 
 class TestBlocktreeMeshCreation: public ::testing::Test {

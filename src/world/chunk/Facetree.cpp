@@ -11,6 +11,17 @@ Facetree::Facetree(Point2i8 origin_, int8_t size_):
     children { { nullptr, nullptr, nullptr, nullptr } } {
 }
 
+uint8_t Facetree::GetQuadrant(Point2i8 pos) const {
+    uint8_t index = 0;
+    for (uint8_t i = 0; i < 2; i++) {
+        if (pos[i] >= origin[i] + size / 2) {
+            index |= (1 << i);
+        }
+    }
+    assert(index < 4);
+    return index;
+}
+
 void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
     uint8_t axis,
     uint8_t layer,
@@ -48,7 +59,7 @@ void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
             Point3f(BLOCK_SIZE, 0.0f, 0.0f),
             Point3f(0.0f) } }
     } };
-    static const std::array<Point2f, 4> vertexUV = { { 
+    static const std::array<Point2f, 4> vertexUV = { {
         Point2f(1.0f, 1.0f),
         Point2f(0.0f, 1.0f),
         Point2f(0.0f),
@@ -90,7 +101,8 @@ void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
                         break;
                     default:    assert(0);
                 }
-                pos += vertexOffset[GetIndex(faceInfo->dir)][i] * static_cast<float>(size);
+                pos *= BLOCK_SIZE;
+                pos += vertexOffset[GetIndex(faceInfo->dir)][i] * static_cast<float>(size) * BLOCK_SIZE;
                 quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[i]));
             }
             quads.emplace_back(std::move(quad));
@@ -109,81 +121,80 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
 
     for (auto& f : faces) {
         if (f.origin == origin && f.size == size) {
-            if (faceInfo != nullptr) {
-                SetFaceNone();
-                break;
+            if (!IsFace()) {
+                INFO("Found right face @ ", origin, ", size = ", static_cast<int>(size));
+                SetFace(f.info);
             } else {
-                SplitInsertFace(f.info);
+                INFO("Found right face, but already has equal face");
+                SetFaceNull();
             }
         } else {
-            uint8_t index = 0;
-            for (uint8_t i = 0; i < 2; i++) {
-                if (f.origin[i] >= origin[i] + size / 2) {
-                    index |= (1 << i);
-                }
-            }
-            if (children[index] == nullptr) {
-                CreateChild(index);
-                subSplit[index].emplace_back(std::move(f));
-            } else if (!children[index]->IsFace()) {
-                subSplit[index].emplace_back(std::move(f));
-            }
+            uint8_t quadrant = GetQuadrant(f.origin);
+            subSplit[quadrant].emplace_back(std::move(f));
         }
     }
+
     for (uint8_t i = 0; i < 4; i++) {
         if (subSplit[i].size() > 0) {
+            if (children[i] == nullptr) {
+                CreateChild(i);
+            }
             children[i]->InsertFaces(std::move(subSplit[i]));
         }
     }
 }
 
-void Facetree::SplitInsertFace(const FaceInfo& info) {
-    for (uint8_t i = 0; i < 4; i++) {
-        if (children[i] == nullptr) {
-            if (size > 1) {
+void Facetree::SplitFaceToChildren(const FaceInfo& info) {
+    if (size > 1) {
+        for (uint8_t i = 0; i < 4; i++) {
+            if (children[i] == nullptr) {
                 CreateChild(i);
                 children[i]->SetFace(info);
-            }
-        } else {
-            if (children[i]->IsFace()) {
-                children[i]->SetFaceNone();
-            } else if (size > 1) {
-                children[i]->SplitInsertFace(info);
+            } else {
+                if (children[i]->IsFace()) {    // assumes up to 2 faces can have same positions
+                    INFO("Resplit bc overlap @ ", children[i]->origin, ", size = ", children[i]->size);
+                    children[i]->SplitFaceToChildren(*children[i]->faceInfo);
+                    children[i]->SplitFaceToChildren(info);
+                    children[i]->SetFaceNull();
+                } else {
+                    children[i]->SetFace(info);
+                }
             }
         }
+    } else {
+        INFO("Set to null bc EOT");
+        SetFaceNull();
     }
 }
 
 void Facetree::SetFace(const FaceInfo& info) {
+    INFO("SetFace @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", info.dir);
     faceInfo = std::make_unique<FaceInfo>(info);
 }
 
-void Facetree::SetFaceNone() {
-    if (faceInfo == nullptr) {
-        faceInfo = std::make_unique<FaceInfo>(BlockType::NONE, Direction::NORTH);
-    } else {
-        faceInfo->type = BlockType::NONE;
-    }
+void Facetree::SetFaceNull() {
+    INFO("SetFaceNull @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", faceInfo->dir);
+    faceInfo = nullptr;
 }
 
 bool Facetree::IsFace() const {
     return faceInfo != nullptr;
 }
 
-void Facetree::CreateChild(uint8_t index) {
-    assert(children[index] == nullptr);
+void Facetree::CreateChild(uint8_t quadrant) {
+    assert(children[quadrant] == nullptr);
     assert(size / 2 > 0);
     Point2i8 childOrigin(origin);
     for (int8_t j = 0; j < 2; j++) {
-        if (((index >> j) & 1) != 0) {
+        if (((quadrant >> j) & 1) != 0) {
             childOrigin[j] += size / 2;
         }
     }
-    children[index] = std::make_unique<Facetree>(childOrigin, size / 2);
+    children[quadrant] = std::make_unique<Facetree>(childOrigin, size / 2);
 }
 
-void Facetree::DeleteChild(uint8_t index) {
-    children[index] = nullptr;
+void Facetree::DeleteChild(uint8_t quadrant) {
+    children[quadrant] = nullptr;
 }
 
 void Facetree::DeleteChildren() {

@@ -44,6 +44,7 @@ link_directories(${CMAKE_BINARY_DIR}/googletest/install/lib ${CMAKE_BINARY_DIR}/
 
 add_executable(${EXEC_NAME} "Main.cpp")
 add_dependencies(check testblocks)
+add_dependencies(check_verbose testblocks)
 add_dependencies(testblocks googletest)
 
 #find_library(GTEST_LIBS NAMES gtest gmock HINTS ${CMAKE_BINARY_DIR}/googletest/install/lib)
