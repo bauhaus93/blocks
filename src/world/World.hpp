@@ -18,6 +18,7 @@
 #include "architect/Architect.hpp"
 
 #include "Camera.hpp"
+#include "Fog.hpp"
 #include "ProtoBlock.hpp"
 
 namespace mc::world {
@@ -33,6 +34,7 @@ class World {
     void        SetDrawDistance(int32_t chunkDrawDistance);
 
     Camera&     GetCamera() { return camera; }
+    Fog&        GetFog() { return fog; }
     int32_t     GetChunkDrawDistance() const { return grid.GetDrawDistance(); }
 
     void        Tick();
@@ -43,6 +45,7 @@ class World {
     graphics::TextureAtlas          atlas;
     std::map<BlockType, ProtoBlock> protoblocks;
     Camera                          camera;
+    Fog                             fog;
     architect::Architect            architect;
     chunk::Grid                     grid;
 

@@ -4,20 +4,39 @@
 
 namespace mc::world {
 
-Fog::Fog():
+Fog::Fog(graphics::ShaderProgram& shader_):
+    shader { shader_ },
     density { 0.0015 },
     color { 0.8f, 0.8f, 0.8f } {
+    UpdateShader();
 }
 
+void Fog::ModDensity(float factor) {
+    density *= factor;
+    if (density > 1.0f) {
+        density = 1.0f;
+    }
+    UpdateShader();
+}
 
-            ModDensity(float value);
-            SetDensity(float value);
-            SetColor(Color newColor);
+void Fog::SetDensity(float value) {
+    density = value;
+    if (density > 1.0f) {
+        density = 1.0f;
+    }
+    UpdateShader();
+}
 
- private:
-     float      density;
-     Color      color;
-};
+void Fog::SetColor(Color newColor) {
+    color = newColor;
+    UpdateShader();
+}
 
+void Fog::UpdateShader() {
+    shader.MakeActive();
+    shader.SetFogDensity(density);
+    shader.SetFogColor(color);
+    shader.MakeInactive();
+}
 
 }   // namespace mc::world

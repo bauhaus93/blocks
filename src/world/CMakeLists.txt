@@ -5,6 +5,8 @@ add_sources(
   Entity.cpp
   Camera.hpp
   Camera.cpp
+  Fog.hpp
+  Fog.cpp
   Frustum.hpp
   Frustum.cpp
   BoundingBox.hpp

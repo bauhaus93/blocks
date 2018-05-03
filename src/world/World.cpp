@@ -14,6 +14,7 @@ World::World():
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
     protoblocks { },
     camera { shader },
+    fog { shader },
     architect { protoblocks },
     grid { architect } {
     INFO("Creating world");

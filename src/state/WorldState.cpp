@@ -70,10 +70,17 @@ void WorldState::HandleKeys() {
         int32_t drawDistance = std::max(0, world.GetChunkDrawDistance() - 5);
         world.SetDrawDistance(drawDistance);
     }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+        world.GetFog().ModDensity(1.25);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+        world.GetFog().ModDensity(0.75);
+    }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
         world.GetCamera().ModFOV(5.0f);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
-        world.GetCamera().ModFOV(-5.0f);    
+        world.GetCamera().ModFOV(-5.0f);
     }
 }
 
@@ -101,7 +108,7 @@ void WorldState::HandleMovementKeys() {
         //glm::vec3 up = glm::normalize(glm::cross(right, dir));
         totalOffset += glm::vec3(0.0f, 0.0f, 1.0f);
     }
-    
+
     if (abs(totalOffset[0]) > 0.01f ||
         abs(totalOffset[1]) > 0.01f ||
         abs(totalOffset[2]) > 0.01f) {

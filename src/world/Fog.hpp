@@ -9,16 +9,18 @@ namespace mc::world {
 
 class Fog {
  public:
-            Fog(ShaderProgram& shader);
+    explicit    Fog(graphics::ShaderProgram& shader_);
 
-            ModDensity(float value);
-            SetDensity(float value);
-            SetColor(Color newColor);
+    void        ModDensity(float factor);
+    void        SetDensity(float value);
+    void        SetColor(Color newColor);
 
  private:
-     Shader&    shader;
-     float      density;
-     Color      color;
+     graphics::ShaderProgram&       shader;
+     float                          density;
+     Color                          color;
+
+     void       UpdateShader();
 };
 
 
