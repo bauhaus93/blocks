@@ -22,42 +22,42 @@ uint8_t Facetree::GetQuadrant(Point2i8 pos) const {
     return index;
 }
 
-void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
+void Facetree::CreateQuads(const ProtoBlockMap& protoblocks,
     uint8_t axis,
     uint8_t layer,
-    std::vector<mesh::Quad>& quads) const {
+    QuadVec& quads) const {
 
-    static const std::array<std::array<Point3f, 4>, 6> vertexOffset = { {
+    static const std::array<std::array<Point2f, 4>, 6> vertexOffset = { {
         // Direction::NORTH
-        { { Point3f(0.0f),
-            Point3f(BLOCK_SIZE, 0.0f, 0.0f),
-            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
-            Point3f(0.0f, 0.0f, BLOCK_SIZE) } },
+        { { Point2f(0.0f),
+            Point2f(0.0f, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, 0.0f) } },
         // Direction::EAST
-        { { Point3f(BLOCK_SIZE, 0.0f, 0.0f),
-            Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
-            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
-            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE ) } },
+        { { Point2f(0.0f),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(0.0f, BLOCK_SIZE ) } },
         // Direction::SOUTH
-        { { Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
-            Point3f(0.0f, BLOCK_SIZE, 0.0f),
-            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE),
-            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) } },
+        { { Point2f(0.0f, BLOCK_SIZE),
+            Point2f(0.0f),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE) } },
         // Direction::WEST
-        { { Point3f(0.0f, BLOCK_SIZE, 0.0f),
-            Point3f(0.0f, 0.0f, 0.0f),
-            Point3f(0.0f, 0.0f, BLOCK_SIZE),
-            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) } },
+        { { Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(0.0f, 0.0f),
+            Point2f(0.0f, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE) } },
         // Direction::UP
-        { {  Point3f(0.0f, 0.0f, BLOCK_SIZE),
-            Point3f(BLOCK_SIZE, 0.0f, BLOCK_SIZE),
-            Point3f(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
-            Point3f(0.0f, BLOCK_SIZE, BLOCK_SIZE) } },
+        { { Point2f(0.0f, 0.0f),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(0.0f, BLOCK_SIZE) } },
         // Direction::DOWN
-        { {  Point3f(0.0f, BLOCK_SIZE, 0.0f),
-            Point3f(BLOCK_SIZE, BLOCK_SIZE, 0.0f),
-            Point3f(BLOCK_SIZE, 0.0f, 0.0f),
-            Point3f(0.0f) } }
+        { { Point2f(0.0f, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(0.0f) } }
     } };
     static const std::array<Point2f, 4> vertexUV = { {
         Point2f(1.0f, 1.0f),
@@ -79,31 +79,24 @@ void Facetree::CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
             mesh::Quad quad;
             for (uint8_t i = 0; i < 4; i++) {
                 Point3f pos;
-                Point3f uv { vertexUV[i][0],
-                             vertexUV[i][1],
+                Point3f uv { vertexUV[i][0] * static_cast<float>(size),
+                             vertexUV[i][1] * static_cast<float>(size),
                              static_cast<float>(protoblocks.at(faceInfo->type).GetFace(faceInfo->dir))
                 };
-                switch (axis) {
-                    case 0:
-                        pos[0] = static_cast<float>(layer);
-                        pos[1] = origin[0];
-                        pos[2] = origin[1];
-                        break;
-                    case 1:
-                        pos[0] = origin[0];
-                        pos[1] = static_cast<float>(layer);
-                        pos[2] = origin[1];
-                        break;
-                    case 2:
-                        pos[0] = origin[0];
-                        pos[1] = origin[1];
-                        pos[2] = static_cast<float>(layer);
-                        break;
-                    default:    assert(0);
+
+                auto& offset = vertexOffset[GetIndex(faceInfo->dir)][i];
+                uint8_t currIndex = 0;
+                for (uint8_t j = 0; j < 3; j++) {
+                    if (j != axis) {
+                        pos[j] = origin[currIndex] * BLOCK_SIZE + offset[currIndex] * size;
+                        currIndex++;
+                    } else {
+                        pos[j] = static_cast<float>(layer) * BLOCK_SIZE;
+                    }
                 }
-                pos *= BLOCK_SIZE;
-                pos += vertexOffset[GetIndex(faceInfo->dir)][i] * static_cast<float>(size) * BLOCK_SIZE;
-                quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[i]));
+
+                //INFO("Dir = ", faceInfo->dir, ", layer = ", (int)layer, ", pos = ", pos);
+                quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
             }
             quads.emplace_back(std::move(quad));
         }
@@ -122,10 +115,10 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
     for (auto& f : faces) {
         if (f.origin == origin && f.size == size) {
             if (!IsFace()) {
-                INFO("Found right face @ ", origin, ", size = ", static_cast<int>(size));
+                //INFO("Found right face @ ", origin, ", size = ", static_cast<int>(size));
                 SetFace(f.info);
             } else {
-                INFO("Found right face, but already has equal face");
+                //INFO("Found right face, but already has equal face");
                 SetFaceNull();
             }
         } else {
@@ -152,7 +145,7 @@ void Facetree::SplitFaceToChildren(const FaceInfo& info) {
                 children[i]->SetFace(info);
             } else {
                 if (children[i]->IsFace()) {    // assumes up to 2 faces can have same positions
-                    INFO("Resplit bc overlap @ ", children[i]->origin, ", size = ", children[i]->size);
+                    //INFO("Resplit bc overlap @ ", children[i]->origin, ", size = ", children[i]->size);
                     children[i]->SplitFaceToChildren(*children[i]->faceInfo);
                     children[i]->SplitFaceToChildren(info);
                     children[i]->SetFaceNull();
@@ -162,18 +155,18 @@ void Facetree::SplitFaceToChildren(const FaceInfo& info) {
             }
         }
     } else {
-        INFO("Set to null bc EOT");
+        //INFO("Set to null bc EOT");
         SetFaceNull();
     }
 }
 
 void Facetree::SetFace(const FaceInfo& info) {
-    INFO("SetFace @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", info.dir);
+    //INFO("SetFace @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", info.dir);
     faceInfo = std::make_unique<FaceInfo>(info);
 }
 
 void Facetree::SetFaceNull() {
-    INFO("SetFaceNull @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", faceInfo->dir);
+    //INFO("SetFaceNull @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", faceInfo->dir);
     faceInfo = nullptr;
 }
 

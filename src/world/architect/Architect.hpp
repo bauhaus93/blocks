@@ -19,8 +19,8 @@ namespace mc::world::architect {
 
 class Architect {
  public:
-                        Architect(const std::map<BlockType, ProtoBlock>& protoblocks_);
-    explicit            Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32_t seed_);
+    explicit            Architect(const ProtoBlockMap& protoblocks_);
+                        Architect(const ProtoBlockMap& protoblocks_, uint32_t seed_);
 
     BlockType           GetBlockType(Point3i chunkPos, Point3i8 localPos) const;
 

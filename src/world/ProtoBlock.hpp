@@ -11,6 +11,8 @@
 
 namespace mc::world {
 
+
+
 class ProtoBlock {
  public:
     explicit            ProtoBlock(BlockType type_);
@@ -24,6 +26,6 @@ class ProtoBlock {
     std::map<Direction, uint32_t>       atlasLayer;
 };
 
-
+typedef std::map<BlockType, ProtoBlock> ProtoBlockMap;
 
 }   // namespace mc::world

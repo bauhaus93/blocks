@@ -7,10 +7,13 @@ namespace mc::world {
 const Point2u TEXTURE_SIZE = Point2u(32);
 const uint32_t ATLAS_DEPTH(5);
 
+static graphics::ShaderProgram LoadShader();
+
 World::World():
+    shader { LoadShader() },
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
     protoblocks { },
-    camera { Point3f(0.0f, 0.0f, 000.0f), Point3f(0.0f, 0.0f, 0.0f) },
+    camera { shader },
     architect { protoblocks },
     grid { architect } {
     INFO("Creating world");
@@ -89,11 +92,19 @@ void World::Tick() {
 }
 
 void World::Draw() {
-    camera.ActivateShader();
+    shader.MakeActive();
     atlas.Activate();
     grid.Draw(camera);
     atlas.Deactivate();
-    camera.DeactivateShader();
+    shader.MakeInactive();
+}
+
+static graphics::ShaderProgram LoadShader() {
+    graphics::ShaderProgram program;
+    program.AddVertexShader("shader/VertexShader.glsl");
+    program.AddFragmentShader("shader/FragmentShader.glsl");
+    program.Link();
+    return program;
 }
 
 }   // namespace mc::world

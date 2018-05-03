@@ -16,12 +16,14 @@ class Entity {
 
  public:
 
-                    Entity(Point3f position_, Point3f rotation_);
-                    Entity(const Entity& other);
+                    Entity();
+                    Entity(const Entity& other) = default;
     virtual         ~Entity() = default;
 
-    Entity&         operator=(const Entity& rhs);
+    Entity&         operator=(const Entity& rhs) = default;
 
+    virtual void    SetPosition(const Point3f& newPosition);
+    virtual void    SetRotation(const Point3f& newRotation);
     virtual void    Move(const Point3f& offset);
     virtual void    Rotate(const Point3f& offset);
 

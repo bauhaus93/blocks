@@ -4,15 +4,13 @@
 
 namespace mc::world {
 
-static graphics::ShaderProgram LoadShader();
-
-Camera::Camera(const Point3f& position_, const Point3f& rotation_):
-    Entity(position_, rotation_),
+Camera::Camera(graphics::ShaderProgram& shader_):
+    Entity(),
     fov { 75.0f },
     aspectRatio { 4.0f / 3.0f },
     near { 0.5f },
     far { 200.0f },
-    shader { LoadShader() },
+    shader { shader_ },
     view { glm::lookAt(
                     CreateVec(position),
                     glm::vec3 { 0, 0, 0 },
@@ -23,10 +21,6 @@ Camera::Camera(const Point3f& position_, const Point3f& rotation_):
                             0.5f,
                             1000.0f) },
     frustum { view, projection } {
-    shader.MakeActive();
-    shader.SetFogDensity(0.0015f);
-    shader.SetFogColor(Color(0.8f, 0.8f, 0.8f));
-    shader.MakeInactive();
 }
 
 void Camera::SetFOV(float fovDegree) {
@@ -49,13 +43,6 @@ void Camera::SetFar(float far_) {
 void Camera::ModFOV(float degree) {
     fov = std::min(180.0f, std::max(0.0f, fov + degree));
     UpdateProjection();
-}
-
-void Camera::ActivateShader() {
-    shader.MakeActive();
-}
-void Camera::DeactivateShader() {
-    shader.MakeInactive();
 }
 
 void Camera::LoadMVPMatrix(const glm::mat4& model) const {
@@ -86,20 +73,18 @@ void Camera::UpdateProjection() {
     TRACE("Updated projection: fov = ", fov, ", aspect = ", aspectRatio, ", near = ", near, ", far = ", far);
 }
 
-void Camera::Move(const Point3f& offset) {
-    Entity::Move(offset);
+void Camera::SetPosition(const Point3f& newPosition) {
+    Entity::SetPosition(newPosition);
     UpdateView();
 }
 
-//TODO investigate why angle PI causes jumps in view
-//for now, just don't set the view y angle to exact PI/0
-void Camera::Rotate(const Point3f& offset) {
+void Camera::SetRotation(const Point3f& newRotation) {
     constexpr float DOUBLE_PI = 2 * M_PI;
     constexpr float MIN_Y = 0.001f;
     constexpr float MAX_Y = M_PI - MIN_Y;
 
-    rotation += offset;
-    
+    rotation = newRotation;
+
     if (rotation[1] < MIN_Y) {
         rotation[1] = MIN_Y;
     } else if (rotation[1] > MAX_Y) {
@@ -116,12 +101,36 @@ void Camera::Rotate(const Point3f& offset) {
     UpdateView();
 }
 
-static graphics::ShaderProgram LoadShader() {
-    graphics::ShaderProgram program;
-    program.AddVertexShader("shader/VertexShader.glsl");
-    program.AddFragmentShader("shader/FragmentShader.glsl");
-    program.Link();
-    return program;
+void Camera::Move(const Point3f& offset) {
+    Entity::Move(offset);
+    UpdateView();
 }
+
+//TODO investigate why angle PI causes jumps in view
+//for now, just don't set the view y angle to exact PI/0
+void Camera::Rotate(const Point3f& offset) {
+    constexpr float DOUBLE_PI = 2 * M_PI;
+    constexpr float MIN_Y = 0.001f;
+    constexpr float MAX_Y = M_PI - MIN_Y;
+
+    rotation += offset;
+
+    if (rotation[1] < MIN_Y) {
+        rotation[1] = MIN_Y;
+    } else if (rotation[1] > MAX_Y) {
+        rotation[1] = MAX_Y;
+    }
+
+    for (uint8_t i = 0; i < 3; i++) {
+        if (rotation[i] < 0) {
+            rotation[i] += DOUBLE_PI;
+        } else if (rotation[i] > DOUBLE_PI) {
+            rotation[i] -= DOUBLE_PI;
+        }
+    }
+    UpdateView();
+}
+
+
 
 }   // namespace mc::world

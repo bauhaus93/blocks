@@ -39,6 +39,7 @@ class World {
     void        Draw();
 
  private:
+    graphics::ShaderProgram         shader;
     graphics::TextureAtlas          atlas;
     std::map<BlockType, ProtoBlock> protoblocks;
     Camera                          camera;

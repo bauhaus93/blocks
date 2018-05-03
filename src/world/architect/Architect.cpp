@@ -116,7 +116,7 @@ std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) c
         min = std::min(min, h);
         max = std::max(max, h);
     }
-    return std::make_pair(min, max); 
+    return std::make_pair(min, max);
 }
 
 

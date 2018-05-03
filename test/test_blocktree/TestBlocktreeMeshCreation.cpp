@@ -16,7 +16,7 @@ void TestBlocktreeMeshCreation::SetUp() {
     bt = chunk::Blocktree(Point3i8(0), CHUNK_SIZE);
 }
 
-/*TEST_F(TestBlocktreeMeshCreation, SingleBlockCheckFaces) {
+TEST_F(TestBlocktreeMeshCreation, SingleBlockCheckFaces) {
     std::vector<chunk::BlockElement> blocks;
     blocks.emplace_back(Point3i8(1), BlockType::MUD);
 
@@ -24,7 +24,7 @@ void TestBlocktreeMeshCreation::SetUp() {
 
     mesh::Mesh mesh = bt.CreateMesh(protoblocks);
     ASSERT_EQ(6 * 2, mesh.GetTriangleCount());
-}*/
+}
 
 TEST_F(TestBlocktreeMeshCreation, FullBlocks1TypeCheckFaces) {
     std::vector<chunk::BlockElement> blocks;

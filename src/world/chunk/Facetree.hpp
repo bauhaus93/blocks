@@ -8,6 +8,7 @@
 #include <cassert>
 #include <algorithm>
 #include <vector>
+#include <bitset>
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
@@ -24,6 +25,7 @@ namespace mc::world::chunk {
 class Facetree;
 
 typedef std::array<std::unique_ptr<Facetree>, 4> FacetreeArray;
+typedef std::vector<mesh::Quad>                  QuadVec;
 
 struct FaceInfo {
     BlockType type;
@@ -50,10 +52,10 @@ class Facetree {
                     Facetree(Point2i8 origin_, int8_t size_);
                     Facetree(Facetree&& other) = default;
     void            InsertFaces(std::vector<Face> faces);
-    void            CreateQuads(const std::map<BlockType, ProtoBlock>& protoblocks,
+    void            CreateQuads(const ProtoBlockMap& protoblocks,
                                 uint8_t axis,
                                 uint8_t layer,
-                                std::vector<mesh::Quad>& quads) const;
+                                QuadVec& quads) const;
 
  private:
 

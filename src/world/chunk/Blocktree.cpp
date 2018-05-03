@@ -135,50 +135,32 @@ void Blocktree::ClearChildren() {
     }
 }
 
-mesh::Mesh Blocktree::CreateMesh(const std::map<BlockType, ProtoBlock>& protoblocks) const {
+mesh::Mesh Blocktree::CreateMesh(const ProtoBlockMap& protoblocks) const {
     std::vector<mesh::Quad> quads;
+    constexpr std::array<Direction, 3> faceDirs = { { Direction::EAST,
+                                                      Direction::NORTH,
+                                                      Direction::UP } };
 
     for (uint8_t axis = 0; axis < 3; axis++) {
-        for (uint8_t layer = 0; layer < CHUNK_SIZE; layer++) {
-            INFO("Axis = ", static_cast<int>(axis), ", layer: ", static_cast<int>(layer), "/", static_cast<int>(layer + 1));
+        for (uint8_t layer = 0; layer <= CHUNK_SIZE; layer++) {
             std::vector<Face> faces;
-            switch (axis) {
-                case 0:
-                    if (layer > 0) {
-                        CollectFaces(faces, layer - 1, Direction::EAST);
-                    }
-                    CollectFaces(faces, layer, Direction::WEST);
-                    break;
-                case 1:
-                    if (layer > 0) {
-                        CollectFaces(faces, layer - 1, Direction::NORTH);
-                    }
-                    CollectFaces(faces, layer, Direction::SOUTH);
-                    break;
-                case 2:
-                    if (layer > 0) {
-                        CollectFaces(faces, layer - 1, Direction::UP);
-                    }
-                    CollectFaces(faces, layer, Direction::DOWN);
-                    break;
-                default:    assert(0);
+            if (layer > 0) {
+                CollectFaces(faces, layer - 1, faceDirs[axis]);
             }
+            if (layer < 16) {
+                CollectFaces(faces, layer, GetOpposite(faceDirs[axis]));
+            }
+
             std::sort(faces.begin(),
                       faces.end(),
                       [](const Face& a, const Face& b) {
                           return a.size > b.size;
                       });
-            INFO("Faces: ", faces.size());
-
             Facetree tree(Point2i8(0), CHUNK_SIZE);
             tree.InsertFaces(std::move(faces));
             tree.CreateQuads(protoblocks, axis, layer, quads);
-            if (quads.size() > 0) {
-                INFO("Quadcount: ", quads.size());
-            }
          }
     }
-
     return mesh::Mesh(std::move(quads));
 }
 

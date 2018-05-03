@@ -31,7 +31,7 @@ class Blocktree {
     Blocktree&  operator=(Blocktree&& rhs) = default;
     void        InsertBlocks(std::vector<BlockElement> blocks);
 
-    mesh::Mesh  CreateMesh(const std::map<BlockType, ProtoBlock>& protoblocks) const;
+    mesh::Mesh  CreateMesh(const ProtoBlockMap& protoblocks) const;
     bool        HasChild(uint8_t octant) const;
     const Blocktree& GetChild(uint8_t octant) const;
     uint32_t    MaxDepth() const;

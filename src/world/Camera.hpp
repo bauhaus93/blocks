@@ -24,7 +24,7 @@ namespace mc::world {
 class Camera: public Entity {
 
  public:
-                    Camera(const Point3f& position_, const Point3f& rotation_);
+    explicit        Camera(graphics::ShaderProgram& shader_);
 
     void            SetFOV(float fovDegree);
     void            SetAspectRatio(float ratio);
@@ -33,27 +33,27 @@ class Camera: public Entity {
 
     void            ModFOV(float degree);
 
-    void            ActivateShader();
-    void            DeactivateShader();
     void            LoadMVPMatrix(const glm::mat4& model) const;
+    void            SetPosition(const Point3f& newPosition) override;
+    void            SetRotation(const Point3f& newRotation) override;
     void            Move(const Point3f& offset) override;
     void            Rotate(const Point3f& offset) override;
     const Frustum&  GetFrustum() const { return frustum; }
 
  private:
 
-    void            UpdateView();
-    void            UpdateProjection();
+    void                        UpdateView();
+    void                        UpdateProjection();
 
-    float           fov;
-    float           aspectRatio;
-    float           near;
-    float           far;
+    float                       fov;
+    float                       aspectRatio;
+    float                       near;
+    float                       far;
 
-    graphics::ShaderProgram  shader;
-    glm::mat4      view;
-    glm::mat4      projection;
-    Frustum        frustum;
+    graphics::ShaderProgram&    shader;
+    glm::mat4                   view;
+    glm::mat4                   projection;
+    Frustum                     frustum;
 };
 
 }   // namespace mc::world
