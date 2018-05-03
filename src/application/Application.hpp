@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include "graphics/glad/Glad.h"
+#include <glad/glad.h>
 
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>

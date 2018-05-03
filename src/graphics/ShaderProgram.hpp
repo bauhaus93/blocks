@@ -6,7 +6,7 @@
 
 #include <glm/mat4x4.hpp>
 
-#include "glad/Glad.h"
+#include <glad/glad.h>
 #include "utility/FileRead.hpp"
 #include "utility/Color.hpp"
 

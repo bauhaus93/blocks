@@ -29,30 +29,18 @@ macro(add_test_files)
     endforeach()
 endmacro()
 
-include(ExternalProject)
-ExternalProject_Add(googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG master
-    SOURCE_DIR "${CMAKE_BINARY_DIR}/googletest/src"
-    BINARY_DIR "${CMAKE_BINARY_DIR}/googletest/build"
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/googletest/install -DCMAKE_INSTALL_MESSAGE:STRING=LAZY
-)
-
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(EXEC_NAME "testblocks")
-link_directories(${CMAKE_BINARY_DIR}/googletest/install/lib ${CMAKE_BINARY_DIR}/googletest/install/lib64)
 
 add_executable(${EXEC_NAME} "Main.cpp")
-add_dependencies(check testblocks)
-add_dependencies(check_verbose testblocks)
-add_dependencies(testblocks googletest)
+add_dependencies(${EXEC_NAME} blocks)
 
-#find_library(GTEST_LIBS NAMES gtest gmock HINTS ${CMAKE_BINARY_DIR}/googletest/install/lib)
-target_link_libraries(${EXEC_NAME} libblocks gtest gmock)
+find_package(GTest REQUIRED COMPONENTS gtest gmock)
+target_link_libraries(${EXEC_NAME} blks ${GTEST_LIBRARIES})
+
+target_include_directories(${EXEC_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(${EXEC_NAME} PRIVATE SYSTEM "/usr/local/include" ${GTEST_INCLUDE_DIR})
 
 set_property(TARGET testblocks PROPERTY EXEC_NAME ${EXEC_NAME})
-
-target_include_directories(${EXEC_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/googletest/install/include" "/usr/local/include")
 add_subdirectory(test_point)
 add_subdirectory(test_blocktree)
 

@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-#include "graphics/glad/Glad.h"
+#include <glad/glad.h>
 
 #include <glm/trigonometric.hpp>
 #include <glm/vec3.hpp>

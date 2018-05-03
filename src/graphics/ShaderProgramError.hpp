@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "glad/Glad.h"
+#include <glad/glad.h>
 
 #include "OpenGLError.hpp"
 

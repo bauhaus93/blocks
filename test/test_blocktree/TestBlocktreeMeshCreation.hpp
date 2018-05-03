@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <random>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "utility/Point3.hpp"
 #include "world/chunk/Blocktree.hpp"

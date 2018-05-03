@@ -13,4 +13,3 @@ add_sources(
 )
 
 add_subdirectory(shader)
-add_subdirectory(glad)

@@ -9,16 +9,17 @@ macro(add_sources)
 		else()
 			file(TO_NATIVE_PATH ${_src} _nativePath)
 		endif()
-		set_property(TARGET libblocks APPEND PROPERTY SRC_LIST ${_nativePath})
+		set_property(TARGET blks APPEND PROPERTY SRC_LIST ${_nativePath})
 	endforeach()
 endmacro()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(EXECUTABLE_NAME "blocks")
-set(LIBRARY_NAME "libblocks")
+set(LIBRARY_NAME "blks")
+
+list(APPEND CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules")
 
 add_executable(${EXECUTABLE_NAME} "src/Main.cpp")
 add_library(${LIBRARY_NAME} "")
@@ -60,3 +61,16 @@ add_custom_target(check_verbose COMMAND ${CMAKE_CTEST_COMMAND} -V)
 enable_testing()
 add_subdirectory(test)
 
+set(GLAD_ROOT_DIR ${CMAKE_BINARY_DIR}/glad)
+include(ExternalProject)
+ExternalProject_Add(glad
+    GIT_REPOSITORY "https://github.com/Dav1dde/glad.git"
+    GIT_TAG master
+    SOURCE_DIR ${GLAD_ROOT_DIR}/src
+    BINARY_DIR ${GLAD_ROOT_DIR}/build
+    INSTALL_COMMAND ""
+    TEST_COMMAND ""
+)
+add_dependencies(blocks glad)
+target_include_directories(${LIBRARY_NAME} SYSTEM PRIVATE ${GLAD_ROOT_DIR}/build/include)
+target_link_libraries(${LIBRARY_NAME} PRIVATE ${GLAD_ROOT_DIR}/build/${CMAKE_STATIC_LIBRARY_PREFIX}glad${CMAKE_STATIC_LIBRARY_SUFFIX})

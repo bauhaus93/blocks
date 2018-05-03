@@ -10,7 +10,7 @@
 #include <glm/vec3.hpp>
 
 #include "logger/GlobalLogger.hpp"
-#include "graphics/glad/Glad.h"
+#include <glad/glad.h>
 #include "utility/Point3.hpp"
 
 #include "Vertex.hpp"
