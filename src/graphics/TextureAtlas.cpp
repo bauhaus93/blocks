@@ -16,6 +16,7 @@ TextureAtlas::TextureAtlas(Point2u textureSize_, uint32_t layerCount_):
            textureSize[1] / mipmapDivider > 0) {
         mipmaps++;
         mipmapDivider *= 2;
+    
     }
     INFO("Creating TextureAtlas: size = ", textureSize, ", layers = ", layerCount, ", mipmaps = ", mipmaps);
 

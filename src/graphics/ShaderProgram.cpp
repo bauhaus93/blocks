@@ -66,7 +66,7 @@ void ShaderProgram::LoadUniformTexture() {
         throw ShaderProgramError(__FUNCTION__,
                                  "Could not get uniform texture location");
     }
-    glUniform1i(uniformTexture, 0); //TODO maybe move to other location to set each frame
+    glUniform1i(uniformTexture, 0);
 }
 
 void ShaderProgram::LoadUniformFog() {
@@ -82,7 +82,7 @@ void ShaderProgram::LoadUniformFog() {
     }
 }
 
-void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) const {
+void ShaderProgram::SetMVPMatrix(const glm::mat4& mvp) {
     glUniformMatrix4fv(mvpHandle, 1, GL_FALSE, &mvp[0][0]);
 }
 
@@ -94,11 +94,11 @@ void ShaderProgram::SetFogColor(Color color) {
     glUniform3f(fog.color, color.GetRed(), color.GetGreen(), color.GetBlue());
 }
 
-void ShaderProgram::MakeActive() {
+void ShaderProgram::Activate() {
     glUseProgram(programId);
 }
 
-void ShaderProgram::MakeInactive() const {
+void ShaderProgram::Deactivate() {
     glUseProgram(0);
 }
 
@@ -131,9 +131,9 @@ static GLuint LoadShader(const std::string& filePath, GLenum shaderType) {
     GLuint id = glCreateShader(shaderType);
 
     switch (shaderType) {
-    case GL_VERTEX_SHADER: DEBUG("Compiling vertex shader: \"", filePath, "\"");  break;
-    case GL_FRAGMENT_SHADER: DEBUG("Compiling fragment shader: \"", filePath, "\"");  break;
-    default: DEBUG("Compiling shader: \"", filePath, "\"");   break;
+        case GL_VERTEX_SHADER: DEBUG("Compiling vertex shader: \"", filePath, "\"");  break;
+        case GL_FRAGMENT_SHADER: DEBUG("Compiling fragment shader: \"", filePath, "\"");  break;
+        default: DEBUG("Compiling shader: \"", filePath, "\"");   break;
     }
 
     std::string code = ReadFile(filePath);

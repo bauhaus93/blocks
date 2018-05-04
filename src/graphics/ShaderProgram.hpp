@@ -30,9 +30,9 @@ class ShaderProgram {
     void        AddVertexShader(const std::string& filePath);
     void        AddFragmentShader(const std::string& filePath);
     void        Link();
-    void        MakeActive();
-    void        MakeInactive() const;
-    void        SetMVPMatrix(const glm::mat4& mvp) const;
+    void        Activate();
+    void        Deactivate();
+    void        SetMVPMatrix(const glm::mat4& mvp);
     void        SetFogDensity(float density);
     void        SetFogColor(Color color);
     GLuint      GetId() const { return programId; }

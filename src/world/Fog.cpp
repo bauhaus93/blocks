@@ -33,10 +33,10 @@ void Fog::SetColor(Color newColor) {
 }
 
 void Fog::UpdateShader() {
-    shader.MakeActive();
+    shader.Activate();
     shader.SetFogDensity(density);
     shader.SetFogColor(color);
-    shader.MakeInactive();
+    shader.Deactivate();
 }
 
 }   // namespace mc::world

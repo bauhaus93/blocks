@@ -91,6 +91,7 @@ ExternalProject_Add(glad
     BINARY_DIR ${GLAD_ROOT_DIR}/build
     INSTALL_COMMAND ""
     TEST_COMMAND ""
+    UPDATE_COMMAND ""
 )
 add_dependencies(${LIB_NAME} glad)
 target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${GLAD_ROOT_DIR}/build/include)

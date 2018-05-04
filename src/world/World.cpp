@@ -93,11 +93,11 @@ void World::Tick() {
 }
 
 void World::Draw() {
-    shader.MakeActive();
+    shader.Activate();
     atlas.Activate();
     grid.Draw(camera);
     atlas.Deactivate();
-    shader.MakeInactive();
+    shader.Deactivate();
 }
 
 static graphics::ShaderProgram LoadShader() {
