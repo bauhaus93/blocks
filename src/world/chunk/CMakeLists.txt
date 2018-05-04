@@ -11,6 +11,7 @@ add_sources(
   ChunkLoader.cpp
   CompositeMesh.hpp
   CompositeMesh.cpp
-
 )
+
+add_subdirectory(tests)
 

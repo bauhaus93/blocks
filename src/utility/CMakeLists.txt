@@ -16,3 +16,5 @@ add_sources(
   FileNotFoundError.hpp
   FileNotFoundError.cpp
 )
+
+add_subdirectory(tests)
