@@ -26,7 +26,6 @@ macro(add_test_sources)
 endmacro()
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(EXEC_NAME "blocks")
 set(EXEC_TEST_NAME "testblocks")
@@ -96,3 +95,17 @@ ExternalProject_Add(glad
 add_dependencies(${LIB_NAME} glad)
 target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${GLAD_ROOT_DIR}/build/include)
 target_link_libraries(${LIB_NAME} PRIVATE ${GLAD_ROOT_DIR}/build/${CMAKE_STATIC_LIBRARY_PREFIX}glad${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+set(GLM_ROOT_DIR ${CMAKE_BINARY_DIR}/glm)
+ExternalProject_Add(glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG master
+    SOURCE_DIR ${GLM_ROOT_DIR}/src
+    BINARY_DIR ${GLM_ROOT_DIR}/build
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:Path=${GLM_ROOT_DIR}/install -DCMAKE_INSTALL_MESSAGE:String=LAZY
+    TEST_COMMAND ""
+    UPDATE_COMMAND ""
+)
+add_dependencies(${LIB_NAME} glm)
+target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${GLM_ROOT_DIR}/install/include)
+
