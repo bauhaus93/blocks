@@ -79,8 +79,6 @@ find_package(GTest REQUIRED COMPONENTS gtest gmock)
 target_link_libraries(${EXEC_TEST_NAME} ${GTEST_LIBRARIES})
 target_include_directories(${EXEC_TEST_NAME} SYSTEM PRIVATE ${GTEST_INCLUDE_DIR})
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_custom_target(check_verbose COMMAND ${CMAKE_CTEST_COMMAND} -V)
 enable_testing()
 gtest_discover_tests(${EXEC_TEST_NAME})
 
