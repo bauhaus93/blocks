@@ -71,6 +71,8 @@ void World::LoadProtoBlocks() {
         Direction dir = GetDirection(i);
         if (dir == Direction::UP) {
             protoblocks.at(BlockType::GRASS).AddFace(dir, grassLayer);
+        } else if (dir == Direction::DOWN) {
+            protoblocks.at(BlockType::GRASS).AddFace(dir, mudLayer);
         } else {
             protoblocks.at(BlockType::GRASS).AddFace(dir, grassMudLayer);
         }

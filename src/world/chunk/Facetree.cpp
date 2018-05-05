@@ -29,20 +29,20 @@ void Facetree::CreateQuads(const ProtoBlockMap& protoblocks,
 
     static const std::array<std::array<Point2f, 4>, 6> vertexOffset = { {
         // Direction::NORTH
-        { { Point2f(0.0f),
+        { { Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(0.0f),
             Point2f(0.0f, BLOCK_SIZE),
-            Point2f(BLOCK_SIZE, BLOCK_SIZE),
-            Point2f(BLOCK_SIZE, 0.0f) } },
+            Point2f(BLOCK_SIZE, BLOCK_SIZE) } },
         // Direction::EAST
         { { Point2f(0.0f),
             Point2f(BLOCK_SIZE, 0.0f),
             Point2f(BLOCK_SIZE, BLOCK_SIZE),
             Point2f(0.0f, BLOCK_SIZE ) } },
         // Direction::SOUTH
-        { { Point2f(0.0f, BLOCK_SIZE),
-            Point2f(0.0f),
+        { { Point2f(0.0f),
             Point2f(BLOCK_SIZE, 0.0f),
-            Point2f(BLOCK_SIZE, BLOCK_SIZE) } },
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(0.0f, BLOCK_SIZE) } },
         // Direction::WEST
         { { Point2f(BLOCK_SIZE, 0.0f),
             Point2f(0.0f, 0.0f),
