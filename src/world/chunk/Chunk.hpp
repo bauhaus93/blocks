@@ -16,7 +16,6 @@
 #include "utility/Defs.hpp"
 #include "graphics/TextureAtlas.hpp"
 #include "world/Camera.hpp"
-#include "world/NeighbourMask.hpp"
 #include "world/Direction.hpp"
 #include "world/architect/Architect.hpp"
 #include "world/Size.hpp"

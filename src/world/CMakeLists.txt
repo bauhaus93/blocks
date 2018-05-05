@@ -12,8 +12,6 @@ add_sources(
   BoundingBox.hpp
   BoundingBox.cpp
   Intersection.hpp
-  NeighbourMask.hpp
-  NeighbourMask.cpp
   Direction.hpp
   Direction.cpp
   ProtoBlock.hpp
