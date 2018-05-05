@@ -10,10 +10,17 @@ Application::Application(unsigned int winX, unsigned int winY):
     window { sf::VideoMode(winX, winY),
             "MC",
             sf::Style::Default,
-            sf::ContextSettings(24, 8, 4, 4, 6) },
+            sf::ContextSettings(24, 8, 4, 4, 2) },
     stateStack { window } {
     INFO("Creating application");
-
+    sf::ContextSettings settings = window.getSettings();
+    if (settings.majorVersion < 4 ||
+        (settings.majorVersion == 4 && settings.minorVersion < 2)) {
+        throw ApplicationError("OpenGL version",
+                               __FUNCTION__,
+                               "Needed at least opengl version 4.2, but got only " +
+                               std::to_string(settings.majorVersion) + "." + std::to_string(settings.minorVersion));
+    }
     LoadGlad();
 
     window.setVerticalSyncEnabled(true);

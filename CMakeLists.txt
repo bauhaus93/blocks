@@ -101,9 +101,9 @@ ExternalProject_Add(glm
     GIT_REPOSITORY https://github.com/g-truc/glm.git
     GIT_TAG master
     SOURCE_DIR ${GLM_ROOT_DIR}/src
-    BINARY_DIR ${GLM_ROOT_DIR}/build
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:Path=${GLM_ROOT_DIR}/install -DCMAKE_INSTALL_MESSAGE:String=LAZY
     TEST_COMMAND ""
+    BUILD_COMMAND ""
     UPDATE_COMMAND ""
 )
 add_dependencies(${LIB_NAME} glm)
