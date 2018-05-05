@@ -4,3 +4,5 @@ add_sources(
   ApplicationError.hpp
   ApplicationError.cpp
 )
+
+add_subdirectory(state)
