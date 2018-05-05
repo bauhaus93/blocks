@@ -30,7 +30,7 @@ class StateStack {
 
     void        Pop();
 
-    sf::Window&   		                        window;
+    sf::Window&   		                window;
     std::vector<std::unique_ptr<GameState>>     states;
 };
 

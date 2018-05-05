@@ -65,7 +65,7 @@ target_link_libraries(${LIB_NAME} PRIVATE ${CMAKE_DL_LIBS})
 find_package(Threads REQUIRED)
 target_link_libraries(${LIB_NAME} PRIVATE Threads::Threads)
 
-find_package(SFML 2 REQUIRED COMPONENTS network audio graphics window system)
+find_package(SFML 2 REQUIRED COMPONENTS window system)
 target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_include_directories(${EXEC_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(${LIB_NAME} PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

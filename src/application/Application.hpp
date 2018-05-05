@@ -10,7 +10,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/System.hpp>
-#include <SFML/Graphics.hpp>
 
 #include "logger/GlobalLogger.hpp"
 #include "graphics/OpenGLError.hpp"
@@ -28,10 +27,8 @@ class Application {
     void            Run();
 private:
 
-    sf::RenderWindow    window;
+    sf::Window          window;
     StateStack          stateStack;
-
-
 };
 
 }   // namespace mc
