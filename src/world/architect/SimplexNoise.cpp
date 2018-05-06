@@ -47,29 +47,6 @@ SimplexNoise::SimplexNoise(uint32_t seed_):
     }
 }
 
-SimplexNoise::SimplexNoise(SimplexNoise&& other):
-    seed { other.seed },
-    rng { std::move(other.rng) },
-    octaves { other.octaves },
-    roughness { other.roughness },
-    scale { other.scale },
-    min { other.min },
-    max { other.max },
-    permutation { std::move(other.permutation) } {
-}
-
-SimplexNoise& SimplexNoise::operator=(SimplexNoise&& other) {
-    seed = other.seed;
-    rng = std::move(other.rng);
-    octaves = other.octaves;
-    roughness = other.roughness;
-    scale = other.scale;
-    min = other.min;
-    max = other.max;
-    permutation = std::move(other.permutation);
-    return *this;
-}
-
 void SimplexNoise::SetOctaves(int octaves_) {
     octaves = octaves_;
 }

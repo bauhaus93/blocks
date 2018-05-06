@@ -13,10 +13,6 @@ Grid::Grid(const architect::Architect& architect_):
     chunkLoader.Start();
 }
 
-Grid::~Grid() {
-    chunkLoader.Stop();
-}
-
 void Grid::GivePositionUpdate(Point3f worldPos) {
     Point3i gridPos(worldPos / CHUNK_SIZE / BLOCK_SIZE);
     GivePositionUpdate(gridPos);
@@ -38,6 +34,7 @@ void Grid::GivePositionUpdate(Point3i gridPos) {
             INFO("New center chunk: ", centerPos, ", active chunks: ", loadedChunks.size());
             UnloadOldChunks();
             LoadNewChunks();
+            break;
         }
     }
 }

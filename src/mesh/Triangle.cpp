@@ -10,15 +10,6 @@ Triangle::Triangle():
                Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) } } } {
 }
 
-Triangle::Triangle(Triangle&& other):
-    vertex { std::move(other.vertex) } {
-}
-
-Triangle& Triangle::operator=(Triangle&& other) {
-    vertex = std::move(other.vertex);
-    return *this;
-}
-
 void Triangle::SetVertex(uint8_t index, Vertex vert) {
     assert(index < 3);
     vertex[index] = vert;

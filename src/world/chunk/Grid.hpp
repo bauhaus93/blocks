@@ -23,7 +23,6 @@ class Grid {
 
  public:
     explicit        Grid(const architect::Architect& architect_);
-                    ~Grid();
 
     void            GivePositionUpdate(Point3f worldPos);
     void            SetDrawDistance(int32_t drawDistance_);

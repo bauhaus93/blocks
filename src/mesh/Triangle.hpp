@@ -12,8 +12,8 @@ namespace mc::mesh {
 class Triangle {
  public:
                 Triangle();
-                Triangle(Triangle&& other);
-    Triangle&   operator=(Triangle&& other);
+                Triangle(Triangle&& other) = default;
+    Triangle&   operator=(Triangle&& other) = default;
     void        SetVertex(uint8_t index, Vertex vert);
     const Vertex& GetVertex(uint8_t index) const;
  private:

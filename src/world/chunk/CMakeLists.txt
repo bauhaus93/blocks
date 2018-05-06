@@ -9,8 +9,6 @@ add_sources(
   Grid.cpp
   ChunkLoader.hpp
   ChunkLoader.cpp
-  CompositeMesh.hpp
-  CompositeMesh.cpp
 )
 
 add_subdirectory(tests)

@@ -14,8 +14,8 @@ namespace mc::mesh {
 class Quad {
  public:
             Quad();
-            Quad(Quad&& other);
-    Quad&   operator=(Quad&& other);
+            Quad(Quad&& other) = default;
+    Quad&   operator=(Quad&& other) = default;
     void    SetVertex(uint8_t index, Vertex vert);
     const Vertex& GetVertex(uint8_t index) const; 
     Triangle GetFirstTriangle() const;

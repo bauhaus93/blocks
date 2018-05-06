@@ -19,6 +19,10 @@ ChunkLoader::ChunkLoader(uint32_t maxThreads_,
     finishedChunks { } {
 }
 
+ChunkLoader::~ChunkLoader() {
+    Stop();    
+}
+
 bool ChunkLoader::IsRunning() const {
     return controlThread != nullptr;
 }

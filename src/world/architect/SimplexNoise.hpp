@@ -22,8 +22,8 @@ class SimplexNoise {
  public:
                     SimplexNoise();
     explicit        SimplexNoise(uint32_t seed_);
-                    SimplexNoise(SimplexNoise&& other);
-    SimplexNoise&   operator=(SimplexNoise&& other);
+                    SimplexNoise(SimplexNoise&& other) = default;
+    SimplexNoise&   operator=(SimplexNoise&& other) = default;
                     ~SimplexNoise() = default;
 
     void            SetOctaves(int octaves_);

@@ -10,19 +10,6 @@ Image::Image(std::vector<uint8_t> data_, Point2u size_, uint8_t depth_):
     depth { depth_ } {
 }
 
-Image::Image(Image&& other):
-    data { std::move(other.data) },
-    size { other.size },
-    depth { other.depth } {
-}
-
-Image& Image::operator=(Image&& other) {
-    data = std::move(other.data);
-    size = other.size;
-    depth = other.depth;
-    return *this;
-}
-
 Image Image::CreateSubImage(Point2u origin, Point2u subSize) const {
     assert(origin < size);
     assert(origin + subSize <= size);

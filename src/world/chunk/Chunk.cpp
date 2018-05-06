@@ -12,25 +12,6 @@ Chunk::Chunk(const Point3i& chunkPos_):
     mesh { nullptr } {
 }
 
-Chunk::Chunk(Chunk&& other):
-    chunkPos { other.chunkPos },
-    origin { other.origin },
-    model { std::move(other.model) },
-    blocktree { std::move(other.blocktree) },
-    mesh { std::move(other.mesh) } {
-}
-
-Chunk& Chunk::operator=(Chunk&& other) {
-    if (this != &other) {
-        chunkPos = other.chunkPos;
-        origin = other.origin;
-        model = std::move(other.model);
-        blocktree = std::move(other.blocktree);
-        mesh = std::move(other.mesh);
-    }
-    return *this;
-}
-
 void Chunk::Generate(const architect::Architect& architect) {
     sf::Clock clock;
     std::vector<BlockElement> blockQueue;
@@ -50,20 +31,13 @@ void Chunk::Generate(const architect::Architect& architect) {
     }
 
     if (blockQueue.size() > 0) {
-        blocktree = std::make_unique<Blocktree>(Point3i8(0), CHUNK_SIZE);
+        blocktree = std::make_unique<Blocktree>();
         blocktree->InsertBlocks(blockQueue);
         mesh = std::make_unique<mesh::Mesh>(blocktree->CreateMesh(architect.GetProtoBlocks()));
     }
 
     TRACE("Generated chunk ", chunkPos,
           ", time: ", clock.getElapsedTime().asMilliseconds(), "ms");
-}
-
-void Chunk::CreateMesh() {
-    /*mesh = CreateCompositeMesh(blocktree);
-    if (mesh->IsEmpty()) {
-        mesh = nullptr;
-    }*/
 }
 
 void Chunk::Draw(const Camera& camera) const {

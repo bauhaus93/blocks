@@ -51,6 +51,7 @@ class Facetree {
  public:
                     Facetree(Point2i8 origin_, int8_t size_);
                     Facetree(Facetree&& other) = default;
+    Facetree&       operator=(Facetree&& rhs) = default;
     void            InsertFaces(std::vector<Face> faces);
     void            CreateQuads(const ProtoBlockMap& protoblocks,
                                 uint8_t axis,

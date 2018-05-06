@@ -20,7 +20,6 @@
 #include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
 #include "Blocktree.hpp"
-#include "CompositeMesh.hpp"
 
 namespace mc::world::chunk {
 
@@ -28,13 +27,11 @@ class Chunk {
 
  public:
     explicit        Chunk(const Point3i& chunkPos_);
-                    Chunk(const Chunk& other) = delete;
-                    Chunk(Chunk&& other);
-    Chunk&          operator=(Chunk&& other);
+                    Chunk(Chunk&& other) = default;
+    Chunk&          operator=(Chunk&& other) = default;
 
     void            Generate(const architect::Architect& architect);
     const Point3i&  GetPosition() const { return chunkPos; }
-    void            CreateMesh();
     void            Draw(const Camera& camera) const;
 
  private:

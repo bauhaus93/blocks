@@ -13,8 +13,8 @@ namespace mc {
 class Image {
  public:
                 Image(std::vector<uint8_t> data_, Point2u size_, uint8_t depth_);
-                Image(Image&& other);
-    Image&      operator=(Image&& other);
+                Image(Image&& other) = default;
+    Image&      operator=(Image&& other) = default;
     const std::vector<uint8_t>  GetData() const { return data; }
     Point2u                     GetSize() const { return size; }
     uint8_t                     GetDepth() const { return depth; }

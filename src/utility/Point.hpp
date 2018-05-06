@@ -20,7 +20,7 @@ class Point {
     explicit            Point(std::initializer_list<T> il);
                         Point(T v);
 
-                        Point(const Point<T, N>& other);
+                        Point(const Point<T, N>& other) = default;
                         template<typename T2>
                         Point(const Point<T2, N>& other);
 
@@ -94,11 +94,6 @@ void Point<T, N>::SetValues(T v, Args... args) {
 template<typename T, uint8_t N>
 void Point<T, N>::SetValues(T v) {
     value[N - 1] = v;
-}
-
-template<typename T, uint8_t N>
-Point<T, N>::Point(const Point<T, N>& other):
-    value { other.value } {
 }
 
 template<typename T, uint8_t N>

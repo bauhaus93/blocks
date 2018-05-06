@@ -26,8 +26,9 @@ typedef std::list<std::unique_ptr<std::future<Chunk>>> ChunkFutures;
 class ChunkLoader {
 
  public:
-    explicit            ChunkLoader(uint32_t maxThreads_,
+                        ChunkLoader(uint32_t maxThreads_,
                                     const architect::Architect& architect_);
+                        ~ChunkLoader();
 
     void                Start();
     void                Stop();
