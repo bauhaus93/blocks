@@ -4,7 +4,7 @@
 
 using namespace mc;
 using namespace mc::world;
-
+/*
 void TestBlocktreeMeshCreation::SetUp() {
     std::array<BlockType, 2> types { { BlockType::MUD, BlockType::GRASS } };
     for (uint8_t i = 0; i < 2; i++) {
@@ -41,4 +41,4 @@ TEST_F(TestBlocktreeMeshCreation, FullBlocks1TypeCheckFaces) {
 
     mesh::Mesh mesh = bt.CreateMesh(protoblocks);
     ASSERT_EQ(6 * 2, mesh.GetTriangleCount());
-}
+}*/

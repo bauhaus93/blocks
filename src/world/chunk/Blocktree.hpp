@@ -11,7 +11,7 @@
 #include "utility/Point3.hpp"
 #include "world/BlockType.hpp"
 #include "world/Direction.hpp"
-#include "world/ProtoBlock.hpp"
+#include "world/BlockManager.hpp"
 #include "mesh/Quad.hpp"
 #include "mesh/Mesh.hpp"
 #include "Facetree.hpp"
@@ -31,7 +31,7 @@ class Blocktree {
     Blocktree&  operator=(Blocktree&& rhs) = default;
     void        InsertBlocks(std::vector<BlockElement> blocks);
 
-    mesh::Mesh  CreateMesh(const ProtoBlockMap& protoblocks) const;
+    mesh::Mesh  CreateMesh(const BlockManager& blockManager) const;
     bool        HasChild(uint8_t octant) const;
     const Blocktree& GetChild(uint8_t octant) const;
     uint32_t    MaxDepth() const;

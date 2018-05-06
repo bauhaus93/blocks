@@ -4,12 +4,12 @@
 
 namespace mc::world::architect {
 
-Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_):
-    Architect(protoblocks_, static_cast<uint32_t>(std::random_device{}())) {
+Architect::Architect(const BlockManager& blockManager_):
+    Architect(blockManager_, static_cast<uint32_t>(std::random_device{}())) {
 }
 
-Architect::Architect(const std::map<BlockType, ProtoBlock>& protoblocks_, uint32_t seed_):
-    protoblocks { protoblocks_ },
+Architect::Architect(const BlockManager& blockManager_, uint32_t seed_):
+    blockManager { blockManager_ },
     seed { seed_ },
     rng { seed },
     heightNoise { static_cast<uint32_t>(rng()) },

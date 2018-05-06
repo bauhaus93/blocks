@@ -4,18 +4,18 @@
 
 namespace mc::world {
 
-ProtoBlock::ProtoBlock(BlockType type_):
-    type { type_ } {
+ProtoBlock::ProtoBlock():
+    atlasIndices { { 0, 0, 0, 0, 0, 0 } } {
 }
 
-void ProtoBlock::AddFace(Direction dir, uint32_t atlasIndex) {
-    assert(atlasLayer.find(dir) == atlasLayer.end());
-    atlasLayer.emplace(dir, atlasIndex);
+void ProtoBlock::SetFace(Direction dir, uint32_t atlasIndex) {
+    assert(GetIndex(dir) < 6);
+    atlasIndices[GetIndex(dir)] = atlasIndex;
 }
 
-uint32_t ProtoBlock::GetFace(Direction face) const {
-    assert(atlasLayer.find(face) != atlasLayer.end());
-    return atlasLayer.at(face);
+uint32_t ProtoBlock::GetFace(Direction dir) const {
+    assert(GetIndex(dir) < 6);
+    return atlasIndices[GetIndex(dir)];
 }
 
 

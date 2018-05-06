@@ -9,6 +9,8 @@ add_sources(
   Fog.cpp
   Direction.hpp
   Direction.cpp
+  BlockManager.hpp
+  BlockManager.cpp
   ProtoBlock.hpp
   ProtoBlock.cpp
   Size.hpp

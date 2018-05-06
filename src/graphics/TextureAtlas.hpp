@@ -21,6 +21,7 @@ class TextureAtlas {
     void        Activate();
     void        Deactivate();
     uint32_t    AddTextureLayer(const Image& img);
+    Point2u     GetTextureSize() const { return textureSize; }
 
  private:
     const Point2u                   textureSize;

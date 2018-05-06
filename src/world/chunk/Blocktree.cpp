@@ -135,7 +135,7 @@ void Blocktree::ClearChildren() {
     }
 }
 
-mesh::Mesh Blocktree::CreateMesh(const ProtoBlockMap& protoblocks) const {
+mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
     std::vector<mesh::Quad> quads;
     constexpr std::array<Direction, 3> faceDirs = { { Direction::EAST,
                                                       Direction::NORTH,
@@ -158,7 +158,7 @@ mesh::Mesh Blocktree::CreateMesh(const ProtoBlockMap& protoblocks) const {
                       });
             Facetree tree(Point2i8(0), CHUNK_SIZE);
             tree.InsertFaces(std::move(faces));
-            tree.CreateQuads(protoblocks, axis, layer, quads);
+            tree.CreateQuads(blockManager, axis, layer, quads);
          }
     }
     return mesh::Mesh(std::move(quads));

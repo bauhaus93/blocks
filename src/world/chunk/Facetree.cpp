@@ -22,7 +22,7 @@ uint8_t Facetree::GetQuadrant(Point2i8 pos) const {
     return index;
 }
 
-void Facetree::CreateQuads(const ProtoBlockMap& protoblocks,
+void Facetree::CreateQuads(const BlockManager& blockManager,
     uint8_t axis,
     uint8_t layer,
     QuadVec& quads) const {
@@ -81,7 +81,7 @@ void Facetree::CreateQuads(const ProtoBlockMap& protoblocks,
                 Point3f pos;
                 Point3f uv { vertexUV[i][0] * static_cast<float>(size),
                              vertexUV[i][1] * static_cast<float>(size),
-                             static_cast<float>(protoblocks.at(faceInfo->type).GetFace(faceInfo->dir))
+                             static_cast<float>(blockManager.GetBlockFace(faceInfo->type, faceInfo->dir))
                 };
 
                 auto& offset = vertexOffset[GetIndex(faceInfo->dir)][i];
@@ -94,8 +94,6 @@ void Facetree::CreateQuads(const ProtoBlockMap& protoblocks,
                         pos[j] = static_cast<float>(layer) * BLOCK_SIZE;
                     }
                 }
-
-                //INFO("Dir = ", faceInfo->dir, ", layer = ", (int)layer, ", pos = ", pos);
                 quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
             }
             quads.emplace_back(std::move(quad));
@@ -103,7 +101,7 @@ void Facetree::CreateQuads(const ProtoBlockMap& protoblocks,
     } else {
         for (auto& child: children) {
             if (child != nullptr) {
-                child->CreateQuads(protoblocks, axis, layer, quads);
+                child->CreateQuads(blockManager, axis, layer, quads);
             }
         }
     }

@@ -8,9 +8,9 @@
 
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
-#include "world/ProtoBlock.hpp"
 #include "world/BlockType.hpp"
 #include "world/Size.hpp"
+#include "world/BlockManager.hpp"
 #include "SimplexNoise.hpp"
 #include "GlobalPosition.hpp"
 #include "Biome.hpp"
@@ -19,8 +19,8 @@ namespace mc::world::architect {
 
 class Architect {
  public:
-    explicit            Architect(const ProtoBlockMap& protoblocks_);
-                        Architect(const ProtoBlockMap& protoblocks_, uint32_t seed_);
+    explicit            Architect(const BlockManager& blockManager_);
+                        Architect(const BlockManager& blockManager_, uint32_t seed_);
 
     BlockType           GetBlockType(Point3i chunkPos, Point3i8 localPos) const;
 
@@ -28,11 +28,11 @@ class Architect {
     int32_t             GetGlobalHeight(Point2i globalPos) const;
     int32_t             GetGlobalHeight(Point2i chunkPos, Point2i8 localPos) const;
     int32_t             GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) const;
-    const std::map<BlockType, ProtoBlock>&  GetProtoBlocks() const { return protoblocks; }
+    const BlockManager& GetBlockManager() const { return blockManager; }
 
  private:
-    const std::map<BlockType, ProtoBlock>&  protoblocks;
-    const uint32_t                          seed;
+    const BlockManager&                     blockManager;
+    uint32_t                                seed;
     std::mt19937                            rng;
     SimplexNoise                            heightNoise;
     SimplexNoise                            temperatureNoise;
@@ -45,7 +45,6 @@ class Architect {
     int32_t                                 GetRawGlobalHeight(Point2i globalPos) const;
     const Biome&        GetBiome(Point2i chunkPos, Point2i8 localPos);
     const Biome&        GetBiome(Point2i globalPos) const;
-
 };
 
 

@@ -33,7 +33,7 @@ void Chunk::Generate(const architect::Architect& architect) {
     if (blockQueue.size() > 0) {
         blocktree = std::make_unique<Blocktree>();
         blocktree->InsertBlocks(blockQueue);
-        mesh = std::make_unique<mesh::Mesh>(blocktree->CreateMesh(architect.GetProtoBlocks()));
+        mesh = std::make_unique<mesh::Mesh>(blocktree->CreateMesh(architect.GetBlockManager()));
     }
 
     TRACE("Generated chunk ", chunkPos,

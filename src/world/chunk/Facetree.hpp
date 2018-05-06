@@ -15,7 +15,7 @@
 #include "utility/Point3.hpp"
 #include "world/Size.hpp"
 #include "world/Direction.hpp"
-#include "world/BlockType.hpp"
+#include "world/BlockManager.hpp"
 #include "world/ProtoBlock.hpp"
 #include "mesh/Quad.hpp"
 #include "mesh/Vertex.hpp"
@@ -53,7 +53,7 @@ class Facetree {
                     Facetree(Facetree&& other) = default;
     Facetree&       operator=(Facetree&& rhs) = default;
     void            InsertFaces(std::vector<Face> faces);
-    void            CreateQuads(const ProtoBlockMap& protoblocks,
+    void            CreateQuads(const BlockManager& blockManager,
                                 uint8_t axis,
                                 uint8_t layer,
                                 QuadVec& quads) const;

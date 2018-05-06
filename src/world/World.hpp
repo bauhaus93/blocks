@@ -19,7 +19,7 @@
 
 #include "Camera.hpp"
 #include "Fog.hpp"
-#include "ProtoBlock.hpp"
+#include "BlockManager.hpp"
 
 namespace mc::world {
 
@@ -43,13 +43,13 @@ class World {
  private:
     graphics::ShaderProgram         shader;
     graphics::TextureAtlas          atlas;
-    std::map<BlockType, ProtoBlock> protoblocks;
     Camera                          camera;
     Fog                             fog;
+    BlockManager                    blockManager;
     architect::Architect            architect;
     chunk::Grid                     grid;
 
-    void                            LoadProtoBlocks();
+    void                            LoadBlocks();
 };
 
 }   // namespace mc::world::world
