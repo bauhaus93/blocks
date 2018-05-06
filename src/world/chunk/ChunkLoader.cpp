@@ -6,6 +6,7 @@ namespace mc::world::chunk {
 
 static Chunk CreateChunk(Point3i pos,
                   const architect::Architect& architect);
+static void Sleep(unsigned ms);
 
 ChunkLoader::ChunkLoader(uint32_t maxThreads_,
                          const architect::Architect& architect_):
@@ -20,7 +21,7 @@ ChunkLoader::ChunkLoader(uint32_t maxThreads_,
 }
 
 ChunkLoader::~ChunkLoader() {
-    Stop();    
+    Stop();
 }
 
 bool ChunkLoader::IsRunning() const {
@@ -80,15 +81,22 @@ void ChunkLoader::Loop() {
     while (!stop) {
         HandleFinishedThreads();
         CreateGenerationThreads();
-        TRACE("Active generation threads: ", generationThreads.size());
-        if (generationThreads.size() == maxThreads) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        } else if (generationThreads.size() == 0) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        auto genCount = generationThreads.size();
+        TRACE("Active generation threads: ", genCount);
+        if (genCount == maxThreads) {
+            Sleep(10);
+        } else if (genCount == 0) {
+            Sleep(500);
         } else {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            Sleep(50);
         }
     }
+    DEBUG("Waiting for generation threads to finish");
+    while (!generationThreads.empty()) {
+        HandleFinishedThreads();
+        Sleep(50);
+    }
+    DEBUG("All generation threads finished");
     DEBUG("ChunkLoader thread stopped");
 }
 
@@ -126,7 +134,11 @@ void ChunkLoader::CreateGenerationThreads() {
     pendingMutex.unlock();
 }
 
-static Chunk CreateChunk(Point3i pos, const architect::Architect& architect) {
+void Sleep(unsigned ms) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+
+Chunk CreateChunk(Point3i pos, const architect::Architect& architect) {
     Chunk chunk { pos };
     chunk.Generate(architect);
     return chunk;
