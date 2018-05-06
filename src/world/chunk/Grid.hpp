@@ -11,7 +11,6 @@
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
 #include "utility/Defs.hpp"
-#include "world/Octree.hpp"
 #include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
 #include "Chunk.hpp"

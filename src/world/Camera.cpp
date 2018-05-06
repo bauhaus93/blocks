@@ -19,8 +19,7 @@ Camera::Camera(graphics::ShaderProgram& shader_):
                             glm::radians(75.0f),
                             4.0f / 3.0f,
                             0.5f,
-                            1000.0f) },
-    frustum { view, projection } {
+                            1000.0f) } {
 }
 
 void Camera::SetFOV(float fovDegree) {
@@ -60,7 +59,6 @@ void Camera::UpdateView() {
         posVec + direction,
         glm::vec3(0, 0, 1)      //we want z to be up
     );
-    frustum.Update(view, projection);
 }
 
 void Camera::UpdateProjection() {

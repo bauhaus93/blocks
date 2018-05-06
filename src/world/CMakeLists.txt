@@ -7,18 +7,13 @@ add_sources(
   Camera.cpp
   Fog.hpp
   Fog.cpp
-  Frustum.hpp
-  Frustum.cpp
-  BoundingBox.hpp
-  BoundingBox.cpp
-  Intersection.hpp
   Direction.hpp
   Direction.cpp
   ProtoBlock.hpp
   ProtoBlock.cpp
-  Octree.hpp
   Size.hpp
 )
 
 add_subdirectory(chunk)
 add_subdirectory(architect)
+add_subdirectory(culling)
