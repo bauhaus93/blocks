@@ -20,6 +20,7 @@
 #include "world/architect/Architect.hpp"
 #include "world/Size.hpp"
 #include "Blocktree.hpp"
+#include "NeighbourMask.hpp"
 
 namespace mc::world::chunk {
 
@@ -43,6 +44,7 @@ class Chunk {
     Point3f                     origin;
     glm::mat4                   model;
     std::unique_ptr<Blocktree>  blocktree;
+    NeighbourMask               checkedNeighbours;
     std::unique_ptr<mesh::Mesh> mesh;
 };
 

@@ -14,29 +14,10 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     normalBuffer { 0 },
     indexBuffer { 0 },
     indexCount { 0 },
-    unsavedData { std::make_unique<VBOData>() } {
+    bufferData { nullptr } {
 
     triangles.shrink_to_fit();
-
-    std::map<Vertex, uint32_t> indexedVertices;
-
-    for (auto& triangle: triangles) {
-        for (uint8_t i = 0; i < 3; i++) {
-            const Vertex& vert = triangle.GetVertex(i);
-            auto iter = indexedVertices.find(vert);
-            if (iter == indexedVertices.end()) {
-                unsavedData->vertices.push_back(vert.GetGlmPos());
-                unsavedData->uvs.push_back(vert.GetGlmUV());
-                unsavedData->normals.push_back(vert.GetGlmNormal());
-                uint32_t index = static_cast<uint32_t>(unsavedData->vertices.size() - 1);
-                unsavedData->indices.push_back(index);
-                indexedVertices.emplace(vert, index);
-            } else {
-                unsavedData->indices.push_back(iter->second);
-            }
-        }
-    }
-    indexCount = unsavedData->indices.size();
+    CreateBufferData();
 }
 
 Mesh::Mesh(std::vector<Quad> quads):
@@ -69,7 +50,7 @@ Mesh::Mesh(Mesh&& other):
     normalBuffer { other.normalBuffer },
     indexBuffer { other.indexBuffer },
     indexCount { other.indexCount },
-    unsavedData { std::move(other.unsavedData) } {
+    bufferData { std::move(other.bufferData) } {
     other.vao = 0;
     other.vertexBuffer = 0;
     other.normalBuffer = 0;
@@ -90,13 +71,13 @@ Mesh& Mesh::operator=(Mesh&& other) {
         normalBuffer = other.normalBuffer;
         indexBuffer = other.indexBuffer;
         indexCount = other.indexCount;
-        unsavedData = std::move(other.unsavedData);
+        bufferData = std::move(other.bufferData);
         other.vao = 0;
         other.vertexBuffer = 0;
         other.uvBuffer = 0;
         other.normalBuffer = 0;
         other.indexBuffer = 0;
-        other.unsavedData = nullptr;
+        other.bufferData = nullptr;
         assert(vao != 0);
         assert(vertexBuffer != 0);
         assert(uvBuffer != 0);
@@ -106,10 +87,32 @@ Mesh& Mesh::operator=(Mesh&& other) {
     return *this;
 }
 
+void Mesh::CreateBufferData() {
+    bufferData = std::make_unique<VBOData>();
+    std::map<Vertex, uint32_t> indexedVertices;
+
+    for (auto& triangle: triangles) {
+        for (uint8_t i = 0; i < 3; i++) {
+            const Vertex& vert = triangle.GetVertex(i);
+            auto iter = indexedVertices.find(vert);
+            if (iter == indexedVertices.end()) {
+                bufferData->vertices.push_back(vert.GetGlmPos());
+                bufferData->uvs.push_back(vert.GetGlmUV());
+                bufferData->normals.push_back(vert.GetGlmNormal());
+                uint32_t index = static_cast<uint32_t>(bufferData->vertices.size() - 1);
+                bufferData->indices.push_back(index);
+                indexedVertices.emplace(vert, index);
+            } else {
+                bufferData->indices.push_back(iter->second);
+            }
+        }
+    }
+    indexCount = bufferData->indices.size();
+}
 
 
 void Mesh::LoadVBOs() {
-    assert(unsavedData != nullptr);
+    assert(bufferData != nullptr);
     assert(vertexBuffer == 0);
     assert(uvBuffer == 0);
     assert(normalBuffer == 0);
@@ -119,8 +122,8 @@ void Mesh::LoadVBOs() {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(
         GL_ARRAY_BUFFER,
-        unsavedData->vertices.size() * sizeof(glm::vec3),
-        unsavedData->vertices.data(),
+        bufferData->vertices.size() * sizeof(glm::vec3),
+        bufferData->vertices.data(),
         GL_STATIC_DRAW
     );
 
@@ -128,8 +131,8 @@ void Mesh::LoadVBOs() {
     glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
     glBufferData(
         GL_ARRAY_BUFFER,
-        unsavedData->uvs.size() * sizeof(glm::vec3),
-        unsavedData->uvs.data(),
+        bufferData->uvs.size() * sizeof(glm::vec3),
+        bufferData->uvs.data(),
         GL_STATIC_DRAW
     );
 
@@ -137,8 +140,8 @@ void Mesh::LoadVBOs() {
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
     glBufferData(
         GL_ARRAY_BUFFER,
-        unsavedData->normals.size() * sizeof(glm::vec3),
-        unsavedData->normals.data(),
+        bufferData->normals.size() * sizeof(glm::vec3),
+        bufferData->normals.data(),
         GL_STATIC_DRAW
     );
 
@@ -146,11 +149,11 @@ void Mesh::LoadVBOs() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
-        unsavedData->indices.size() * sizeof(uint32_t),
-        unsavedData->indices.data(),
+        bufferData->indices.size() * sizeof(uint32_t),
+        bufferData->indices.data(),
         GL_STATIC_DRAW
     );
-    unsavedData = nullptr;
+    bufferData = nullptr;
 }
 
 void Mesh::LoadVAO() {

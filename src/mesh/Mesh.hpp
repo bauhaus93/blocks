@@ -41,6 +41,7 @@ class Mesh {
 
  private:
 
+    void        CreateBufferData();
     void        LoadVBOs();
     void        LoadVAO();
 
@@ -53,7 +54,7 @@ class Mesh {
     GLuint      indexBuffer;
     uint32_t    indexCount;
 
-    std::unique_ptr<VBOData>    unsavedData;
+    std::unique_ptr<VBOData>        bufferData;
 };
 
 }       // namespace mc::mesh

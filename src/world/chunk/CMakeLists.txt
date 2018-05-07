@@ -9,7 +9,8 @@ add_sources(
   Grid.cpp
   ChunkLoader.hpp
   ChunkLoader.cpp
+  NeighbourMask.hpp
+  NeighbourMask.cpp
 )
 
 add_subdirectory(tests)
-

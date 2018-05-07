@@ -16,7 +16,7 @@ World::World():
     grid { architect } {
     INFO("Creating world");
 
-    SetDrawDistance(40);
+    SetDrawDistance(15);
     grid.GivePositionUpdate(camera.GetPosition());
 }
 
