@@ -8,7 +8,7 @@ static graphics::ShaderProgram LoadShader();
 
 World::World():
     shader { LoadShader() },
-    atlas { TEXTURE_SIZE, ATLAS_DEPTH },
+    atlas { Point2u(32), 16 },
     camera { shader },
     fog { shader },
     blockManager { atlas },
@@ -16,7 +16,7 @@ World::World():
     grid { architect } {
     INFO("Creating world");
 
-    SetDrawDistance(5);
+    SetDrawDistance(40);
     grid.GivePositionUpdate(camera.GetPosition());
 }
 

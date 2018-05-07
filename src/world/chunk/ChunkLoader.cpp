@@ -47,7 +47,7 @@ void ChunkLoader::RequestChunks(const std::vector<Point3i>& requestedChunkPos) {
 
 std::vector<Chunk> ChunkLoader::GetFinishedChunks() {
     std::vector<Chunk> retVec;
-    
+
     finishedMutex.lock();
     retVec.swap(finishedChunks);
     finishedMutex.unlock();
@@ -71,7 +71,7 @@ void ChunkLoader::Stop() {
         controlThread->join();
         controlThread = nullptr;
     } else {
-        WARN("Wanted to stop ChunkLoaded thread, but was not running");
+        WARN("Wanted to stop ChunkLoader thread, but was not running");
     }
 }
 
@@ -108,7 +108,7 @@ void ChunkLoader::HandleFinishedThreads() {
             Chunk chunk = iter->get()->get();
             finishedChunks.emplace_back(std::move(chunk));
             finishedMutex.unlock();
-            iter = generationThreads.erase(iter); 
+            iter = generationThreads.erase(iter);
         } else {
             ++iter;
         }
@@ -118,9 +118,9 @@ void ChunkLoader::HandleFinishedThreads() {
 void ChunkLoader::CreateGenerationThreads() {
     pendingMutex.lock();
     auto iter = pendingChunkPos.begin();
-    while (iter != pendingChunkPos.end() && 
+    while (iter != pendingChunkPos.end() &&
            generationThreads.size() < maxThreads) {
-        
+
         std::unique_ptr<std::future<Chunk>> fut =
             std::make_unique<std::future<Chunk>>(std::async(
                 std::launch::async,

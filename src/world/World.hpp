@@ -23,9 +23,6 @@
 
 namespace mc::world {
 
-extern const Point2u TEXTURE_SIZE;
-extern const uint32_t ATLAS_DEPTH;
-
 class World {
  public:
 
