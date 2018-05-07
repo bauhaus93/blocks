@@ -93,7 +93,7 @@ ExternalProject_Add(glad
     UPDATE_COMMAND ""
 )
 add_dependencies(${LIB_NAME} glad)
-target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${GLAD_ROOT_DIR}/build/include)
+target_include_directories(${LIB_NAME} PRIVATE ${GLAD_ROOT_DIR}/build/include)
 target_link_libraries(${LIB_NAME} PRIVATE ${GLAD_ROOT_DIR}/build/${CMAKE_STATIC_LIBRARY_PREFIX}glad${CMAKE_STATIC_LIBRARY_SUFFIX})
 
 set(GLM_ROOT_DIR ${CMAKE_BINARY_DIR}/glm)
@@ -107,5 +107,4 @@ ExternalProject_Add(glm
     UPDATE_COMMAND ""
 )
 add_dependencies(${LIB_NAME} glm)
-target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${GLM_ROOT_DIR}/install/include)
-
+target_include_directories(${LIB_NAME} PRIVATE ${GLM_ROOT_DIR}/install/include)

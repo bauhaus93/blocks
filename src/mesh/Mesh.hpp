@@ -6,11 +6,11 @@
 #include <map>
 #include <memory>
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 #include "logger/GlobalLogger.hpp"
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include "utility/Point3.hpp"
 
 #include "Vertex.hpp"

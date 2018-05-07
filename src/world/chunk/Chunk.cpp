@@ -7,7 +7,7 @@ namespace mc::world::chunk {
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * static_cast<float>(CHUNK_SIZE) * BLOCK_SIZE },
-    model {  CreateTranslationMatrix(origin) * glm::mat4(1.0f) },
+    model {  CreateTranslationMatrix(origin) },
     blocktree { nullptr },
     mesh { nullptr } {
 }

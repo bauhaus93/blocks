@@ -52,7 +52,6 @@ void Camera::LoadMVPMatrix(const glm::mat4& model) const {
 void Camera::UpdateView() {
     auto direction = CreateDirection(rotation);
 
-    TRACE("camera direction: ", direction[0], "/", direction[1], "/", direction[2]);
     glm::vec3 posVec = CreateVec(position);
     view = glm::lookAt(
         posVec,
@@ -68,7 +67,7 @@ void Camera::UpdateProjection() {
         near,
         far
     );
-    TRACE("Updated projection: fov = ", fov, ", aspect = ", aspectRatio, ", near = ", near, ", far = ", far);
+    INFO("Updated projection: fov = ", fov, ", aspect = ", aspectRatio, ", near = ", near, ", far = ", far);
 }
 
 void Camera::SetPosition(const Point3f& newPosition) {

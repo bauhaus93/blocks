@@ -6,15 +6,14 @@ namespace mc::world {
 
 Entity::Entity():
     position(0.0f),
-    rotation(0.0f),
+    rotation(0.0f, 0.0f, 1.0f),
     model { glm::mat4(1.0f) } {
     UpdateModel();
 }
 
 void Entity::UpdateModel() {
     model = CreateTranslationMatrix(position) *
-            CreateRotationMatrix(rotation) *
-            glm::mat4(1.0f);
+            CreateRotationMatrix(rotation);
 }
 
 void Entity::SetPosition(const Point3f& newPosition) {

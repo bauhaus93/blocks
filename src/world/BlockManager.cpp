@@ -11,7 +11,7 @@ BlockManager::BlockManager(graphics::TextureAtlas& atlas) {
 
 void  BlockManager::LoadFaces(graphics::TextureAtlas& atlas) {
     constexpr unsigned FACE_COUNT = 5;
-    static const std::array<const char*, FACE_COUNT> faceNames = { { 
+    static const std::array<const char*, FACE_COUNT> faceNames = { {
         "mud", "grass", "grass-mud", "desert", "rock" } };
     Image img = ReadBitmap("data/atlas.bmp");
     Point2u imgSize = img.GetSize();
@@ -21,7 +21,7 @@ void  BlockManager::LoadFaces(graphics::TextureAtlas& atlas) {
     for (unsigned i = 0; i < FACE_COUNT; ++i) {
         Image sub = img.CreateSubImage(currPos, textureSize);
         faces[faceNames[i]] = atlas.AddTextureLayer(std::move(sub));
-        
+
         currPos[0] += textureSize[0];
         if (currPos[0] > imgSize[0]) {
             currPos[0] = 0;
@@ -34,15 +34,15 @@ void  BlockManager::LoadFaces(graphics::TextureAtlas& atlas) {
 }
 
 void BlockManager::LoadProtoblocks() {
-    
-    AddBlock(BlockType::MUD); 
+
+    AddBlock(BlockType::MUD);
     for (unsigned i = 0; i < 6; i++) {
         auto& protoMud = protoblocks.at(BlockType::MUD);
         protoMud.SetFace(GetDirection(i),
                          faces.at("mud"));
     }
 
-    AddBlock(BlockType::GRASS); 
+    AddBlock(BlockType::GRASS);
     for (unsigned i = 0; i < 6; i++) {
         auto& protoGrass = protoblocks.at(BlockType::GRASS);
         Direction dir = GetDirection(i);
@@ -54,15 +54,15 @@ void BlockManager::LoadProtoblocks() {
             protoGrass.SetFace(dir, faces.at("grass-mud"));
         }
     }
-    
-    AddBlock(BlockType::DESERT); 
+
+    AddBlock(BlockType::DESERT);
     for (unsigned i = 0; i < 6; i++) {
         auto& protoDesert = protoblocks.at(BlockType::DESERT);
         protoDesert.SetFace(GetDirection(i),
                             faces.at("desert"));
     }
-   
-    AddBlock(BlockType::ROCK); 
+
+    AddBlock(BlockType::ROCK);
     for (unsigned i = 0; i < 6; i++) {
         auto& protoRock = protoblocks.at(BlockType::ROCK);
         protoRock.SetFace(GetDirection(i),

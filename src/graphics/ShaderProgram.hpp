@@ -4,9 +4,9 @@
 
 #include <string>
 
-#include <glm/mat4x4.hpp>
+#include "glm/mat4x4.hpp"
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include "utility/FileRead.hpp"
 #include "utility/Color.hpp"
 

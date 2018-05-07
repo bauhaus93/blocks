@@ -4,9 +4,6 @@
 
 namespace mc::world {
 
-const Point2u TEXTURE_SIZE = Point2u(32);
-const uint32_t ATLAS_DEPTH(5);
-
 static graphics::ShaderProgram LoadShader();
 
 World::World():
@@ -14,7 +11,7 @@ World::World():
     atlas { TEXTURE_SIZE, ATLAS_DEPTH },
     camera { shader },
     fog { shader },
-    blockManager { atlas }, 
+    blockManager { atlas },
     architect { blockManager },
     grid { architect } {
     INFO("Creating world");

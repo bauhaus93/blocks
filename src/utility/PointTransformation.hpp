@@ -4,9 +4,9 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp>
-#include <glm/gtx/transform.hpp>
+#include "glm/mat4x4.hpp"
+#include "glm/vec3.hpp"
+#include "glm/gtx/transform.hpp"
 
 #include "Point3.hpp"
 
@@ -21,7 +21,7 @@ glm::vec3 CreateVec(const Point3<T>& point) {
 
 template<typename T>
 glm::mat4 CreateTranslationMatrix(const Point3<T>& point) {
-    return glm::translate(glm::mat4(), CreateVec(point));
+    return glm::translate(glm::mat4(1.0f), CreateVec(point));
 }
 
 template<typename T>

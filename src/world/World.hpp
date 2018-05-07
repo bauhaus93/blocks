@@ -5,8 +5,8 @@
 #include <string>
 #include <map>
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"

@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 #include "utility/Point3.hpp"
 
@@ -32,6 +32,3 @@ class Vertex {
 std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
 
 }       // namespace mc::mesh
-
-
-
