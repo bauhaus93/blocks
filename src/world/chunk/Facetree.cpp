@@ -113,10 +113,8 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
     for (auto& f : faces) {
         if (f.origin == origin && f.size == size) {
             if (!IsFace()) {
-                //INFO("Found right face @ ", origin, ", size = ", static_cast<int>(size));
                 SetFace(f.info);
             } else {
-                //INFO("Found right face, but already has equal face");
                 SetFaceNull();
             }
         } else {
@@ -133,6 +131,11 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
             children[i]->InsertFaces(std::move(subSplit[i]));
         }
     }
+    FaceInfo merge = IsMergeable();
+    if (merge.type != BlockType::NONE) {
+        SetFace(merge);
+        DeleteChildren();
+    }
 }
 
 void Facetree::SplitFaceToChildren(const FaceInfo& info) {
@@ -143,7 +146,6 @@ void Facetree::SplitFaceToChildren(const FaceInfo& info) {
                 children[i]->SetFace(info);
             } else {
                 if (children[i]->IsFace()) {    // assumes up to 2 faces can have same positions
-                    //INFO("Resplit bc overlap @ ", children[i]->origin, ", size = ", children[i]->size);
                     children[i]->SplitFaceToChildren(*children[i]->faceInfo);
                     children[i]->SplitFaceToChildren(info);
                     children[i]->SetFaceNull();
@@ -153,18 +155,37 @@ void Facetree::SplitFaceToChildren(const FaceInfo& info) {
             }
         }
     } else {
-        //INFO("Set to null bc EOT");
         SetFaceNull();
     }
 }
 
+FaceInfo Facetree::IsMergeable() {
+    bool foundOne = false;
+    FaceInfo merge(BlockType::NONE, Direction::NORTH);
+    for (uint8_t i = 0; i < 4; i++) {
+        if (children[i] == nullptr || !children[i]->IsFace()) {
+            return FaceInfo(BlockType::NONE, Direction::NORTH);
+        }
+        FaceInfo curr = children[i]->GetFace();
+        if (!foundOne) {
+            if (curr.type != BlockType::NONE) {
+                foundOne = true;
+                merge = curr;
+            } else {
+                return FaceInfo(BlockType::NONE, Direction::NORTH);
+            }
+        } else if (curr.type != merge.type || curr.dir != merge.dir) {
+                return FaceInfo(BlockType::NONE, Direction::NORTH);
+        }
+    }
+    return merge;
+}
+
 void Facetree::SetFace(const FaceInfo& info) {
-    //INFO("SetFace @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", info.dir);
     faceInfo = std::make_unique<FaceInfo>(info);
 }
 
 void Facetree::SetFaceNull() {
-    //INFO("SetFaceNull @ ", origin, ", size = ", static_cast<int>(size), ", dir = ", faceInfo->dir);
     faceInfo = nullptr;
 }
 

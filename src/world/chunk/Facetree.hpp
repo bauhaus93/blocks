@@ -68,6 +68,8 @@ class Facetree {
     void    CreateChild(uint8_t quadrant);
     void    DeleteChild(uint8_t quadrant);
     void    DeleteChildren();
+    const FaceInfo& GetFace() const { assert(faceInfo != nullptr); return *faceInfo; }
+    FaceInfo        IsMergeable();
 
     Point2i8                    origin;
     int8_t                      size;

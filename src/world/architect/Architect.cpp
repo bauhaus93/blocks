@@ -74,6 +74,12 @@ void Architect::LoadBiomes() {
 }
 
 const Biome& Architect::GetBiome(Point2i globalPos) const {
+
+    /*if (globalPos[0] == 10) {
+        return biomes.at(BiomeType::GRASSLANDS);
+    } else {
+        return biomes.at(BiomeType::DESERT);
+    }*/
     //double height = heightNoise.GetNoise(globalPos);
     double temperature = temperatureNoise.GetNoise(globalPos);
     //double humidity = humidityNoise.GetNoise(globalPos);
@@ -126,6 +132,7 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) c
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
+    //return 50;
     return GetRawGlobalHeight(globalPos);
 }
 

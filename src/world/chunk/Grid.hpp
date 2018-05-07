@@ -28,13 +28,14 @@ class Grid {
     void            Draw(const Camera& camera) const;
     void            Update();
 
+
     int32_t         GetDrawDistance() const { return drawDistance; }
 
  private:
     void            GivePositionUpdate(Point3i centerPos);
     void            LoadNewChunks();
     void            UnloadOldChunks();
-    std::vector<Point3i> CreateVisibleChunkPosVec() const;
+    void            UpdateChunkBorderFaces(Chunk& newChunk);
 
     int32_t                                 drawDistance;
     int32_t                                 refreshDistance;

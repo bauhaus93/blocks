@@ -86,9 +86,19 @@ void Grid::Update() {
         std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
         for (auto iter = std::make_move_iterator(newChunks.begin());
              iter != std::make_move_iterator(newChunks.end()); ++iter) {
-            loadedChunks.emplace(iter->GetPosition(), *iter);
+            auto result = loadedChunks.emplace(iter->GetPosition(), *iter);
+            UpdateChunkBorderFaces(result.first->second);
         }
         //DEBUG("Updating chunks took ", clock.getElapsedTime().asMilliseconds(), "ms");
+    }
+}
+
+void Grid::UpdateChunkBorderFaces(Chunk& newChunk) {
+    for (uint8_t i = 0; i < 6; i++) {
+        auto result = loadedChunks.find(newChunk.GetPosition() + GetOffset(GetDirection(i)));
+        if (result != loadedChunks.end()) {
+            Chunk::UpdateBorderFaces(newChunk, result->second, GetDirection(i));
+        }
     }
 }
 

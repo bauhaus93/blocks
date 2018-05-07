@@ -143,6 +143,7 @@ mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
 
     for (uint8_t axis = 0; axis < 3; axis++) {
         for (uint8_t layer = 0; layer <= CHUNK_SIZE; layer++) {
+            if (layer == 0 || layer == 16) continue;
             std::vector<Face> faces;
             if (layer > 0) {
                 CollectFaces(faces, layer - 1, faceDirs[axis]);
@@ -211,6 +212,18 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t index, Direction 
                 }
             }
         }
+    }
+}
+
+void Blocktree::CollectBorderFaces(std::vector<Face>& faces, Direction border) {
+    switch(border) {
+    case Direction::NORTH:  CollectFaces(faces, 0, border);                 break;
+    case Direction::EAST:   CollectFaces(faces, CHUNK_SIZE - 1, border);    break;
+    case Direction::SOUTH:  CollectFaces(faces, CHUNK_SIZE - 1, border);    break;
+    case Direction::WEST:   CollectFaces(faces, 0, border);                 break;
+    case Direction::UP:     CollectFaces(faces, CHUNK_SIZE - 1, border);    break;
+    case Direction::DOWN:   CollectFaces(faces, 0, border);                 break;
+    default: assert(0);
     }
 }
 

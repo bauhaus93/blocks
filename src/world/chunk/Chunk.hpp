@@ -33,8 +33,10 @@ class Chunk {
 
     void            Generate(const architect::Architect& architect);
     const Point3i&  GetPosition() const { return chunkPos; }
+    const NeighbourMask&  GetCheckedNeighbours() const { return checkedNeighbours; }
     void            Draw(const Camera& camera) const;
 
+    static void     UpdateBorderFaces(Chunk& curr, Chunk& neighbour, Direction relation);
  private:
     void    GenerateColumn(Point3i top,
                            const std::array<int32_t, 4>& neighbourHeight,
@@ -47,9 +49,5 @@ class Chunk {
     NeighbourMask               checkedNeighbours;
     std::unique_ptr<mesh::Mesh> mesh;
 };
-
-typedef std::array<int32_t, CHUNK_SIZE * CHUNK_SIZE> HeightArray;
-
-
 
 }       // namespace mc::world::chunk
