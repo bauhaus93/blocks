@@ -24,7 +24,4 @@ void main() {
     float fogFactor = 1.0 / exp(dist * fog.density);
     //fogFactor = 1.0 - clamp(fogFactor, 0.0, 1.0);
     color = mix(fog.color, color, fogFactor);
-
-
-
 }

@@ -15,7 +15,7 @@ namespace mc::world {
 
 class BlockManager {
  public:
-                BlockManager(graphics::TextureAtlas& atlas);
+    explicit    BlockManager(graphics::TextureAtlas& atlas);
 
     void        SetBlockFace(BlockType type, Direction dir, uint32_t atlasIndex);
     uint32_t    GetBlockFace(BlockType type, Direction dir) const;
