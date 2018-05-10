@@ -48,8 +48,7 @@ void Chunk::Draw(const Camera& camera) const {
 }
 
 void Chunk::UpdateBorderFaces(Chunk& curr, Chunk& neighbour, Direction relation) {
-    
-
+    // TODO
 }
 
 }       // namespace mc::world::chunk

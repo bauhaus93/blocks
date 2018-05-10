@@ -142,11 +142,15 @@ mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
                                                       Direction::UP } };
 
     for (uint8_t axis = 0; axis < 3; axis++) {
-        for (uint8_t layer = 1; layer < CHUNK_SIZE; layer++) {  // ignores faces on chunk borders
+        for (uint8_t layer = 0; layer <= CHUNK_SIZE; layer++) {
             std::vector<Face> faces;
-            
-            CollectFaces(faces, layer - 1, faceDirs[axis]);
-            CollectFaces(faces, layer, GetOpposite(faceDirs[axis]));
+
+            if (layer > 0) {
+                CollectFaces(faces, layer - 1, faceDirs[axis]);
+            }
+            if (layer < CHUNK_SIZE) {
+                CollectFaces(faces, layer, GetOpposite(faceDirs[axis]));
+            }
 
             std::sort(faces.begin(),
                       faces.end(),
@@ -203,7 +207,7 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t index, Direction 
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
                 if (index >= children[i]->origin[axis] &&
-                    index < children[i]->origin[axis] + children[i]->size) {
+                    index < children[i]->origin[axis] + children[i]->size) {   // not sure about < or <=
                         children[i]->CollectFaces(faces, index, dir);
                 }
             }
@@ -213,13 +217,13 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t index, Direction 
 
 void Blocktree::CollectBorderFaces(std::vector<Face>& faces, Direction border) {
     switch(border) {
-    case Direction::NORTH:  CollectFaces(faces, 0, border);                 break;
-    case Direction::EAST:   CollectFaces(faces, CHUNK_SIZE - 1, border);    break;
-    case Direction::SOUTH:  CollectFaces(faces, CHUNK_SIZE - 1, border);    break;
-    case Direction::WEST:   CollectFaces(faces, 0, border);                 break;
-    case Direction::UP:     CollectFaces(faces, CHUNK_SIZE - 1, border);    break;
-    case Direction::DOWN:   CollectFaces(faces, 0, border);                 break;
-    default: assert(0);
+        case Direction::NORTH:  CollectFaces(faces, 0, border);             break;
+        case Direction::EAST:   CollectFaces(faces, CHUNK_SIZE, border);    break;
+        case Direction::SOUTH:  CollectFaces(faces, CHUNK_SIZE, border);    break;
+        case Direction::WEST:   CollectFaces(faces, 0, border);             break;
+        case Direction::UP:     CollectFaces(faces, CHUNK_SIZE, border);    break;
+        case Direction::DOWN:   CollectFaces(faces, 0, border);             break;
+        default: assert(0);
     }
 }
 
@@ -234,6 +238,5 @@ std::array<std::vector<BlockElement>, 8> Blocktree::SplitToChildren(const std::v
 
     return queue;
 }
-
 
 }   // namespace mc::world::chunk

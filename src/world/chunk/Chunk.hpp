@@ -18,6 +18,7 @@
 #include "world/Camera.hpp"
 #include "world/Direction.hpp"
 #include "world/architect/Architect.hpp"
+#include "world/BlockManager.hpp"
 #include "world/Size.hpp"
 #include "Blocktree.hpp"
 #include "NeighbourMask.hpp"
@@ -35,6 +36,7 @@ class Chunk {
     const Point3i&  GetPosition() const { return chunkPos; }
     const NeighbourMask&  GetCheckedNeighbours() const { return checkedNeighbours; }
     void            Draw(const Camera& camera) const;
+    Blocktree&      GetBlocktree() { assert(blocktree != nullptr); return *blocktree; };
 
     static void     UpdateBorderFaces(Chunk& curr, Chunk& neighbour, Direction relation);
  private:

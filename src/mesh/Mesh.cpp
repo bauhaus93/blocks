@@ -20,26 +20,12 @@ Mesh::Mesh(std::vector<Triangle> triangles_):
     CreateBufferData();
 }
 
-Mesh::Mesh(std::vector<Quad> quads):
-    Mesh(CreateTriangles(std::move(quads))) {
+Mesh::Mesh(const std::vector<Quad>& quads):
+    Mesh(CreateTriangles(quads)) {
 }
 
 Mesh::~Mesh() {
-    if (indexBuffer != 0) {
-        glDeleteBuffers(1, &indexBuffer);
-    }
-    if (normalBuffer != 0) {
-        glDeleteBuffers(1, &normalBuffer);
-    }
-    if (uvBuffer != 0) {
-        glDeleteBuffers(1, &uvBuffer);
-    }
-    if (vertexBuffer != 0) {
-        glDeleteBuffers(1, &vertexBuffer);
-    }
-    if (vao != 0) {
-        glDeleteVertexArrays(1, &vao);
-    }
+    DeleteBuffers();
 }
 
 Mesh::Mesh(Mesh&& other):
@@ -59,11 +45,6 @@ Mesh::Mesh(Mesh&& other):
 
 Mesh& Mesh::operator=(Mesh&& other) {
     if(this != &other) {
-        assert(vao == 0);
-        assert(vertexBuffer == 0);
-        assert(uvBuffer == 0);
-        assert(normalBuffer == 0);
-        assert(indexBuffer == 0);
         triangles = std::move(other.triangles);
         vao = other.vao;
         vertexBuffer = other.vertexBuffer;
@@ -78,17 +59,30 @@ Mesh& Mesh::operator=(Mesh&& other) {
         other.normalBuffer = 0;
         other.indexBuffer = 0;
         other.bufferData = nullptr;
-        assert(vao != 0);
-        assert(vertexBuffer != 0);
-        assert(uvBuffer != 0);
-        assert(normalBuffer != 0);
-        assert(indexBuffer != 0);
     }
     return *this;
 }
 
+void Mesh::VoidVolume(const Volume& volume) {
+    auto removed = std::remove_if(triangles.begin(),
+                   triangles.end(),
+                   [&volume](const Triangle& t) {
+                       return t.InVolume(volume);
+                   });
+    triangles.erase(removed, triangles.end());
+    triangles.shrink_to_fit();
+    DeleteBuffers();
+    CreateBufferData();
+}
+
 void Mesh::AddQuads(const std::vector<Quad>& quads) {
-    triangles.insert(triangles.end(), )
+    std::vector<Triangle> newTriangles = CreateTriangles(quads);
+    triangles.insert(triangles.end(),
+                     std::make_move_iterator(newTriangles.begin()),
+                     std::make_move_iterator(newTriangles.end()));
+    triangles.shrink_to_fit();
+    DeleteBuffers();
+    CreateBufferData();
 }
 
 void Mesh::CreateBufferData() {
@@ -114,6 +108,23 @@ void Mesh::CreateBufferData() {
     indexCount = bufferData->indices.size();
 }
 
+void Mesh::DeleteBuffers() {
+    if (indexBuffer != 0) {
+        glDeleteBuffers(1, &indexBuffer);
+    }
+    if (normalBuffer != 0) {
+        glDeleteBuffers(1, &normalBuffer);
+    }
+    if (uvBuffer != 0) {
+        glDeleteBuffers(1, &uvBuffer);
+    }
+    if (vertexBuffer != 0) {
+        glDeleteBuffers(1, &vertexBuffer);
+    }
+    if (vao != 0) {
+        glDeleteVertexArrays(1, &vao);
+    }
+}
 
 void Mesh::LoadVBOs() {
     assert(bufferData != nullptr);

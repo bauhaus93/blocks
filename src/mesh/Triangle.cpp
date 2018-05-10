@@ -20,5 +20,13 @@ const Vertex& Triangle::GetVertex(uint8_t index) const {
     return vertex[index];
 }
 
-}       // namespace mc::mesh
+bool Triangle::InVolume(const Volume& volume) const {
+    for (auto& v: vertex) {
+        if (!v.InVolume(volume)) {
+            return false;
+        }
+    }
+    return true;
+}
 
+}       // namespace mc::mesh

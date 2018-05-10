@@ -8,6 +8,7 @@
 #include "glm/vec3.hpp"
 
 #include "utility/Point3.hpp"
+#include "utility/Volume.hpp"
 
 namespace mc::mesh {
 
@@ -22,6 +23,7 @@ class Vertex {
     glm::vec3   GetGlmPos() const;
     glm::vec3   GetGlmUV() const;
     glm::vec3   GetGlmNormal() const;
+    bool        InVolume(const Volume& volume) const;
 
  private:
     Point3f pos;

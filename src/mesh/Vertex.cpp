@@ -47,6 +47,10 @@ glm::vec3 Vertex::GetGlmNormal() const {
     return glm::vec3(normal[0], normal[1], normal[2]);
 }
 
+bool Vertex::InVolume(const Volume& volume) const {
+    return volume.Contains(pos);
+}
+
 std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
     os << "Vertex(";
     os << "pos = (" << vertex.GetPos() << ")";
@@ -57,4 +61,3 @@ std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
 }
 
 }       // namespace mc::mesh
-

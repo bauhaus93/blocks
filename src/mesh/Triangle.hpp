@@ -5,6 +5,7 @@
 #include <array>
 #include <memory>
 
+#include "utility/Volume.hpp"
 #include "Vertex.hpp"
 
 namespace mc::mesh {
@@ -16,10 +17,10 @@ class Triangle {
     Triangle&   operator=(Triangle&& other) = default;
     void        SetVertex(uint8_t index, Vertex vert);
     const Vertex& GetVertex(uint8_t index) const;
+    bool        InVolume(const Volume& volume) const;
  private:
     std::array<Vertex, 3>  vertex;
 };
 
 
 }       // namespace mc::mesh
-

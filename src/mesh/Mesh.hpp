@@ -12,6 +12,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "glad/glad.h"
 #include "utility/Point3.hpp"
+#include "utility/Volume.hpp"
 
 #include "Vertex.hpp"
 #include "Quad.hpp"
@@ -39,10 +40,12 @@ class Mesh {
     bool                            IsEmpty() const { return triangles.empty(); }
     void                            AddQuads(const std::vector<Quad>& quads);
     void                            Draw();
+    void                            VoidVolume(const Volume& volume);
 
  private:
 
     void        CreateBufferData();
+    void        DeleteBuffers();
     void        LoadVBOs();
     void        LoadVAO();
 

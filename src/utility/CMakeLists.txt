@@ -11,6 +11,8 @@ add_sources(
   Image.cpp
   Color.hpp
   Color.cpp
+  Volume.hpp
+  Volume.cpp
   PointTransformation.hpp
   PointTransformation.cpp
   FileNotFoundError.hpp
