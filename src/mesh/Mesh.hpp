@@ -29,7 +29,7 @@ struct VBOData {
 class Mesh {
  public:
     explicit                        Mesh(std::vector<Triangle> triangles_);
-    explicit                        Mesh(std::vector<Quad> quads);
+    explicit                        Mesh(const std::vector<Quad>& quads);
                                     ~Mesh();
                                     Mesh(Mesh&& other);
     Mesh&                           operator=(Mesh&& other);
@@ -37,6 +37,7 @@ class Mesh {
     std::size_t                     GetTriangleCount() const { return triangles.size(); }
     const std::vector<Triangle>&    GetTriangles() const { return triangles; }
     bool                            IsEmpty() const { return triangles.empty(); }
+    void                            AddQuads(const std::vector<Quad>& quads);
     void                            Draw();
 
  private:

@@ -4,7 +4,7 @@
 
 namespace mc::mesh {
 
-static std::vector<Triangle> CreateTriangles(std::vector<Quad> quads);
+static std::vector<Triangle> CreateTriangles(const std::vector<Quad>& quads);
 
 Mesh::Mesh(std::vector<Triangle> triangles_):
     triangles { std::move(triangles_) },
@@ -85,6 +85,10 @@ Mesh& Mesh::operator=(Mesh&& other) {
         assert(indexBuffer != 0);
     }
     return *this;
+}
+
+void Mesh::AddQuads(const std::vector<Quad>& quads) {
+    triangles.insert(triangles.end(), )
 }
 
 void Mesh::CreateBufferData() {
@@ -223,7 +227,7 @@ void Mesh::Draw() {
     glBindVertexArray(0);
 }
 
-static std::vector<Triangle> CreateTriangles(std::vector<Quad> quads) {
+static std::vector<Triangle> CreateTriangles(const std::vector<Quad>& quads) {
     std::vector<Triangle> triangles;
     triangles.reserve(quads.size() * 2);
 

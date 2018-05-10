@@ -142,15 +142,11 @@ mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
                                                       Direction::UP } };
 
     for (uint8_t axis = 0; axis < 3; axis++) {
-        for (uint8_t layer = 0; layer <= CHUNK_SIZE; layer++) {
-            if (layer == 0 || layer == 16) continue;
+        for (uint8_t layer = 1; layer < CHUNK_SIZE; layer++) {  // ignores faces on chunk borders
             std::vector<Face> faces;
-            if (layer > 0) {
-                CollectFaces(faces, layer - 1, faceDirs[axis]);
-            }
-            if (layer < 16) {
-                CollectFaces(faces, layer, GetOpposite(faceDirs[axis]));
-            }
+            
+            CollectFaces(faces, layer - 1, faceDirs[axis]);
+            CollectFaces(faces, layer, GetOpposite(faceDirs[axis]));
 
             std::sort(faces.begin(),
                       faces.end(),
