@@ -74,7 +74,6 @@ void Architect::LoadBiomes() {
 }
 
 const Biome& Architect::GetBiome(Point2i globalPos) const {
-
     /*if (globalPos[0] == 10) {
         return biomes.at(BiomeType::GRASSLANDS);
     } else {
@@ -132,7 +131,10 @@ int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) c
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
-    //return 50;
+    /*if (globalPos[0] == -10 && globalPos[1] == -10) {
+        return 51;
+    }
+    return 50;*/
     return GetRawGlobalHeight(globalPos);
 }
 

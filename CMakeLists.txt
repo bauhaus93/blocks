@@ -70,6 +70,8 @@ target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_include_directories(${EXEC_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_link_libraries(${LIB_NAME} PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
+set(OpenGL_GL_PREFERENCE "GLVND")
+#FindOpenGL()
 find_package(OpenGL REQUIRED)
 target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
 target_link_libraries(${LIB_NAME} PRIVATE ${OPENGL_LIBRARIES})

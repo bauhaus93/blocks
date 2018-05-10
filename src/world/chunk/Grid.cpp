@@ -44,6 +44,10 @@ void Grid::LoadNewChunks() {
     Point3i max = centerPos + drawDistance;
     std::vector<Point3i> requestChunks;
 
+    /*min[0] = -1;
+    min[1] = -1;
+    max[0] = 0;
+    max[1] = 0;*/
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
             auto pair = architect.GetMinMaxGlobalHeight(Point2i(x, y));

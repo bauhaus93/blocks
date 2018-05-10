@@ -115,6 +115,8 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
             if (!IsFace()) {
                 SetFace(f.info);
             } else {
+                SplitFaceToChildren(*faceInfo);
+                SplitFaceToChildren(f.info);
                 SetFaceNull();
             }
         } else {
@@ -125,7 +127,10 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
 
     for (uint8_t i = 0; i < 4; i++) {
         if (subSplit[i].size() > 0) {
-            if (children[i] == nullptr) {
+            if (IsFace()) {
+                SplitFaceToChildren(*faceInfo);
+                SetFaceNull();
+            } else if (children[i] == nullptr) {
                 CreateChild(i);
             }
             children[i]->InsertFaces(std::move(subSplit[i]));
