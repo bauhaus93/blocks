@@ -13,7 +13,6 @@ Chunk::Chunk(const Point3i& chunkPos_):
 }
 
 void Chunk::Generate(const architect::Architect& architect) {
-    sf::Clock clock;
     std::vector<BlockElement> blockQueue;
 
     for (int8_t y = 0; y < CHUNK_SIZE; y++) {
@@ -35,9 +34,6 @@ void Chunk::Generate(const architect::Architect& architect) {
         blocktree->InsertBlocks(blockQueue);
         mesh = std::make_unique<mesh::Mesh>(blocktree->CreateMesh(architect.GetBlockManager()));
     }
-
-    TRACE("Generated chunk ", chunkPos,
-          ", time: ", clock.getElapsedTime().asMilliseconds(), "ms");
 }
 
 void Chunk::Draw(const Camera& camera) const {

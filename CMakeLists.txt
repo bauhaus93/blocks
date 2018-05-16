@@ -31,6 +31,10 @@ set(EXEC_NAME "blocks")
 set(EXEC_TEST_NAME "testblocks")
 set(LIB_NAME "blks")
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose build type" FORCE)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules")
 
 add_executable(${EXEC_NAME} "src/Main.cpp")
@@ -68,7 +72,7 @@ target_link_libraries(${LIB_NAME} PRIVATE Threads::Threads)
 find_package(SFML 2 REQUIRED COMPONENTS window system)
 target_include_directories(${LIB_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
 target_include_directories(${EXEC_NAME} SYSTEM PRIVATE ${SFML_INCLUDE_DIR})
-target_link_libraries(${LIB_NAME} PRIVATE ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+target_link_libraries(${LIB_NAME} PRIVATE "sfml-system" "sfml-window")
 
 set(OpenGL_GL_PREFERENCE "GLVND")
 #FindOpenGL()
