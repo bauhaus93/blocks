@@ -39,7 +39,7 @@ class Blocktree {
     BlockType   GetBlockType(Point3i8 pos) const;
     bool        IsLeaf() const;
     bool        IsEmpty() const;
-    void        CollectBorderFaces(std::vector<Face>& faces, Direction border);
+    void        CollectBorderFaces(std::vector<Face>& faces, Direction border) const;
 
  private:
     std::array<std::vector<BlockElement>, 8> SplitToChildren(const std::vector<BlockElement>& blocks);

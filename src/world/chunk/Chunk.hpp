@@ -7,8 +7,6 @@
 #include <bitset>
 #include <functional>
 
-#include <SFML/System.hpp>
-
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
 #include "utility/Point3.hpp"
@@ -28,17 +26,20 @@ namespace mc::world::chunk {
 class Chunk {
 
  public:
-    explicit        Chunk(const Point3i& chunkPos_);
-                    Chunk(Chunk&& other) = default;
-    Chunk&          operator=(Chunk&& other) = default;
+    explicit                Chunk(const Point3i& chunkPos_);
+                            Chunk(Chunk&& other) = default;
+    Chunk&                  operator=(Chunk&& other) = default;
 
-    void            Generate(const architect::Architect& architect);
-    const Point3i&  GetPosition() const { return chunkPos; }
-    const NeighbourMask&  GetCheckedNeighbours() const { return checkedNeighbours; }
-    void            Draw(const Camera& camera) const;
-    Blocktree&      GetBlocktree() { assert(blocktree != nullptr); return *blocktree; };
+    void                    Generate(const architect::Architect& architect);
+    const Point3i&          GetPosition() const { return chunkPos; }
+    const NeighbourMask&    GetCheckedNeighbours() const { return checkedNeighbours; }
+    NeighbourMask&          GetCheckedNeighbours() { return checkedNeighbours; }
+    bool                    IsEmpty() const { assert(blocktree != nullptr); return blocktree->IsEmpty(); }
+    void                    Draw(const Camera& camera) const;
+    const Blocktree&        GetBlocktree() { assert(blocktree != nullptr); return *blocktree; };
+    mesh::Mesh              GetMesh() { assert(mesh != nullptr); return *mesh; }
 
-    static void     UpdateBorderFaces(Chunk& curr, Chunk& neighbour, Direction relation);
+    static void             UpdateBorderFaces(Chunk& curr, Chunk& neighbour, Direction relation);
  private:
     void    GenerateColumn(Point3i top,
                            const std::array<int32_t, 4>& neighbourHeight,

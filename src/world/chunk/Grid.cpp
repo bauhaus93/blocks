@@ -8,9 +8,10 @@ Grid::Grid(const architect::Architect& architect_):
     drawDistance { 10 },
     refreshDistance { 1 },
     architect { architect_ },
-    centerPos(1337, 1337, 1337),
+    centerPos(0),
     chunkLoader { 20, architect } {
     chunkLoader.Start();
+    LoadNewChunks();
 }
 
 void Grid::GivePositionUpdate(Point3f worldPos) {

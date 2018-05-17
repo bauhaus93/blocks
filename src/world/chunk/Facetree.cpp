@@ -4,6 +4,10 @@
 
 namespace mc::world::chunk {
 
+Facetree::Facetree():
+    Facetree(Point2i8(0), CHUNK_SIZE) {
+}
+
 Facetree::Facetree(Point2i8 origin_, int8_t size_):
     origin { origin_ },
     size { size_ },
@@ -111,16 +115,16 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
     std::array<std::vector<Face>, 4> subSplit;
 
     for (auto& f : faces) {
-        if (f.origin == origin && f.size == size) {
+        if (f.GetOrigin() == origin && f.GetSize() == size) {
             if (!IsFace()) {
-                SetFace(f.info);
+                SetFace(FaceInfo(f.GetType(), f.GetDirection()));
             } else {
                 SplitFaceToChildren(*faceInfo);
-                SplitFaceToChildren(f.info);
+                SplitFaceToChildren(FaceInfo(f.GetType(), f.GetDirection()));
                 SetFaceNull();
             }
         } else {
-            uint8_t quadrant = GetQuadrant(f.origin);
+            uint8_t quadrant = GetQuadrant(f.GetOrigin());
             subSplit[quadrant].emplace_back(std::move(f));
         }
     }
@@ -140,6 +144,18 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
     if (merge.type != BlockType::NONE) {
         SetFace(merge);
         DeleteChildren();
+    }
+}
+
+void Facetree::GetFaces(std::vector<Face>& faces) const {
+    if (faceInfo != nullptr) {
+        faces.emplace_back(faceInfo->type, faceInfo->dir, origin, size);
+    } else {
+        for (auto& child: children) {
+            if (child != nullptr) {
+                child->GetFaces(faces);
+            }
+        }
     }
 }
 
@@ -186,8 +202,8 @@ FaceInfo Facetree::IsMergeable() {
     return merge;
 }
 
-void Facetree::SetFace(const FaceInfo& info) {
-    faceInfo = std::make_unique<FaceInfo>(info);
+void Facetree::SetFace(const FaceInfo& face) {
+    faceInfo = std::make_unique<FaceInfo>(face.type, face.dir);
 }
 
 void Facetree::SetFaceNull() {

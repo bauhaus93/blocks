@@ -155,9 +155,9 @@ mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
             std::sort(faces.begin(),
                       faces.end(),
                       [](const Face& a, const Face& b) {
-                          return a.size > b.size;
+                          return a.GetSize() > b.GetSize();
                       });
-            Facetree tree(Point2i8(0), CHUNK_SIZE);
+            Facetree tree;
             tree.InsertFaces(std::move(faces));
             tree.CreateQuads(blockManager, axis, layer, quads);
          }
@@ -215,7 +215,7 @@ void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t index, Direction 
     }
 }
 
-void Blocktree::CollectBorderFaces(std::vector<Face>& faces, Direction border) {
+void Blocktree::CollectBorderFaces(std::vector<Face>& faces, Direction border) const {
     switch(border) {
         case Direction::NORTH:  CollectFaces(faces, 0, border);             break;
         case Direction::EAST:   CollectFaces(faces, CHUNK_SIZE, border);    break;

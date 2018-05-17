@@ -19,6 +19,7 @@
 #include "world/ProtoBlock.hpp"
 #include "mesh/Quad.hpp"
 #include "mesh/Vertex.hpp"
+#include "Face.hpp"
 
 namespace mc::world::chunk {
 
@@ -36,23 +37,14 @@ struct FaceInfo {
     }
 };
 
-struct Face {
-    FaceInfo info;
-    Point2i8 origin;
-    int8_t   size;
-    Face(BlockType type_, Direction dir_, Point2i8 origin_, int8_t size_):
-        info { type_, dir_ },
-        origin { origin_ },
-        size { size_ } {
-    }
-};
-
 class Facetree {
  public:
+                    Facetree();
                     Facetree(Point2i8 origin_, int8_t size_);
                     Facetree(Facetree&& other) = default;
     Facetree&       operator=(Facetree&& rhs) = default;
     void            InsertFaces(std::vector<Face> faces);
+    void            GetFaces(std::vector<Face>& faces) const;
     void            CreateQuads(const BlockManager& blockManager,
                                 uint8_t axis,
                                 uint8_t layer,
@@ -62,7 +54,7 @@ class Facetree {
 
     uint8_t GetQuadrant(Point2i8 pos) const;
     void    SplitFaceToChildren(const FaceInfo& info);
-    void    SetFace(const FaceInfo& info);
+    void    SetFace(const FaceInfo& face);
     void    SetFaceNull();
     bool    IsFace() const;
     void    CreateChild(uint8_t quadrant);

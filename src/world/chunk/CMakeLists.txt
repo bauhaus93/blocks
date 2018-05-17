@@ -5,6 +5,8 @@ add_sources(
   Blocktree.cpp
   Facetree.hpp
   Facetree.cpp
+  Face.hpp
+  Face.cpp
   Grid.hpp
   Grid.cpp
   ChunkLoader.hpp
