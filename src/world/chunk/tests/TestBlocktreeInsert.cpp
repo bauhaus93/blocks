@@ -14,6 +14,8 @@
 using namespace mc;
 using namespace mc::world;
 
+namespace mc::tests {
+
 TEST(TestBlocktreeInsert, SingleBlockCheckTopLevelOctantAndDepth) {
     std::array<Point3i8, 8> positions { {
         Point3i8(7, 7, 7),
@@ -304,3 +306,5 @@ TEST(TestBlocktreeInsert, 4DiffCols1EmptyMultipleInsertsRandomOrderCheckMerge) {
     ASSERT_FALSE(bt.HasChild(3));
     ASSERT_FALSE(bt.HasChild(7));
 }
+
+}   // namespace mc::tests

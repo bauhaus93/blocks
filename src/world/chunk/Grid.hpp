@@ -35,7 +35,6 @@ class Grid {
     void            GivePositionUpdate(Point3i centerPos);
     void            LoadNewChunks();
     void            UnloadOldChunks();
-    void            UpdateChunkBorderFaces(Chunk& newChunk);
 
     int32_t                                 drawDistance;
     int32_t                                 refreshDistance;

@@ -10,6 +10,7 @@
 
 namespace mc::world {
 
+//TODO change enum positions (N, E, U, S, W, D)
 enum class Direction {
     NORTH,
     EAST,

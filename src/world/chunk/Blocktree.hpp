@@ -29,7 +29,7 @@ class Blocktree {
                 Blocktree(Point3i8 origin_, int8_t size_);
                 Blocktree(Blocktree&& other) = default;
     Blocktree&  operator=(Blocktree&& rhs) = default;
-    void        InsertBlocks(std::vector<BlockElement> blocks);
+    void        InsertBlocks(const std::vector<BlockElement>& blocks);
 
     mesh::Mesh  CreateMesh(const BlockManager& blockManager) const;
     bool        HasChild(uint8_t octant) const;

@@ -73,7 +73,7 @@ uint8_t Blocktree::GetOctant(Point3i8 pos) const {
     return index;
 }
 
-void Blocktree::InsertBlocks(std::vector<BlockElement> blocks) {
+void Blocktree::InsertBlocks(const std::vector<BlockElement>& blocks) {
     if (size == 1) {
         assert(blocks.size() == 1);
         type = blocks[0].second;

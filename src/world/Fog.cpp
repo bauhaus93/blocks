@@ -15,6 +15,8 @@ void Fog::ModDensity(float factor) {
     density *= factor;
     if (density > 1.0f) {
         density = 1.0f;
+    } else if (density < 0.0f) {
+        density = 0.0f;
     }
     UpdateShader();
 }
@@ -23,6 +25,8 @@ void Fog::SetDensity(float value) {
     density = value;
     if (density > 1.0f) {
         density = 1.0f;
+    } else if (density < 0.0f) {
+        density = 0.0f;
     }
     UpdateShader();
 }

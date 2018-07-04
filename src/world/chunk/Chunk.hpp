@@ -37,9 +37,8 @@ class Chunk {
     bool                    IsEmpty() const { assert(blocktree != nullptr); return blocktree->IsEmpty(); }
     void                    Draw(const Camera& camera) const;
     const Blocktree&        GetBlocktree() { assert(blocktree != nullptr); return *blocktree; };
-    mesh::Mesh              GetMesh() { assert(mesh != nullptr); return *mesh; }
+    const mesh::Mesh&       GetMesh() { assert(mesh != nullptr); return *mesh; }
 
-    static void             UpdateBorderFaces(Chunk& curr, Chunk& neighbour, Direction relation);
  private:
     void    GenerateColumn(Point3i top,
                            const std::array<int32_t, 4>& neighbourHeight,

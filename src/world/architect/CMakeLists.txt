@@ -8,3 +8,5 @@ add_sources(
     GlobalPosition.hpp
     GlobalPosition.cpp
 )
+
+add_subdirectory(tests)
