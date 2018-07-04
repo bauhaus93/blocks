@@ -15,10 +15,12 @@ Chunk::Chunk(const Point3i& chunkPos_):
 void Chunk::Generate(const architect::Architect& architect) {
     std::vector<BlockElement> blockQueue;
 
-    // including neighbouring border blocks
-    for (int8_t y = -1; y <= CHUNK_SIZE; y++) {
-        for (int8_t x = -1; x <= CHUNK_SIZE; x++) {
+    for (int8_t y = 0; y < CHUNK_SIZE; y++) {
+        for (int8_t x = 0; x < CHUNK_SIZE; x++) {
             int8_t height = static_cast<int8_t>(architect.GetChunkRelativeHeight(chunkPos, Point2i8 { x, y } ));
+            if (height >= CHUNK_SIZE) {
+                height = CHUNK_SIZE - 1;
+            }
             if (height >= 0) {
                 Point3i8 curr { x, y, height };
                 while (curr[2] >= 0) {

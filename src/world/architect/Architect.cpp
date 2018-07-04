@@ -122,7 +122,7 @@ std::pair<int32_t, int32_t> Architect::GetMinMaxGlobalHeight(Point2i chunkPos) c
 
 int32_t Architect::GetChunkRelativeHeight(Point3i chunkPos, Point2i8 localPos) const {
     Point2i globalPos = GetGlobalPosition(Point2i(chunkPos[0], chunkPos[1]), localPos);
-    return std::min(CHUNK_SIZE - 1, GetGlobalHeight(globalPos) - chunkPos[2] * CHUNK_SIZE - 1);
+    return GetGlobalHeight(globalPos) - chunkPos[2] * CHUNK_SIZE - 1;
 }
 
 int32_t Architect::GetGlobalHeight(Point2i globalPos) const {
