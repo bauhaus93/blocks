@@ -40,8 +40,7 @@ class Mesh {
     bool                            IsEmpty() const { return triangles.empty(); }
     void                            AddQuads(const std::vector<Quad>& quads);
     void                            Draw();
-    void                            VoidVolume(const Volume& volume);
-
+    
  private:
 
     void        CreateBufferData();

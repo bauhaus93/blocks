@@ -30,6 +30,7 @@ class Grid {
 
 
     int32_t         GetDrawDistance() const { return drawDistance; }
+    uint32_t        CountChunkTriangles() const;
 
  private:
     void            GivePositionUpdate(Point3i centerPos);

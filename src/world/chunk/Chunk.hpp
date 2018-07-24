@@ -34,10 +34,10 @@ class Chunk {
     const Point3i&          GetPosition() const { return chunkPos; }
     const NeighbourMask&    GetCheckedNeighbours() const { return checkedNeighbours; }
     NeighbourMask&          GetCheckedNeighbours() { return checkedNeighbours; }
-    bool                    IsEmpty() const { assert(blocktree != nullptr); return blocktree->IsEmpty(); }
+    bool                    IsEmpty() const { return blocktree == nullptr ? true : blocktree->IsEmpty(); }
     void                    Draw(const Camera& camera) const;
-    const Blocktree&        GetBlocktree() { assert(blocktree != nullptr); return *blocktree; };
-    const mesh::Mesh&       GetMesh() { assert(mesh != nullptr); return *mesh; }
+    const Blocktree&        GetBlocktree() const { assert(blocktree != nullptr); return *blocktree; };
+    const mesh::Mesh&       GetMesh() const { assert(mesh != nullptr); return *mesh; }
 
  private:
     void    GenerateColumn(Point3i top,

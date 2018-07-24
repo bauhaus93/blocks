@@ -63,18 +63,6 @@ Mesh& Mesh::operator=(Mesh&& other) {
     return *this;
 }
 
-void Mesh::VoidVolume(const Volume& volume) {
-    auto removed = std::remove_if(triangles.begin(),
-                   triangles.end(),
-                   [&volume](const Triangle& t) {
-                       return t.InVolume(volume);
-                   });
-    triangles.erase(removed, triangles.end());
-    triangles.shrink_to_fit();
-    DeleteBuffers();
-    CreateBufferData();
-}
-
 void Mesh::AddQuads(const std::vector<Quad>& quads) {
     std::vector<Triangle> newTriangles = CreateTriangles(quads);
     triangles.insert(triangles.end(),

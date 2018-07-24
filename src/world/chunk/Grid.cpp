@@ -27,12 +27,23 @@ void Grid::SetDrawDistance(int32_t drawDistance_) {
     TRACE("Set draw distance to ", drawDistance);
 }
 
+uint32_t Grid::CountChunkTriangles() const {
+    std::size_t triangles = 0;
+    for (const auto& p: loadedChunks) {
+        if (!p.second.IsEmpty()) {
+            triangles += p.second.GetMesh().GetTriangleCount();
+        }
+    }
+    return static_cast<uint32_t>(triangles);
+}
+
 void Grid::GivePositionUpdate(Point3i gridPos) {
+
     Point3i diff = centerPos - gridPos;
     for (uint8_t i = 0; i < 3; i++) {
         if (abs(diff[i]) >= refreshDistance) {
             centerPos = gridPos;
-            INFO("New center chunk: ", centerPos, ", active chunks: ", loadedChunks.size());
+            INFO("New center chunk: ", centerPos, ", active chunks: ", loadedChunks.size(), ", triangles: ", CountChunkTriangles());
             UnloadOldChunks();
             LoadNewChunks();
             break;
