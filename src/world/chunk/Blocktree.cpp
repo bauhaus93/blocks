@@ -182,7 +182,15 @@ void Blocktree::UpdateMesh(mesh::Mesh& mesh,
               });
     Facetree tree;
     tree.InsertFaces(std::move(faces));
-    uint8_t axis = GetPlaneAxis(border);
+    uint8_t axis = 0;
+    switch (border) {
+        case Direction::NORTH:
+        case Direction::SOUTH:  axis = 0;   break;
+        case Direction::EAST:
+        case Direction::WEST:   axis = 1;   break;
+        case Direction::UP:
+        case Direction::DOWN:   axis = 2;   break;
+    }
     uint8_t layer = border == Direction::NORTH ||
                     border == Direction::WEST ||
                     border == Direction::DOWN ? 0 : CHUNK_SIZE;

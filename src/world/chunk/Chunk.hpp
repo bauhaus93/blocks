@@ -32,7 +32,7 @@ class Chunk {
                             Chunk(Chunk&& other) = default;
     Chunk&                  operator=(Chunk&& other) = default;
 
-    void                    UpdateBorder(Chunk& neighbour,
+    void                    UpdateBorder(const Chunk& neighbour,
                                           Direction border,
                                           const BlockManager& blockManager);
 

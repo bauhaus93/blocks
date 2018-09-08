@@ -61,19 +61,6 @@ Point3i GetOffset(Direction dir) {
     return Point3i(0);
 }
 
-uint8_t GetPlaneAxis(Direction dir) {
-    switch (dir) {
-        case Direction::NORTH:  return 0;
-        case Direction::EAST:   return 1;
-        case Direction::SOUTH:  return 0;
-        case Direction::WEST:   return 1;
-        case Direction::UP:     return 2;
-        case Direction::DOWN:   return 2;
-        default: assert(0);
-    }
-    return 0xFF;
-}
-
 std::ostream& operator<<(std::ostream& os, Direction dir) {
     switch (dir) {
         case Direction::NORTH:  os << "North";  break;
