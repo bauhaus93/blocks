@@ -25,6 +25,7 @@ Direction GetDirection(uint8_t index);
 uint8_t GetValue(Direction dir);
 Direction GetOpposite(Direction dir);
 Point3i GetOffset(Direction dir);
+uint8_t GetPlaneAxis(Direction dir);
 
 std::ostream& operator<<(std::ostream& os, Direction dir);
 

@@ -6,7 +6,7 @@ namespace mc::mesh {
 
 static std::vector<Triangle> CreateTriangles(const std::vector<Quad>& quads);
 
-Mesh::Mesh(std::vector<Triangle> triangles_):
+Mesh::Mesh(std::vector<Triangle>&& triangles_):
     triangles { std::move(triangles_) },
     vao { 0 },
     vertexBuffer { 0 },
@@ -99,18 +99,23 @@ void Mesh::CreateBufferData() {
 void Mesh::DeleteBuffers() {
     if (indexBuffer != 0) {
         glDeleteBuffers(1, &indexBuffer);
+        indexBuffer = 0;
     }
     if (normalBuffer != 0) {
         glDeleteBuffers(1, &normalBuffer);
+        normalBuffer = 0;
     }
     if (uvBuffer != 0) {
         glDeleteBuffers(1, &uvBuffer);
+        uvBuffer = 0;
     }
     if (vertexBuffer != 0) {
         glDeleteBuffers(1, &vertexBuffer);
+        vertexBuffer = 0;
     }
     if (vao != 0) {
         glDeleteVertexArrays(1, &vao);
+        vao = 0;
     }
 }
 

@@ -79,7 +79,8 @@ void Facetree::CreateQuads(const BlockManager& blockManager,
     } };
 
     if (faceInfo != nullptr) {
-        if (faceInfo->type != BlockType::NONE) {
+        if (faceInfo->type != BlockType::NONE &&
+            faceInfo->type != BlockType::NEIGHBOUR) {
             mesh::Quad quad;
             for (uint8_t i = 0; i < 4; i++) {
                 Point3f pos;

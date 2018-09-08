@@ -96,11 +96,32 @@ void Grid::Update() {
     if (chunkLoader.HasFinishedChunks()) {
         //sf::Clock clock;
         std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
+        UpdateChunkBorders(newChunks);
         for (auto iter = std::make_move_iterator(newChunks.begin());
             iter != std::make_move_iterator(newChunks.end()); ++iter) {
             loadedChunks.emplace(iter->GetPosition(), *iter);
         }
+
         //DEBUG("Updating chunks took ", clock.getElapsedTime().asMilliseconds(), "ms");
+    }
+}
+
+void Grid::UpdateChunkBorders(std::vector<Chunk>& newChunks) {
+    for (auto& chunk: newChunks) {
+        for (uint8_t i = 0; i < 6; i++) {
+            Direction border = GetDirection(i);
+            Point3i neighbourPos = chunk.GetPosition() + GetOffset(border);
+            auto neighbourFind = loadedChunks.find(neighbourPos);
+            if (neighbourFind != loadedChunks.end()) {
+                Chunk& neighbour = neighbourFind->second;
+                Direction opposite = GetOpposite(border);
+                chunk.UpdateBorder(neighbour, border, architect.GetBlockManager());
+                if (!neighbour.IsBorderChecked(opposite)) {
+                    neighbour.UpdateBorder(chunk, opposite, architect.GetBlockManager());
+                }
+            }
+        }
+
     }
 }
 

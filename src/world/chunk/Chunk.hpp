@@ -32,17 +32,23 @@ class Chunk {
                             Chunk(Chunk&& other) = default;
     Chunk&                  operator=(Chunk&& other) = default;
 
+    void                    UpdateBorder(Chunk& neighbour,
+                                          Direction border,
+                                          const BlockManager& blockManager);
+
     const Point3i&          GetPosition() const { return chunkPos; }
     bool                    IsEmpty() const { return blocktree.IsEmpty(); }
     void                    Draw(const Camera& camera) const;
     const Blocktree&        GetBlocktree() const { return blocktree; };
     const mesh::Mesh&       GetMesh() const { assert(mesh != nullptr); return *mesh; }
+    bool                    IsBorderChecked(Direction border) const { return checkedBorders.Contains(border); }
 
  private:
 
     Point3i                     chunkPos;
     Point3f                     origin;
     glm::mat4                   model;
+    NeighbourMask               checkedBorders;
 
     Blocktree                   blocktree;
     std::unique_ptr<mesh::Mesh> mesh;

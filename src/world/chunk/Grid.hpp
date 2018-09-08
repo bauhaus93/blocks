@@ -36,6 +36,8 @@ class Grid {
     void            GivePositionUpdate(Point3i centerPos);
     void            LoadNewChunks();
     void            UnloadOldChunks();
+    void            UpdateChunkBorders(std::vector<Chunk>& newChunks);
+
 
     int32_t                                 drawDistance;
     int32_t                                 refreshDistance;

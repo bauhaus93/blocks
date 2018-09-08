@@ -8,6 +8,7 @@ Chunk::Chunk(const Point3i& chunkPos_, Blocktree&& blocktree_, mesh::Mesh&& mesh
     chunkPos { chunkPos_ },
     origin { chunkPos * static_cast<float>(CHUNK_SIZE) * BLOCK_SIZE },
     model {  CreateTranslationMatrix(origin) },
+    checkedBorders { },
     blocktree { std::move(blocktree_) },
     mesh { std::make_unique<mesh::Mesh>(std::move(mesh_)) } {
 }
@@ -16,8 +17,17 @@ Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * static_cast<float>(CHUNK_SIZE) * BLOCK_SIZE },
     model {  CreateTranslationMatrix(origin) },
+    checkedBorders { },
     blocktree { },
     mesh { nullptr } {
+}
+
+void Chunk::UpdateBorder(Chunk& neighbour, Direction border, const BlockManager& blockManager) {
+    assert(!checkedBorders.Contains(border));
+    if (mesh != nullptr) {
+        blocktree.UpdateMesh(*mesh, neighbour.blocktree, border, blockManager);
+    }
+    checkedBorders.Add(border);
 }
 
 void Chunk::Draw(const Camera& camera) const {

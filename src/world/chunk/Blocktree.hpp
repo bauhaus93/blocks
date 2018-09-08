@@ -32,6 +32,10 @@ class Blocktree {
     void        InsertBlocks(const std::vector<BlockElement>& blocks);
 
     mesh::Mesh  CreateMesh(const BlockManager& blockManager) const;
+    void        UpdateMesh(mesh::Mesh& mesh,
+                           const Blocktree& neighbour,
+                           Direction border,
+                           const BlockManager& blockManager) const;
     bool        HasChild(uint8_t octant) const;
     const Blocktree& GetChild(uint8_t octant) const;
     uint32_t    MaxDepth() const;
@@ -39,7 +43,6 @@ class Blocktree {
     BlockType   GetBlockType(Point3i8 pos) const;
     bool        IsLeaf() const;
     bool        IsEmpty() const;
-    void        CollectBorderFaces(std::vector<Face>& faces, Direction border) const;
 
  private:
     std::array<std::vector<BlockElement>, 8> SplitToChildren(const std::vector<BlockElement>& blocks);
@@ -47,6 +50,11 @@ class Blocktree {
     void            CreateChild(uint8_t octant);
     void            ClearChildren();
     void            CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const;
+    void            CollectNeighbourFaces(std::vector<Face>& faces,
+                                 uint8_t index,
+                                 Direction dir) const;
+    void            CollectBorderFaces(std::vector<Face>& faces, Direction border) const;
+    void            CollectNeighbourBorderFaces(std::vector<Face>& faces, Direction border) const;
     uint8_t         GetOctant(Point3i8 pos) const;
 
     Point3i8        origin;
