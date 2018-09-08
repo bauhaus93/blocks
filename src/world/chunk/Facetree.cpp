@@ -79,8 +79,7 @@ void Facetree::CreateQuads(const BlockManager& blockManager,
     } };
 
     if (faceInfo != nullptr) {
-        if (faceInfo->type != BlockType::NONE &&
-            faceInfo->type != BlockType::NEIGHBOUR) {
+        if (faceInfo->type != BlockType::NONE) {
             mesh::Quad quad;
             for (uint8_t i = 0; i < 4; i++) {
                 Point3f pos;
@@ -145,6 +144,18 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
     if (merge.type != BlockType::NONE) {
         SetFace(merge);
         DeleteChildren();
+    }
+}
+
+void Facetree::RemoveFaces(Direction faceDir) {
+    if (faceInfo != nullptr && faceInfo->dir == faceDir) {
+        SetFaceNull();
+    } else {
+        for (auto& child: children) {
+            if (child != nullptr) {
+                child->RemoveFaces(faceDir);
+            }
+        }
     }
 }
 

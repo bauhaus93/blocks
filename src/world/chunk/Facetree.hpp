@@ -44,6 +44,7 @@ class Facetree {
                     Facetree(Facetree&& other) = default;
     Facetree&       operator=(Facetree&& rhs) = default;
     void            InsertFaces(std::vector<Face> faces);
+    void            RemoveFaces(Direction faceDir);
     void            GetFaces(std::vector<Face>& faces) const;
     void            CreateQuads(const BlockManager& blockManager,
                                 uint8_t axis,

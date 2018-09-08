@@ -6,7 +6,6 @@ namespace mc::world {
 
 enum class BlockType {
     NONE,
-    NEIGHBOUR,
     GRASS,
     MUD,
     DESERT,
