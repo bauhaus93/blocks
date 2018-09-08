@@ -11,6 +11,8 @@
 #include "world/BlockType.hpp"
 #include "world/Size.hpp"
 #include "world/BlockManager.hpp"
+#include "world/chunk/Chunk.hpp"
+#include "world/chunk/Blocktree.hpp"
 #include "SimplexNoise.hpp"
 #include "GlobalPosition.hpp"
 #include "Biome.hpp"
@@ -21,6 +23,8 @@ class Architect {
  public:
     explicit            Architect(const BlockManager& blockManager_);
                         Architect(const BlockManager& blockManager_, uint32_t seed_);
+
+    chunk::Chunk        CreateChunk(const Point3i& chunkPos) const;
 
     BlockType           GetBlockType(Point3i chunkPos, Point3i8 localPos) const;
 

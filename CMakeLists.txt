@@ -49,7 +49,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         target_compile_options(${LIB_NAME} PRIVATE -Wall -ferror-limit=1 -Werror)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-        target_compile_options(${LIB_NAME} PRIVATE /W4 /MP /std:c++latest)
+        target_compile_options(${LIB_NAME} PRIVATE /W4 /MP)
 endif()
 
 add_subdirectory(src)
@@ -104,7 +104,7 @@ target_link_libraries(${LIB_NAME} PRIVATE ${GLAD_ROOT_DIR}/build/${CMAKE_STATIC_
 
 set(GLM_ROOT_DIR ${CMAKE_BINARY_DIR}/glm)
 ExternalProject_Add(glm
-    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_REPOSITORY "https://github.com/g-truc/glm.git"
     GIT_TAG master
     SOURCE_DIR ${GLM_ROOT_DIR}/src
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:Path=${GLM_ROOT_DIR}/install -DCMAKE_INSTALL_MESSAGE:String=LAZY

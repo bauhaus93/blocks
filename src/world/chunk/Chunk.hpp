@@ -15,7 +15,6 @@
 #include "graphics/TextureAtlas.hpp"
 #include "world/Camera.hpp"
 #include "world/Direction.hpp"
-#include "world/architect/Architect.hpp"
 #include "world/BlockManager.hpp"
 #include "world/Size.hpp"
 #include "Blocktree.hpp"
@@ -26,29 +25,26 @@ namespace mc::world::chunk {
 class Chunk {
 
  public:
+                            Chunk(const Point3i& chunkPos_,
+                                  Blocktree&& blocktree_,
+                                  mesh::Mesh&& mesh_);
     explicit                Chunk(const Point3i& chunkPos_);
                             Chunk(Chunk&& other) = default;
     Chunk&                  operator=(Chunk&& other) = default;
 
-    void                    Generate(const architect::Architect& architect);
     const Point3i&          GetPosition() const { return chunkPos; }
-    const NeighbourMask&    GetCheckedNeighbours() const { return checkedNeighbours; }
-    NeighbourMask&          GetCheckedNeighbours() { return checkedNeighbours; }
-    bool                    IsEmpty() const { return blocktree == nullptr ? true : blocktree->IsEmpty(); }
+    bool                    IsEmpty() const { return blocktree.IsEmpty(); }
     void                    Draw(const Camera& camera) const;
-    const Blocktree&        GetBlocktree() const { assert(blocktree != nullptr); return *blocktree; };
+    const Blocktree&        GetBlocktree() const { return blocktree; };
     const mesh::Mesh&       GetMesh() const { assert(mesh != nullptr); return *mesh; }
 
  private:
-    void    GenerateColumn(Point3i top,
-                           const std::array<int32_t, 4>& neighbourHeight,
-                           const architect::Architect& architect);
 
     Point3i                     chunkPos;
     Point3f                     origin;
     glm::mat4                   model;
-    std::unique_ptr<Blocktree>  blocktree;
-    NeighbourMask               checkedNeighbours;
+
+    Blocktree                   blocktree;
     std::unique_ptr<mesh::Mesh> mesh;
 };
 

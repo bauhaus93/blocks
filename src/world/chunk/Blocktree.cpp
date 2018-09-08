@@ -142,7 +142,7 @@ mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
                                                       Direction::UP } };
 
     for (uint8_t axis = 0; axis < 3; axis++) {
-        for (uint8_t layer = 0; layer <= CHUNK_SIZE; layer++) {
+        for (uint8_t layer = 1; layer < CHUNK_SIZE; layer++) {
             std::vector<Face> faces;
 
             if (layer > 0) {

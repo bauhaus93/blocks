@@ -17,7 +17,9 @@ class Triangle {
     Triangle&   operator=(Triangle&& other) = default;
     void        SetVertex(uint8_t index, Vertex vert);
     const Vertex& GetVertex(uint8_t index) const;
+    std::pair<Triangle, Triangle> Subdivide() const;
     bool        InVolume(const Volume& volume) const;
+
  private:
     std::array<Vertex, 3>  vertex;
 };

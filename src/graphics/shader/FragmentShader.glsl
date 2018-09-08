@@ -14,7 +14,8 @@ uniform sampler2DArray textureArray;
 uniform FogData fog;
 
 void main() {
-  if (uv[0] < 0.05 || uv[1] < 0.05) {
+  if (uv[0] < 0.02 ||
+      uv[1] < 0.02) {
     color = vec3(1, 0, 0);
   } else {
     color = texture(textureArray, uv).rgb;

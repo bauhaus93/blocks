@@ -51,6 +51,36 @@ Architect::Architect(const BlockManager& blockManager_, uint32_t seed_):
     LoadBiomes();
 }
 
+chunk::Chunk Architect::CreateChunk(const Point3i& chunkPos) const {
+    std::vector<chunk::BlockElement> blocks;
+
+    for (int8_t y = 0; y < CHUNK_SIZE; y++) {
+        for (int8_t x = 0; x < CHUNK_SIZE; x++) {
+            int8_t height = static_cast<int8_t>(GetChunkRelativeHeight(chunkPos, Point2i8 { x, y } ));
+            if (height >= CHUNK_SIZE) {
+                height = CHUNK_SIZE - 1;
+            }
+            if (height >= 0) {
+                Point3i8 curr { x, y, height };
+                while (curr[2] >= 0) {
+                    BlockType type = GetBlockType(chunkPos, curr);
+                    blocks.emplace_back(std::make_pair(curr, type));
+                    curr[2]--;
+                }
+            }
+        }
+    }
+
+    if (blocks.size() > 0) {
+        chunk::Blocktree bt;
+        bt.InsertBlocks(blocks);
+        mesh::Mesh mesh = bt.CreateMesh(GetBlockManager());
+        return chunk::Chunk(chunkPos, std::move(bt), std::move(mesh));
+
+    }
+    return chunk::Chunk(chunkPos);
+}
+
 void Architect::LoadBiomes() {
     Biome grasslands;
     grasslands.SetBlockType(BlockType::GRASS);

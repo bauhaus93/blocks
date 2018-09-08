@@ -3,6 +3,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 #include <initializer_list>
@@ -57,6 +58,7 @@ class Point {
 
     bool        InBoundaries(const Point<T, N>& min,
                              const Point<T, N>& max) const;
+    float       GetDistance(const Point<T, N>& other) const;
  private:
     std::array<T, N>    value;
 
@@ -319,6 +321,15 @@ bool Point<T, N>::InBoundaries(const Point<T, N>& min,
         }
     }
     return true;
+}
+
+template<typename T, uint8_t N>
+float Point<T, N>::GetDistance(const Point<T, N>& other) const {
+    float sum = 0;
+    for (decltype(N) i = 0; i < N; i++) {
+        sum += pow(static_cast<float>(value[i] - other[i]), 2.0f);
+    }
+    return pow(sum, 0.5f);
 }
 
 template<typename T, uint8_t N>
