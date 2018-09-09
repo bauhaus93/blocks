@@ -11,4 +11,11 @@ Face::Face(BlockType type_, Direction dir_, Point2i8 origin_, int8_t size_):
     size { size_ } {
 }
 
+std::ostream& operator<<(std::ostream& os, const Face& face) {
+    os << "Face: origin = " << face.GetOrigin() <<
+    ", size = " << static_cast<uint32_t>(face.GetSize()) <<
+    ", direction = " << face.GetDirection();
+    return os;
+}
+
 }   // namespace mc::world::chunk

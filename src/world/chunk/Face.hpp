@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <cstdint>
 
 #include "logger/GlobalLogger.hpp"
@@ -24,5 +25,7 @@ class Face {
     Point2i8    origin;
     int8_t      size;
 };
+
+std::ostream& operator<<(std::ostream& os, const Face& face);
 
 }   // namespace mc::world::chunk

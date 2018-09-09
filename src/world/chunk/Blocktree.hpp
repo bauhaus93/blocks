@@ -49,12 +49,7 @@ class Blocktree {
     BlockType       IsMergeable() const;
     void            CreateChild(uint8_t octant);
     void            ClearChildren();
-    void            CollectFaces(std::vector<Face>& faces, uint8_t layer, Direction dir) const;
-    void            CollectNeighbourFaces(std::vector<Face>& faces,
-                                 uint8_t index,
-                                 Direction dir) const;
-    void            CollectBorderFaces(std::vector<Face>& faces, Direction border) const;
-    void            CollectNeighbourBorderFaces(std::vector<Face>& faces, Direction border) const;
+    void            CollectFaces(std::map<uint8_t, std::vector<Face>>& layer, uint8_t axis) const;
     uint8_t         GetOctant(Point3i8 pos) const;
 
     Point3i8        origin;

@@ -25,6 +25,7 @@ Chunk::Chunk(const Point3i& chunkPos_):
 void Chunk::UpdateBorder(const Chunk& neighbour, Direction border, const BlockManager& blockManager) {
     assert(!checkedBorders.Contains(border));
     if (mesh != nullptr) {
+        INFO("Update border @ ", chunkPos);
         blocktree.UpdateMesh(*mesh, neighbour.blocktree, border, blockManager);
     }
     checkedBorders.Add(border);

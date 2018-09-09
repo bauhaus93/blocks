@@ -110,6 +110,11 @@ const Biome& Architect::GetBiome(Point2i globalPos) const {
     double hills = hillNoise.GetNoise(globalPos);
     double mountain = mountainNoise.GetNoise(globalPos);
 
+    if (globalPos[0] >= 0 && globalPos[1] >= 0 &&
+        globalPos[0] < 16 && globalPos[1] < 16)
+        return biomes.at(BiomeType::HILLS);
+    return biomes.at(BiomeType::GRASSLANDS);
+
     if (mountain > 0.0 && mountain > hills) {
         return biomes.at(BiomeType::MOUNTAIN);
     }
@@ -164,6 +169,8 @@ int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
     double mountain = mountainNoise.GetNoise(globalPos);
     double h = heightNoise.GetNoise(globalPos);
     double hHill = h, hMountain = h;
+
+    //return 10;
 
     if (hill > 0.0) {
         hHill *= 1.0 + (3.0 * hill);
