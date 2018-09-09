@@ -120,11 +120,7 @@ void Grid::UpdateChunkBorders(std::vector<Chunk>& newChunks) {
             auto neighbourFind = loadedChunks.find(neighbourPos);
             if (neighbourFind != loadedChunks.end()) {
                 Chunk& neighbour = neighbourFind->second;
-                Direction opposite = GetOpposite(border);
-                chunk.UpdateBorder(neighbour, border, architect.GetBlockManager());
-                if (!neighbour.IsBorderChecked(opposite)) {
-                    neighbour.UpdateBorder(chunk, opposite, architect.GetBlockManager());
-                }
+                chunk.UpdateBorders(neighbour, border, architect.GetBlockManager());
             }
         }
 

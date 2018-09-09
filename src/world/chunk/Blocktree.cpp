@@ -197,6 +197,50 @@ void Blocktree::CollectFaces(std::map<uint8_t, std::vector<Face>>& layer, uint8_
     }
 }
 
+void Blocktree::CollectBorderFaces(std::vector<Face>& layer, Direction border, uint8_t axis) const {
+    if (type != BlockType::NONE) {
+        Point2i8 faceOrigin(0);
+        Direction faceDir;
+        switch (axis) {
+        case 0:
+                faceOrigin[0] = origin[1];
+                faceOrigin[1] = origin[2];
+                faceDir = Direction::WEST;
+                break;
+        case 1:
+                faceOrigin[0] = origin[0];
+                faceOrigin[1] = origin[2];
+                faceDir = Direction::SOUTH;
+                break;
+        case 2:
+                faceOrigin[0] = origin[0];
+                faceOrigin[1] = origin[1];
+                faceDir = Direction::DOWN;
+                break;
+            default:    assert(0);
+        }
+        if (origin[axis] != 0) {
+            if (layer.find(origin[axis]) == layer.end()) {
+                layer.emplace(origin[axis], std::vector<Face>());
+            }
+            layer.at(origin[axis]).emplace_back(type, faceDir, faceOrigin, size);
+        }
+        if (origin[axis] + size != CHUNK_SIZE) {
+            if (layer.find(origin[axis] + size) == layer.end()) {
+                layer.emplace(origin[axis] + size, std::vector<Face>());
+            }
+            layer.at(origin[axis] + size).emplace_back(type, GetOpposite(faceDir), faceOrigin, size);
+        }
+    } else {
+        for (uint8_t i = 0; i < 8; i++) {
+            if (children[i] != nullptr) {
+                children[i]->CollectFaces(layer, axis);
+            }
+        }
+    }
+}
+
+
 std::array<std::vector<BlockElement>, 8> Blocktree::SplitToChildren(const std::vector<BlockElement>& blocks) {
     std::array<std::vector<BlockElement>, 8> queue;
 

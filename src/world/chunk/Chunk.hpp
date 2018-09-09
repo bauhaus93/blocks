@@ -36,7 +36,7 @@ class Chunk {
     void                    InsertBlocks(const std::vector<BlockElement>& blocks);
 
     void                    CreateMesh(const BlockManager& blockManager);
-    void                    UpdateBorder(const Chunk& neighbour,
+    void                    UpdateBorders(Chunk& neighbour,
                                           Direction border,
                                           const BlockManager& blockManager);
 

@@ -50,7 +50,11 @@ class Facetree {
                                 uint8_t axis,
                                 uint8_t layer,
                                 QuadVec& quads) const;
-
+    void            CreateQuadsByDirection(const BlockManager& blockManager,
+                                uint8_t axis,
+                                uint8_t layer,
+                                QuadVec& quads,
+                                Direction dir) const;
  private:
 
     uint8_t GetQuadrant(Point2i8 pos) const;

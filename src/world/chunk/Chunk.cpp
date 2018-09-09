@@ -34,12 +34,47 @@ void Chunk::CreateMesh(const BlockManager& blockManager) {
     mesh = std::make_unique<mesh::Mesh>(quads);
 }
 
-void Chunk::UpdateBorder(const Chunk& neighbour, Direction border, const BlockManager& blockManager) {
+void Chunk::UpdateBorders(Chunk& neighbour, Direction border, const BlockManager& blockManager) {
     assert(!checkedBorders.Contains(border));
-    if (mesh != nullptr) {
-        //blocktree.UpdateMesh(*mesh, neighbour.blocktree, border, blockManager);
+    assert(!neighbour.checkedBorders.Contains(GetOpposite(border)));
+    uint8_t axis = 0;
+    uint8_t layer = 0;
+    switch (border) {
+    case Direction::EAST:   layer = CHUNK_SIZE; axis = 0;   break;
+    case Direction::WEST:   layer = 0;          axis = 0;   break;
+    case Direction::SOUTH:  layer = CHUNK_SIZE; axis = 1;   break;
+    case Direction::NORTH:  layer = 0;          axis = 1;   break;
+    case Direction::UP:     layer = CHUNK_SIZE; axis = 2;   break;
+    case Direction::DOWN:   layer = 0;          axis = 2;   break;
+    default: assert(0);
     }
+    uint8_t layerNb = layer == 0 ? CHUNK_SIZE : 0;
+    Facetree ft;
+    auto findCurr = borderFaces[axis].find(layer);
+    if (findCurr != borderFaces[axis].end()) {
+        ft.InsertFaces(std::move(findCurr->second));
+        borderFaces[axis].erase(findCurr);
+    }
+    auto findNb = borderFaces[axis].find(layerNb);
+    if (findNb != borderFaces[axis].end()) {
+        ft.InsertFaces(std::move(findNb->second));
+        borderFaces[axis].erase(findNb);
+    }
+    if (mesh != nullptr) {
+        std::vector<mesh::Quad> quads;
+        ft.CreateQuadsByDirection(blockManager, axis, layer, quads, border);
+        //mesh->AddQuads(quads);
+        mesh = std::make_unique<mesh::Mesh>(quads);
+    }
+    if (neighbour.mesh != nullptr) {
+        std::vector<mesh::Quad> quads;
+        ft.CreateQuadsByDirection(blockManager, axis, layerNb, quads, GetOpposite(border));
+        //neighbour.mesh->AddQuads(quads);
+        mesh = std::make_unique<mesh::Mesh>(quads);
+    }
+
     checkedBorders.Add(border);
+    neighbour.checkedBorders.Add(GetOpposite(border));
 }
 
 void Chunk::Draw(const Camera& camera) const {

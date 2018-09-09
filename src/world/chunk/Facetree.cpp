@@ -66,7 +66,7 @@ void Facetree::CreateQuads(const BlockManager& blockManager,
     static const std::array<Point2f, 4> vertexUV = { {
         Point2f(1.0f, 1.0f),
         Point2f(0.0f, 1.0f),
-        Point2f(0.0f),
+        Point2f(0.0f, 0.0f),
         Point2f(1.0f, 0.0f)
     } };
     static const std::array<Point3f, 6> vertexNormal = { {
@@ -80,6 +80,92 @@ void Facetree::CreateQuads(const BlockManager& blockManager,
 
     if (faceInfo != nullptr) {
         if (faceInfo->type != BlockType::NONE) {
+            mesh::Quad quad;
+            for (uint8_t i = 0; i < 4; i++) {
+                Point3f pos;
+                Point3f uv { vertexUV[i][0] * static_cast<float>(size),
+                             vertexUV[i][1] * static_cast<float>(size),
+                             static_cast<float>(blockManager.GetBlockFace(faceInfo->type, faceInfo->dir))
+                };
+
+                auto& offset = vertexOffset[GetIndex(faceInfo->dir)][i];
+                uint8_t currIndex = 0;
+                for (uint8_t j = 0; j < 3; j++) {
+                    if (j != axis) {
+                        pos[j] = origin[currIndex] * BLOCK_SIZE + offset[currIndex] * size;
+                        currIndex++;
+                    } else {
+                        pos[j] = static_cast<float>(layer) * BLOCK_SIZE;
+                    }
+                }
+                quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
+            }
+            quads.emplace_back(std::move(quad));
+        }
+    } else {
+        for (auto& child: children) {
+            if (child != nullptr) {
+                child->CreateQuads(blockManager, axis, layer, quads);
+            }
+        }
+    }
+}
+
+void Facetree::CreateQuadsByDirection(const BlockManager& blockManager,
+    uint8_t axis,
+    uint8_t layer,
+    QuadVec& quads,
+    Direction dir) const {
+
+    static const std::array<std::array<Point2f, 4>, 6> vertexOffset = { {
+        // Direction::NORTH
+        { { Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(0.0f),
+            Point2f(0.0f, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE) } },
+        // Direction::EAST
+        { { Point2f(0.0f),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(0.0f, BLOCK_SIZE ) } },
+        // Direction::SOUTH
+        { { Point2f(0.0f),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(0.0f, BLOCK_SIZE) } },
+        // Direction::WEST
+        { { Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(0.0f, 0.0f),
+            Point2f(0.0f, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE) } },
+        // Direction::UP
+        { { Point2f(0.0f, 0.0f),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(0.0f, BLOCK_SIZE) } },
+        // Direction::DOWN
+        { { Point2f(0.0f, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, BLOCK_SIZE),
+            Point2f(BLOCK_SIZE, 0.0f),
+            Point2f(0.0f) } }
+    } };
+    static const std::array<Point2f, 4> vertexUV = { {
+        Point2f(1.0f, 1.0f),
+        Point2f(0.0f, 1.0f),
+        Point2f(0.0f, 0.0f),
+        Point2f(1.0f, 0.0f)
+    } };
+    static const std::array<Point3f, 6> vertexNormal = { {
+        Point3f(0.0f, -1.0f, 0.0f), // Direction::NORTH
+        Point3f(1.0f, 0.0f, 0.0f),  // Direction::EAST
+        Point3f(0.0f, 1.0f, 0.0f),  // Direction::SOUTH
+        Point3f(-1.0f, 0.0f, 0.0f), // Direction::WEST
+        Point3f(0.0f, 0.0f, 1.0f),  // Direction::UP
+        Point3f(0.0f, 0.0f, -1.0f)  // Direction::DOWN
+    } };
+
+    if (faceInfo != nullptr) {
+        if (faceInfo->type != BlockType::NONE && faceInfo->dir == dir) {
             mesh::Quad quad;
             for (uint8_t i = 0; i < 4; i++) {
                 Point3f pos;
