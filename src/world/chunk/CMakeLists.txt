@@ -13,6 +13,7 @@ add_sources(
   ChunkLoader.cpp
   NeighbourMask.hpp
   NeighbourMask.cpp
+  LayerFaces.hpp
 )
 
 add_subdirectory(tests)

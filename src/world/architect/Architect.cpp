@@ -71,14 +71,12 @@ chunk::Chunk Architect::CreateChunk(const Point3i& chunkPos) const {
         }
     }
 
+    chunk::Chunk chunk(chunkPos);
     if (blocks.size() > 0) {
-        chunk::Blocktree bt;
-        bt.InsertBlocks(blocks);
-        mesh::Mesh mesh = bt.CreateMesh(GetBlockManager());
-        return chunk::Chunk(chunkPos, std::move(bt), std::move(mesh));
-
+        chunk.InsertBlocks(blocks);
+        chunk.CreateMesh(GetBlockManager());
     }
-    return chunk::Chunk(chunkPos);
+    return chunk;
 }
 
 void Architect::LoadBiomes() {

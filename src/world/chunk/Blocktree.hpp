@@ -6,15 +6,14 @@
 #include <vector>
 #include <cstdint>
 #include <cassert>
+#include <algorithm>
 
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point3.hpp"
 #include "world/BlockType.hpp"
 #include "world/Direction.hpp"
-#include "world/BlockManager.hpp"
-#include "mesh/Quad.hpp"
-#include "mesh/Mesh.hpp"
-#include "Facetree.hpp"
+#include "world/Size.hpp"
+#include "LayerFaces.hpp"
 
 namespace mc::world::chunk {
 
@@ -31,11 +30,7 @@ class Blocktree {
     Blocktree&  operator=(Blocktree&& rhs) = default;
     void        InsertBlocks(const std::vector<BlockElement>& blocks);
 
-    mesh::Mesh  CreateMesh(const BlockManager& blockManager) const;
-    void        UpdateMesh(mesh::Mesh& mesh,
-                           const Blocktree& neighbour,
-                           Direction border,
-                           const BlockManager& blockManager) const;
+    LayerFaces  CreateFaces() const;
     bool        HasChild(uint8_t octant) const;
     const Blocktree& GetChild(uint8_t octant) const;
     uint32_t    MaxDepth() const;

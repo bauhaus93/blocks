@@ -17,21 +17,25 @@
 #include "world/Direction.hpp"
 #include "world/BlockManager.hpp"
 #include "world/Size.hpp"
+#include "mesh/Mesh.hpp"
+#include "mesh/Quad.hpp"
 #include "Blocktree.hpp"
+#include "Facetree.hpp"
 #include "NeighbourMask.hpp"
+#include "LayerFaces.hpp"
 
 namespace mc::world::chunk {
 
 class Chunk {
 
  public:
-                            Chunk(const Point3i& chunkPos_,
-                                  Blocktree&& blocktree_,
-                                  mesh::Mesh&& mesh_);
     explicit                Chunk(const Point3i& chunkPos_);
                             Chunk(Chunk&& other) = default;
     Chunk&                  operator=(Chunk&& other) = default;
 
+    void                    InsertBlocks(const std::vector<BlockElement>& blocks);
+
+    void                    CreateMesh(const BlockManager& blockManager);
     void                    UpdateBorder(const Chunk& neighbour,
                                           Direction border,
                                           const BlockManager& blockManager);
@@ -49,6 +53,7 @@ class Chunk {
     Point3f                     origin;
     glm::mat4                   model;
     NeighbourMask               checkedBorders;
+    LayerFaces                  borderFaces;
 
     Blocktree                   blocktree;
     std::unique_ptr<mesh::Mesh> mesh;

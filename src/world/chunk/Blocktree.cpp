@@ -135,69 +135,23 @@ void Blocktree::ClearChildren() {
     }
 }
 
-mesh::Mesh Blocktree::CreateMesh(const BlockManager& blockManager) const {
-    std::vector<mesh::Quad> quads;
+LayerFaces Blocktree::CreateFaces() const {
+    LayerFaces faces;
 
     for (uint8_t axis = 0; axis < 3; ++axis) {
         std::map<uint8_t, std::vector<Face>> layer;
         CollectFaces(layer, axis);
-        INFO("Faces on ", layer.size(), " layers");
 
-        for(auto&& l: layer) {
+        for(auto& l: layer) {
             std::sort(l.second.begin(),
                       l.second.end(),
                       [](const Face& a, const Face& b) {
                           return a.GetSize() > b.GetSize();
                       });
-            INFO("axis = ", (int)axis, ", layer = ", (int)l.first, ", faces = ", l.second.size());
-            Facetree tree;
-            tree.InsertFaces(std::move(l.second));
-            tree.CreateQuads(blockManager, axis, l.first, quads);
         }
+        faces[axis] = std::move(layer);
     }
-    return mesh::Mesh(std::move(quads));
-}
-
-void Blocktree::UpdateMesh(mesh::Mesh& mesh,
-                           const Blocktree& neighbour,
-                           Direction border,
-                           const BlockManager& blockManager) const {/*
-    Direction opposite = GetOpposite(border);
-    std::vector<Face> faces;
-    uint8_t layer = border == Direction::NORTH ||
-                    border == Direction::WEST ||
-                    border == Direction::DOWN ? 0 : CHUNK_SIZE;
-    uint8_t neighbourLayer = layer == 0 ? CHUNK_SIZE : 0;
-
-    INFO("Before collecting border faces");
-    CollectFaces(faces, layer, border);
-    auto fc = faces.size();
-    neighbour.CollectFaces(faces, neighbourLayer, opposite);
-    INFO("layer = ", (unsigned int)layer, ", border faces = ", fc, ", neighbour faces = ", faces.size() - fc);
-
-    std::sort(faces.begin(),
-              faces.end(),
-              [](const Face& a, const Face& b) {
-                  return a.GetSize() > b.GetSize();
-              });
-    Facetree tree;
-    tree.InsertFaces(std::move(faces));
-    tree.RemoveFaces(opposite);
-    uint8_t axis = 0;
-    switch (border) {
-        case Direction::EAST:
-        case Direction::WEST:   axis = 0;   break;
-        case Direction::NORTH:
-        case Direction::SOUTH:  axis = 1;   break;
-        case Direction::UP:
-        case Direction::DOWN:   axis = 2;   break;
-        default:                assert(0);
-    }
-
-    std::vector<mesh::Quad> quads;
-    tree.CreateQuads(blockManager, axis, layer, quads);
-
-    mesh.AddQuads(quads);*/
+    return faces;
 }
 
 void Blocktree::CollectFaces(std::map<uint8_t, std::vector<Face>>& layer, uint8_t axis) const {
