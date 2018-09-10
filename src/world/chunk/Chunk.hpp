@@ -53,7 +53,6 @@ class Chunk {
     Point3f                     origin;
     glm::mat4                   model;
     NeighbourMask               checkedBorders;
-    LayerFaces                  borderFaces;
 
     Blocktree                   blocktree;
     std::unique_ptr<mesh::Mesh> mesh;

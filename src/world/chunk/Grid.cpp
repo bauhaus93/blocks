@@ -5,7 +5,7 @@
 namespace mc::world::chunk {
 
 Grid::Grid(const architect::Architect& architect_):
-    drawDistance { 10 },
+    drawDistance { 5 },
     refreshDistance { 1 },
     architect { architect_ },
     centerPos(0),
@@ -21,7 +21,7 @@ void Grid::GivePositionUpdate(Point3f worldPos) {
 
 void Grid::SetDrawDistance(int32_t drawDistance_) {
     drawDistance = drawDistance_;
-    refreshDistance = std::max(drawDistance / 10, 1);
+    refreshDistance = std::max(drawDistance / 5, 1);
     UnloadOldChunks();
     LoadNewChunks();
     TRACE("Set draw distance to ", drawDistance);
@@ -65,8 +65,8 @@ void Grid::LoadNewChunks() {
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
             auto pair = architect.GetMinMaxGlobalHeight(Point2i(x, y));
-            int32_t minZ = std::max(pair.first / CHUNK_SIZE - 1, min[2]);
-            int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 2, max[2]);
+            int32_t minZ = std::max(pair.first / CHUNK_SIZE , min[2]);
+            int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 1, max[2]);
             for (auto z = minZ; z < maxZ; z++) {
                 Point3i p(x, y, z);
                 if (loadedChunks.find(p) == loadedChunks.end()) {

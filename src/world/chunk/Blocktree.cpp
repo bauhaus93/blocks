@@ -141,20 +141,19 @@ LayerFaces Blocktree::CreateFaces() const {
     for (uint8_t axis = 0; axis < 3; ++axis) {
         std::map<uint8_t, std::vector<Face>> layer;
         CollectFaces(layer, axis);
-
-        for(auto& l: layer) {
-            std::sort(l.second.begin(),
-                      l.second.end(),
-                      [](const Face& a, const Face& b) {
-                          return a.GetSize() > b.GetSize();
-                      });
-        }
         faces[axis] = std::move(layer);
     }
     return faces;
 }
 
-void Blocktree::CollectFaces(std::map<uint8_t, std::vector<Face>>& layer, uint8_t axis) const {
+std::vector<Face> Blocktree::CreateFaces(uint8_t layer, uint8_t axis) const {
+    std::vector<Face> faces;
+    CollectFaces(faces, layer, axis);
+    return faces;
+}
+
+void Blocktree::CollectFaces(std::map<uint8_t, std::vector<Face>>& layerMap, uint8_t axis) const {
+    assert(axis < 3);
     if (type != BlockType::NONE) {
         Point2i8 faceOrigin(0);
         Direction faceDir;
@@ -176,65 +175,70 @@ void Blocktree::CollectFaces(std::map<uint8_t, std::vector<Face>>& layer, uint8_
                 break;
             default:    assert(0);
         }
-        if (origin[axis] != 0) {
-            if (layer.find(origin[axis]) == layer.end()) {
-                layer.emplace(origin[axis], std::vector<Face>());
-            }
-            layer.at(origin[axis]).emplace_back(type, faceDir, faceOrigin, size);
+        if (layerMap.find(origin[axis]) == layerMap.end()) {
+            layerMap.emplace(origin[axis], std::vector<Face>());
         }
-        if (origin[axis] + size != CHUNK_SIZE) {
-            if (layer.find(origin[axis] + size) == layer.end()) {
-                layer.emplace(origin[axis] + size, std::vector<Face>());
-            }
-            layer.at(origin[axis] + size).emplace_back(type, GetOpposite(faceDir), faceOrigin, size);
+        layerMap.at(origin[axis]).emplace_back(type, faceDir, faceOrigin, size);
+
+        if (layerMap.find(origin[axis] + size) == layerMap.end()) {
+            layerMap.emplace(origin[axis] + size, std::vector<Face>());
         }
+        layerMap.at(origin[axis] + size).emplace_back(type, GetOpposite(faceDir), faceOrigin, size);
     } else {
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
-                children[i]->CollectFaces(layer, axis);
+                children[i]->CollectFaces(layerMap, axis);
             }
         }
     }
 }
 
-void Blocktree::CollectBorderFaces(std::vector<Face>& layer, Direction border, uint8_t axis) const {
+void Blocktree::CollectFaces(std::vector<Face>& faces, uint8_t layer, uint8_t axis) const {
+    assert(layer <= CHUNK_SIZE);
+    assert(axis < 3);
     if (type != BlockType::NONE) {
-        Point2i8 faceOrigin(0);
-        Direction faceDir;
-        switch (axis) {
-        case 0:
-                faceOrigin[0] = origin[1];
-                faceOrigin[1] = origin[2];
-                faceDir = Direction::WEST;
-                break;
-        case 1:
-                faceOrigin[0] = origin[0];
-                faceOrigin[1] = origin[2];
-                faceDir = Direction::SOUTH;
-                break;
-        case 2:
-                faceOrigin[0] = origin[0];
-                faceOrigin[1] = origin[1];
-                faceDir = Direction::DOWN;
-                break;
-            default:    assert(0);
-        }
-        if (origin[axis] != 0) {
-            if (layer.find(origin[axis]) == layer.end()) {
-                layer.emplace(origin[axis], std::vector<Face>());
+        if (origin[axis] == layer || origin[axis] + size == layer) {
+            Point2i8 faceOrigin(0);
+            Direction faceDir;
+            switch (axis) {
+            case 0:
+                    faceOrigin[0] = origin[1];
+                    faceOrigin[1] = origin[2];
+                    if (origin[axis] == layer) {
+                        faceDir = Direction::WEST;
+                    } else {
+                        faceDir = Direction::EAST;
+                    }
+                    break;
+            case 1:
+                    faceOrigin[0] = origin[0];
+                    faceOrigin[1] = origin[2];
+                    if (origin[axis] == layer) {
+                        faceDir = Direction::SOUTH;
+                    } else {
+                        faceDir = Direction::NORTH;
+                    }
+                    break;
+            case 2:
+                    faceOrigin[0] = origin[0];
+                    faceOrigin[1] = origin[1];
+                    if (origin[axis] == layer) {
+                        faceDir = Direction::DOWN;
+                    } else {
+                        faceDir = Direction::UP;
+                    }
+                    break;
+                default:    assert(0);
             }
-            layer.at(origin[axis]).emplace_back(type, faceDir, faceOrigin, size);
-        }
-        if (origin[axis] + size != CHUNK_SIZE) {
-            if (layer.find(origin[axis] + size) == layer.end()) {
-                layer.emplace(origin[axis] + size, std::vector<Face>());
-            }
-            layer.at(origin[axis] + size).emplace_back(type, GetOpposite(faceDir), faceOrigin, size);
+            faces.emplace_back(type, faceDir, faceOrigin, size);
         }
     } else {
         for (uint8_t i = 0; i < 8; i++) {
             if (children[i] != nullptr) {
-                children[i]->CollectFaces(layer, axis);
+                if (children[i]->origin[axis] <= layer &&
+                    children[i]->origin[axis] + size >= layer) {
+                    children[i]->CollectFaces(faces, layer, axis);
+                }
             }
         }
     }

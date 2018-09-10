@@ -198,6 +198,15 @@ void Facetree::CreateQuadsByDirection(const BlockManager& blockManager,
 }
 
 void Facetree::InsertFaces(std::vector<Face> faces) {
+    std::sort(faces.begin(), faces.end(),
+              [](const Face& a, const Face& b) {
+                  return a.GetSize() > b.GetSize();
+              });
+    InsertFacesSorted(faces);
+}
+
+//Precondition: Face vector must be sorted (face size descending)
+void Facetree::InsertFacesSorted(std::vector<Face> faces) {
     std::array<std::vector<Face>, 4> subSplit;
 
     for (auto& f : faces) {
@@ -223,7 +232,7 @@ void Facetree::InsertFaces(std::vector<Face> faces) {
             } else if (children[i] == nullptr) {
                 CreateChild(i);
             }
-            children[i]->InsertFaces(std::move(subSplit[i]));
+            children[i]->InsertFacesSorted(std::move(subSplit[i]));
         }
     }
     FaceInfo merge = IsMergeable();
