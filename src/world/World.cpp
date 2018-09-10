@@ -26,7 +26,12 @@ World::~World() {
 
 void World::SetDrawDistance(int32_t chunkDrawDistance) {
     grid.SetDrawDistance(chunkDrawDistance);
-    camera.SetFar((chunkDrawDistance - chunkDrawDistance / 10 ) * CHUNK_SIZE * BLOCK_SIZE);
+    float near = camera.GetNear();
+    float far = (chunkDrawDistance - 4) * CHUNK_SIZE * BLOCK_SIZE;
+    if (far + 1.0f < near) {
+        far = near + 1.0f;
+    }
+    camera.SetFar(far);
 }
 
 void World::Tick() {

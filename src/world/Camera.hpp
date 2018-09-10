@@ -29,6 +29,7 @@ class Camera: public Entity {
     void            SetAspectRatio(float ratio);
     void            SetNear(float near_);
     void            SetFar(float far_);
+    float           GetNear() const { return near; }
 
     void            ModFOV(float degree);
 

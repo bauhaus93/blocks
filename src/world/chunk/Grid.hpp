@@ -36,6 +36,7 @@ class Grid {
     void            GivePositionUpdate(Point3i centerPos);
     void            LoadNewChunks();
     void            UnloadOldChunks();
+    void            RequestChunksZ(const Point2i& chunkPos, std::vector<Point3i>& requestChunks);
     void            UpdateChunkBorders(std::vector<Chunk>& newChunks);
 
 

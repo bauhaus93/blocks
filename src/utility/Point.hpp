@@ -327,9 +327,9 @@ template<typename T, uint8_t N>
 float Point<T, N>::GetDistance(const Point<T, N>& other) const {
     float sum = 0;
     for (decltype(N) i = 0; i < N; i++) {
-        sum += pow(static_cast<float>(value[i] - other[i]), 2.0f);
+        sum += std::pow(static_cast<float>(value[i] - other[i]), 2.0f);
     }
-    return pow(sum, 0.5f);
+    return std::sqrt(sum);
 }
 
 template<typename T, uint8_t N>

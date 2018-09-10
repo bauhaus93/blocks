@@ -52,27 +52,33 @@ void Grid::GivePositionUpdate(Point3i gridPos) {
 }
 
 void Grid::LoadNewChunks() {
-    Point3i min = centerPos - drawDistance;
-    Point3i max = centerPos + drawDistance;
     std::vector<Point3i> requestChunks;
-
 
     /*requestChunks.emplace_back(0, 0, 0);
     requestChunks.emplace_back(1, 0, 0);
     chunkLoader.RequestChunks(requestChunks);
     return;*/
 
-    for (auto y = min[1]; y < max[1]; y++) {
-        for (auto x = min[0]; x < max[0]; x++) {
-            auto pair = architect.GetMinMaxGlobalHeight(Point2i(x, y));
-            int32_t minZ = std::max(pair.first / CHUNK_SIZE, min[2]);  // was -1 (at CHUNK_SIZE 16)
-            int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 1, max[2]);  // was +2 (at CHUNK_SIZE 16)
-            for (auto z = minZ; z < maxZ; z++) {
-                Point3i p(x, y, z);
-                if (loadedChunks.find(p) == loadedChunks.end()) {
-                    requestChunks.push_back(p);
-                }
-            }
+    Point2i curr { centerPos[0], centerPos[1] };
+    RequestChunksZ(Point2i { centerPos[0], centerPos[1] }, requestChunks);
+
+    for (int32_t offset = 1; offset < drawDistance; offset++) {
+        for (int32_t y = centerPos[1] - offset; y < centerPos[1] + offset; y++) {
+            Point2i pos { centerPos[0] - offset, y };
+            RequestChunksZ(pos, requestChunks);
+        }
+        for (int32_t x = centerPos[0] - offset; x < centerPos[0] + offset; x++) {
+            Point2i pos { x, centerPos[1] + offset };
+            RequestChunksZ(pos, requestChunks);
+        }
+        for (int32_t y = centerPos[1] + offset; y > centerPos[1] - offset; y--) {
+            Point2i pos { centerPos[0] + offset, y };
+            RequestChunksZ(pos, requestChunks);
+        }
+
+        for (int32_t x = centerPos[0] + offset; x > centerPos[0] - offset; x--) {
+            Point2i pos { x, centerPos[1] - offset };
+            RequestChunksZ(pos, requestChunks);
         }
     }
 
@@ -80,18 +86,31 @@ void Grid::LoadNewChunks() {
     chunkLoader.RequestChunks(requestChunks);
 }
 
+void Grid::RequestChunksZ(const Point2i& chunkPos, std::vector<Point3i>& requestChunks) {
+    auto pair = architect.GetMinMaxGlobalHeight(chunkPos);
+    int32_t minZ = std::max(pair.first / CHUNK_SIZE, centerPos[2] - drawDistance);  // was -1 (at CHUNK_SIZE 16)
+    int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 1, centerPos[2] + drawDistance);  // was +2 (at CHUNK_SIZE 16)
+    for (auto z = minZ; z < maxZ; z++) {
+        Point3i p(chunkPos[0], chunkPos[1], z);
+        if (p.GetDistance(centerPos) < drawDistance) {
+            if (loadedChunks.find(p) == loadedChunks.end()) {
+                requestChunks.push_back(p);
+            }
+        }
+    }
+
+}
+
 void Grid::UnloadOldChunks() {
-    Point3i min = centerPos - drawDistance;
-    Point3i max = centerPos + drawDistance;
     uint32_t unloadCount = 0;
 
     auto iter = loadedChunks.begin();
     while (iter != loadedChunks.end()) {
-        if (!iter->first.InBoundaries(min, max)) {
+        if (iter->first.GetDistance(centerPos) < drawDistance) {
+            ++iter;
+        } else {
             loadedChunks.erase(iter++);
             unloadCount++;
-        } else {
-            ++iter;
         }
     }
 
@@ -102,7 +121,7 @@ void Grid::Update() {
     if (chunkLoader.HasFinishedChunks()) {
         //sf::Clock clock;
         std::vector<Chunk> newChunks = chunkLoader.GetFinishedChunks();
-        UpdateChunkBorders(newChunks);
+        //UpdateChunkBorders(newChunks);
         for (auto iter = std::make_move_iterator(newChunks.begin());
             iter != std::make_move_iterator(newChunks.end()); ++iter) {
             loadedChunks.emplace(iter->GetPosition(), *iter);
