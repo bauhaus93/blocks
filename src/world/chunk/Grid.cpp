@@ -65,8 +65,8 @@ void Grid::LoadNewChunks() {
     for (auto y = min[1]; y < max[1]; y++) {
         for (auto x = min[0]; x < max[0]; x++) {
             auto pair = architect.GetMinMaxGlobalHeight(Point2i(x, y));
-            int32_t minZ = std::max(pair.first / CHUNK_SIZE , min[2]);
-            int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 1, max[2]);
+            int32_t minZ = std::max(pair.first / CHUNK_SIZE, min[2]);  // was -1 (at CHUNK_SIZE 16)
+            int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 1, max[2]);  // was +2 (at CHUNK_SIZE 16)
             for (auto z = minZ; z < maxZ; z++) {
                 Point3i p(x, y, z);
                 if (loadedChunks.find(p) == loadedChunks.end()) {
