@@ -22,7 +22,7 @@ void Chunk::CreateMesh(const BlockManager& blockManager) {
     LayerFaces faces = blocktree.CreateFaces();
     for (uint8_t axis = 0; axis < 3; axis++) {
         for(auto& layer: faces[axis]) {
-            if (layer.first != 0 && (axis == 2 || layer.first != CHUNK_SIZE)) { // axis == 2 || -> tmp for top surfaces
+            if (layer.first != 0 && layer.first != CHUNK_SIZE) {
                 Facetree ft;
                 ft.InsertFaces(std::move(layer.second));
                 ft.CreateQuads(blockManager, axis, layer.first, quads);
