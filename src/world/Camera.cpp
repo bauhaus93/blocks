@@ -16,10 +16,10 @@ Camera::Camera(graphics::ShaderProgram& shader_):
                     glm::vec3 { 0, 0, 0 },
                     glm::vec3 { 0, 0, 1 }) },
     projection { glm::perspective(
-                            glm::radians(75.0f),
-                            4.0f / 3.0f,
-                            0.5f,
-                            1000.0f) } {
+                            glm::radians(fov),
+                            aspectRatio,
+                            near,
+                            far) } {
 }
 
 void Camera::SetFOV(float fovDegree) {
@@ -40,7 +40,7 @@ void Camera::SetFar(float far_) {
 }
 
 void Camera::ModFOV(float degree) {
-    fov = std::min(180.0f, std::max(0.0f, fov + degree));
+    fov = std::min(179.0f, std::max(1.0f, fov + degree));
     UpdateProjection();
 }
 
