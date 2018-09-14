@@ -139,9 +139,7 @@ void Sleep(unsigned ms) {
 }
 
 Chunk CreateChunk(Point3i pos, const architect::Architect& architect) {
-    Chunk chunk { pos };
-    chunk.Generate(architect);
-    return chunk;
+    return architect.CreateChunk(pos);
 }
 
 }   // namespace mc::world::chunk

@@ -24,6 +24,7 @@ class Vertex {
     glm::vec3   GetGlmUV() const;
     glm::vec3   GetGlmNormal() const;
     bool        InVolume(const Volume& volume) const;
+    float       GetDistance(const Vertex& other) const;
 
  private:
     Point3f pos;

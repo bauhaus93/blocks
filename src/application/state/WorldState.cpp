@@ -65,9 +65,9 @@ void WorldState::HandleKeys() {
     HandleMovementKeys();
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-        world.SetDrawDistance(world.GetChunkDrawDistance() + 5);
+        world.SetDrawDistance(world.GetChunkDrawDistance() + 2);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-        int32_t drawDistance = std::max(0, world.GetChunkDrawDistance() - 5);
+        int32_t drawDistance = std::max(0, world.GetChunkDrawDistance() - 2);
         world.SetDrawDistance(drawDistance);
     }
 

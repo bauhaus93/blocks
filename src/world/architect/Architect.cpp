@@ -51,6 +51,34 @@ Architect::Architect(const BlockManager& blockManager_, uint32_t seed_):
     LoadBiomes();
 }
 
+chunk::Chunk Architect::CreateChunk(const Point3i& chunkPos) const {
+    std::vector<chunk::BlockElement> blocks;
+
+    for (int8_t y = 0; y < CHUNK_SIZE; y++) {
+        for (int8_t x = 0; x < CHUNK_SIZE; x++) {
+            int8_t height = static_cast<int8_t>(GetChunkRelativeHeight(chunkPos, Point2i8 { x, y } ));
+            if (height >= CHUNK_SIZE) {
+                height = CHUNK_SIZE - 1;
+            }
+            if (height >= 0) {
+                Point3i8 curr { x, y, height };
+                while (curr[2] >= 0) {
+                    BlockType type = GetBlockType(chunkPos, curr);
+                    blocks.emplace_back(std::make_pair(curr, type));
+                    curr[2]--;
+                }
+            }
+        }
+    }
+
+    chunk::Chunk chunk(chunkPos);
+    if (blocks.size() > 0) {
+        chunk.InsertBlocks(blocks);
+        chunk.CreateMesh(GetBlockManager());
+    }
+    return chunk;
+}
+
 void Architect::LoadBiomes() {
     Biome grasslands;
     grasslands.SetBlockType(BlockType::GRASS);
@@ -79,6 +107,11 @@ const Biome& Architect::GetBiome(Point2i globalPos) const {
     //double humidity = humidityNoise.GetNoise(globalPos);
     double hills = hillNoise.GetNoise(globalPos);
     double mountain = mountainNoise.GetNoise(globalPos);
+
+    /*if (globalPos[0] >= 0 && globalPos[1] >= 0 &&
+        globalPos[0] < CHUNK_SIZE && globalPos[1] < CHUNK_SIZE)
+        return biomes.at(BiomeType::HILLS);
+    return biomes.at(BiomeType::GRASSLANDS);*/
 
     if (mountain > 0.0 && mountain > hills) {
         return biomes.at(BiomeType::MOUNTAIN);
@@ -134,6 +167,10 @@ int32_t Architect::GetRawGlobalHeight(Point2i globalPos) const {
     double mountain = mountainNoise.GetNoise(globalPos);
     double h = heightNoise.GetNoise(globalPos);
     double hHill = h, hMountain = h;
+
+    /*if (globalPos[0] >= 16 || globalPos[1] >= 16)
+        return 10;
+    return 14;*/
 
     if (hill > 0.0) {
         hHill *= 1.0 + (3.0 * hill);

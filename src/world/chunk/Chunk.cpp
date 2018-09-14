@@ -8,35 +8,75 @@ Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
     origin { chunkPos * static_cast<float>(CHUNK_SIZE) * BLOCK_SIZE },
     model {  CreateTranslationMatrix(origin) },
-    blocktree { nullptr },
+    checkedBorders { },
+    blocktree { },
     mesh { nullptr } {
 }
 
-void Chunk::Generate(const architect::Architect& architect) {
-    std::vector<BlockElement> blockQueue;
+void Chunk::InsertBlocks(const std::vector<BlockElement>& blocks) {
+    blocktree.InsertBlocks(blocks);
+}
 
-    for (int8_t y = 0; y < CHUNK_SIZE; y++) {
-        for (int8_t x = 0; x < CHUNK_SIZE; x++) {
-            int8_t height = static_cast<int8_t>(architect.GetChunkRelativeHeight(chunkPos, Point2i8 { x, y } ));
-            if (height >= CHUNK_SIZE) {
-                height = CHUNK_SIZE - 1;
-            }
-            if (height >= 0) {
-                Point3i8 curr { x, y, height };
-                while (curr[2] >= 0) {
-                    BlockType type = architect.GetBlockType(chunkPos, curr);
-                    blockQueue.emplace_back(std::make_pair(curr, type));
-                    curr[2]--;
-                }
+void Chunk::CreateMesh(const BlockManager& blockManager) {
+    std::vector<mesh::Quad> quads;
+    LayerFaces faces = blocktree.CreateFaces();
+    for (uint8_t axis = 0; axis < 3; axis++) {
+        for(auto& layer: faces[axis]) {
+            if (layer.first != 0 && layer.first != CHUNK_SIZE) {
+                Facetree ft;
+                ft.InsertFaces(std::move(layer.second));
+                ft.CreateQuads(blockManager, axis, layer.first, quads);
             }
         }
     }
+    mesh = std::make_unique<mesh::Mesh>(quads);
+}
 
-    if (blockQueue.size() > 0) {
-        blocktree = std::make_unique<Blocktree>();
-        blocktree->InsertBlocks(blockQueue);
-        mesh = std::make_unique<mesh::Mesh>(blocktree->CreateMesh(architect.GetBlockManager()));
+void Chunk::UpdateBorders(Chunk& neighbour, Direction border, const BlockManager& blockManager) {
+    assert(!checkedBorders.Contains(border));
+    uint8_t axis = 0;
+    uint8_t layer = 0;
+    switch (border) {
+    case Direction::EAST:   layer = CHUNK_SIZE; axis = 0;   break;
+    case Direction::WEST:   layer = 0;          axis = 0;   break;
+    case Direction::SOUTH:  layer = CHUNK_SIZE; axis = 1;   break;
+    case Direction::NORTH:  layer = 0;          axis = 1;   break;
+    case Direction::UP:     layer = CHUNK_SIZE; axis = 2;   break;
+    case Direction::DOWN:   layer = 0;          axis = 2;   break;
+    default: assert(0);
     }
+    uint8_t layerNb = layer == 0 ? CHUNK_SIZE : 0;
+    Facetree ft;
+    std::vector<Face> faces;
+    if (mesh != nullptr) {
+        faces = blocktree.CreateFaces(layer, axis);
+    }
+    if (neighbour.mesh != nullptr) {
+        std::vector<Face> newFaces;
+        newFaces = neighbour.blocktree.CreateFaces(layerNb, axis);
+        faces.insert(faces.end(), newFaces.begin(), newFaces.end());
+        std::sort(faces.begin(), faces.end(),
+                  [](const Face& a, const Face& b) {
+                      return a.GetSize() > b.GetSize();
+                  });
+    }
+    ft.InsertFaces(std::move(faces));
+
+    if (mesh != nullptr) {
+        std::vector<mesh::Quad> quads;
+        ft.CreateQuadsByDirection(blockManager, axis, layer, quads, border);
+        mesh->AddQuads(quads);
+        //mesh = std::make_unique<mesh::Mesh>(quads);
+    }
+    if (neighbour.mesh != nullptr) {
+        std::vector<mesh::Quad> quads;
+        ft.CreateQuadsByDirection(blockManager, axis, layerNb, quads, GetOpposite(border));
+        neighbour.mesh->AddQuads(quads);
+        //neighbour.mesh = std::make_unique<mesh::Mesh>(quads);
+    }
+
+    checkedBorders.Add(border);
+    neighbour.checkedBorders.Add(GetOpposite(border));
 }
 
 void Chunk::Draw(const Camera& camera) const {

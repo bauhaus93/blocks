@@ -29,7 +29,7 @@ struct VBOData {
 
 class Mesh {
  public:
-    explicit                        Mesh(std::vector<Triangle> triangles_);
+    explicit                        Mesh(std::vector<Triangle>&& triangles_);
     explicit                        Mesh(const std::vector<Quad>& quads);
                                     ~Mesh();
                                     Mesh(Mesh&& other);
@@ -40,7 +40,7 @@ class Mesh {
     bool                            IsEmpty() const { return triangles.empty(); }
     void                            AddQuads(const std::vector<Quad>& quads);
     void                            Draw();
-    
+
  private:
 
     void        CreateBufferData();

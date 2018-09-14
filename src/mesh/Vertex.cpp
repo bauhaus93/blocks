@@ -51,6 +51,10 @@ bool Vertex::InVolume(const Volume& volume) const {
     return volume.Contains(pos);
 }
 
+float Vertex::GetDistance(const Vertex& other) const {
+    return pos.GetDistance(other.pos);
+}
+
 std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
     os << "Vertex(";
     os << "pos = (" << vertex.GetPos() << ")";

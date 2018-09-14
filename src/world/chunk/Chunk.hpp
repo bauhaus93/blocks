@@ -15,11 +15,14 @@
 #include "graphics/TextureAtlas.hpp"
 #include "world/Camera.hpp"
 #include "world/Direction.hpp"
-#include "world/architect/Architect.hpp"
 #include "world/BlockManager.hpp"
 #include "world/Size.hpp"
+#include "mesh/Mesh.hpp"
+#include "mesh/Quad.hpp"
 #include "Blocktree.hpp"
+#include "Facetree.hpp"
 #include "NeighbourMask.hpp"
+#include "LayerFaces.hpp"
 
 namespace mc::world::chunk {
 
@@ -30,25 +33,28 @@ class Chunk {
                             Chunk(Chunk&& other) = default;
     Chunk&                  operator=(Chunk&& other) = default;
 
-    void                    Generate(const architect::Architect& architect);
+    void                    InsertBlocks(const std::vector<BlockElement>& blocks);
+
+    void                    CreateMesh(const BlockManager& blockManager);
+    void                    UpdateBorders(Chunk& neighbour,
+                                          Direction border,
+                                          const BlockManager& blockManager);
+
     const Point3i&          GetPosition() const { return chunkPos; }
-    const NeighbourMask&    GetCheckedNeighbours() const { return checkedNeighbours; }
-    NeighbourMask&          GetCheckedNeighbours() { return checkedNeighbours; }
-    bool                    IsEmpty() const { return blocktree == nullptr ? true : blocktree->IsEmpty(); }
+    bool                    IsEmpty() const { return blocktree.IsEmpty(); }
     void                    Draw(const Camera& camera) const;
-    const Blocktree&        GetBlocktree() const { assert(blocktree != nullptr); return *blocktree; };
+    const Blocktree&        GetBlocktree() const { return blocktree; };
     const mesh::Mesh&       GetMesh() const { assert(mesh != nullptr); return *mesh; }
+    bool                    IsBorderChecked(Direction border) const { return checkedBorders.Contains(border); }
 
  private:
-    void    GenerateColumn(Point3i top,
-                           const std::array<int32_t, 4>& neighbourHeight,
-                           const architect::Architect& architect);
 
     Point3i                     chunkPos;
     Point3f                     origin;
     glm::mat4                   model;
-    std::unique_ptr<Blocktree>  blocktree;
-    NeighbourMask               checkedNeighbours;
+    NeighbourMask               checkedBorders;
+
+    Blocktree                   blocktree;
     std::unique_ptr<mesh::Mesh> mesh;
 };
 
