@@ -19,7 +19,7 @@
 #include "graphics/TextureAtlas.hpp"
 #include "Chunk.hpp"
 
-namespace mc::world::chunk {
+namespace blocks {
 
 typedef std::list<std::unique_ptr<std::future<Chunk>>> ChunkFutures;
 
@@ -27,7 +27,7 @@ class ChunkLoader {
 
  public:
                         ChunkLoader(uint32_t maxThreads_,
-                                    const architect::Architect& architect_);
+                                    const Architect& architect_);
                         ~ChunkLoader();
 
     void                Start();
@@ -47,11 +47,11 @@ class ChunkLoader {
     std::mutex                      pendingMutex;
     std::mutex                      finishedMutex;
     const uint32_t                  maxThreads;
-    const architect::Architect&     architect;
+    const Architect&     architect;
     std::unique_ptr<std::thread>    controlThread;
     ChunkFutures                    generationThreads;
     std::vector<Chunk>              finishedChunks;
     std::list<Point3i>              pendingChunkPos;
 };
 
-}   // namespace mc::world::chunk
+}   // namespace blocks

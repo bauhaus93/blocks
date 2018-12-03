@@ -2,7 +2,7 @@
 
 #include "Frustum.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 Frustum::Frustum(const glm::mat4& view, const glm::mat4& projection):
     clip { projection * view } {
@@ -68,4 +68,4 @@ Intersection Frustum::Intersects(const BoundingBox& box) const {
     return Intersection::INSIDE;
 }
 
-}   // namespace mc::world
+}   // namespace blocks

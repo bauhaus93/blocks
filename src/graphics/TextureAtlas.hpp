@@ -12,7 +12,7 @@
 #include "utility/Point2.hpp"
 #include "utility/Image.hpp"
 
-namespace mc::graphics {
+namespace blocks {
 
 class TextureAtlas {
  public:
@@ -30,4 +30,4 @@ class TextureAtlas {
     GLuint                          textureId;
 };
 
-}   // namespace mc::graphics
+}   // namespace blocks

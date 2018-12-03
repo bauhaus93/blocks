@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace mc::world {
+namespace blocks {
 
 enum class Intersection {
     INSIDE,
@@ -10,4 +10,4 @@ enum class Intersection {
     PARTIAL
 };
 
-}   // namedspace mc::world
+}   // namedspace blocks

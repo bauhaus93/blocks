@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace mc::log {
+namespace blocks {
 
 enum class LogLevel {
     TRACE = 0,
@@ -12,4 +12,4 @@ enum class LogLevel {
     ERROR = 4
 };
 
-}   // namespace mc::log
+}   // namespace blocks

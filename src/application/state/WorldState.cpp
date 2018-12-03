@@ -2,7 +2,7 @@
 
 #include "WorldState.hpp"
 
-namespace mc {
+namespace blocks {
 
 WorldState::WorldState(sf::Window& window_):
     GameState(window_, 20),
@@ -125,4 +125,4 @@ void WorldState::DrawScene() {
 }
 
 
-}       // namespace mc
+}       // namespace blocks

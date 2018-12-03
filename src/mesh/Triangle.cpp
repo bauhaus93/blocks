@@ -2,7 +2,7 @@
 
 #include "Triangle.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 Triangle::Triangle():
     vertex { { Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) },
@@ -46,4 +46,4 @@ bool Triangle::InVolume(const Volume& volume) const {
     return true;
 }
 
-}       // namespace mc::mesh
+}       // namespace blocks

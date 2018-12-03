@@ -11,7 +11,7 @@
 #include <cassert>
 #include <array>
 
-namespace mc {
+namespace blocks {
 
 template<typename T, uint8_t N>
 class Point {
@@ -345,4 +345,4 @@ std::ostream& operator<<(std::ostream& os, const Point<T, N>& point) {
 
 
 
-}       // namespace mc
+}       // namespace blocks

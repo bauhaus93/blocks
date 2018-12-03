@@ -2,9 +2,9 @@
 
 #include "Grid.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
-Grid::Grid(const architect::Architect& architect_):
+Grid::Grid(const Architect& architect_):
     drawDistance { 5 },
     refreshDistance { 1 },
     architect { architect_ },
@@ -88,8 +88,8 @@ void Grid::LoadNewChunks() {
 
 void Grid::RequestChunksZ(const Point2i& chunkPos, std::vector<Point3i>& requestChunks) {
     auto pair = architect.GetMinMaxGlobalHeight(chunkPos);
-    int32_t minZ = std::max(pair.first / CHUNK_SIZE, centerPos[2] - drawDistance);  // was -1 (at CHUNK_SIZE 16)
-    int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 1, centerPos[2] + drawDistance);  // was +2 (at CHUNK_SIZE 16)
+    int32_t minZ = std::max(pair.first / CHUNK_SIZE, centerPos[2] - drawDistance);
+    int32_t maxZ = std::min(pair.second / CHUNK_SIZE + 2, centerPos[2] + drawDistance);
     for (auto z = minZ; z < maxZ; z++) {
         Point3i p(chunkPos[0], chunkPos[1], z);
         if (p.GetDistance(centerPos) < drawDistance) {
@@ -152,4 +152,4 @@ void Grid::Draw(const Camera& camera) const {
     }
 }
 
-}   // namespace mc::world::chunk
+}   // namespace chunk

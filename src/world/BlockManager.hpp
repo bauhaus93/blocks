@@ -11,11 +11,11 @@
 #include "BlockType.hpp"
 #include "ProtoBlock.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class BlockManager {
  public:
-    explicit    BlockManager(graphics::TextureAtlas& atlas);
+    explicit    BlockManager(TextureAtlas& atlas);
 
     void        SetBlockFace(BlockType type, Direction dir, uint32_t atlasIndex);
     uint32_t    GetBlockFace(BlockType type, Direction dir) const;
@@ -24,10 +24,10 @@ class BlockManager {
     std::map<BlockType, ProtoBlock>     protoblocks;
 
 
-    void         LoadFaces(graphics::TextureAtlas& atlas);
+    void         LoadFaces(TextureAtlas& atlas);
     void         LoadProtoblocks();
     void         AddBlock(BlockType type);
 };
 
 
-}       // namespace mc::world
+}       // namespace blocks

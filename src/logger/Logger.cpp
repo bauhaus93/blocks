@@ -2,7 +2,7 @@
 
 #include "Logger.hpp"
 
-namespace mc::log {
+namespace blocks {
 
 const char* GetLogLevelString(LogLevel logLevel) {
     switch (logLevel) {
@@ -32,4 +32,29 @@ Logger::Logger(std::ostream& out_, LogLevel logLevel_) :
     mutex { } {
 }
 
-}   // namespace mc::log
+void Logger::WriteMessagePrefix(LogLevel msgLevel) {
+  std::time_t t = std::time(nullptr);
+  #ifdef _MSC_VER
+  std::tm tm;
+  if (localtime_s(&tm, &t) == 0) {
+  #else
+  std::tm* tm = localtime(&t);
+  if (tm != nullptr) {
+  #endif
+      out << std::put_time(tm, "[%T] ");
+  }
+  else {
+    out << "[NO_TIME] ";
+  }
+  switch(msgLevel) {
+      case LogLevel::TRACE:
+      case LogLevel::DEBUG:
+      case LogLevel::INFO:  out << "\033[1;32m";    break;
+      case LogLevel::WARN:  out << "\033[1;93m";    break;
+      case LogLevel::ERROR: out << "\033[1;31m";    break;
+      default:  break;
+  }
+  out << GetLogLevelString(msgLevel) << "\033[0m - ";
+}
+
+}   // namespace blocks

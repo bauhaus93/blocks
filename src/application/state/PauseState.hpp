@@ -8,7 +8,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "GameState.hpp"
 
-namespace mc {
+namespace blocks {
 
 class PauseState: public GameState {
 
@@ -24,4 +24,4 @@ class PauseState: public GameState {
 };
 
 
-}       // namespace mc
+}       // namespace blocks

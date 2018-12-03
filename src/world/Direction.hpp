@@ -8,7 +8,7 @@
 
 #include "utility/Point3.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 //TODO change enum positions (N, E, U, S, W, D)
 enum class Direction {
@@ -28,4 +28,4 @@ Point3i GetOffset(Direction dir);
 
 std::ostream& operator<<(std::ostream& os, Direction dir);
 
-}       // namespace mc::world
+}       // namespace blocks

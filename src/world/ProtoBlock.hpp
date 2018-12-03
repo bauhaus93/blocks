@@ -8,7 +8,7 @@
 
 #include "Direction.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class ProtoBlock {
  public:
@@ -21,4 +21,4 @@ class ProtoBlock {
     std::array<uint32_t, 6>     atlasIndices;
 };
 
-}   // namespace mc::world
+}   // namespace blocks

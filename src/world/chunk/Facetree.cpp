@@ -2,7 +2,7 @@
 
 #include "Facetree.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 Facetree::Facetree():
     Facetree(Point2i8(0), CHUNK_SIZE) {
@@ -80,7 +80,7 @@ void Facetree::CreateQuads(const BlockManager& blockManager,
 
     if (faceInfo != nullptr) {
         if (faceInfo->type != BlockType::NONE) {
-            mesh::Quad quad;
+            Quad quad;
             for (uint8_t i = 0; i < 4; i++) {
                 Point3f pos;
                 Point3f uv { vertexUV[i][0] * static_cast<float>(size),
@@ -98,7 +98,7 @@ void Facetree::CreateQuads(const BlockManager& blockManager,
                         pos[j] = static_cast<float>(layer) * BLOCK_SIZE;
                     }
                 }
-                quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
+                quad.SetVertex(i, Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
             }
             quads.emplace_back(std::move(quad));
         }
@@ -166,7 +166,7 @@ void Facetree::CreateQuadsByDirection(const BlockManager& blockManager,
 
     if (faceInfo != nullptr) {
         if (faceInfo->type != BlockType::NONE && faceInfo->dir == dir) {
-            mesh::Quad quad;
+            Quad quad;
             for (uint8_t i = 0; i < 4; i++) {
                 Point3f pos;
                 Point3f uv { vertexUV[i][0] * static_cast<float>(size),
@@ -184,7 +184,7 @@ void Facetree::CreateQuadsByDirection(const BlockManager& blockManager,
                         pos[j] = static_cast<float>(layer) * BLOCK_SIZE;
                     }
                 }
-                quad.SetVertex(i, mesh::Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
+                quad.SetVertex(i, Vertex(pos, uv, vertexNormal[GetIndex(faceInfo->dir)]));
             }
             quads.emplace_back(std::move(quad));
         }
@@ -343,4 +343,4 @@ void Facetree::DeleteChildren() {
     }
 }
 
-}   // mc::world::chunk
+}   // chunk

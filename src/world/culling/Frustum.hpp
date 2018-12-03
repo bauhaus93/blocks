@@ -14,7 +14,7 @@
 
 
 
-namespace mc::world {
+namespace blocks {
 
 class Frustum {
  public:
@@ -31,4 +31,4 @@ class Frustum {
 };
 
 
-}   // namespace mc::world
+}   // namespace blocks

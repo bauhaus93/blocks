@@ -10,7 +10,7 @@
 
 #include "Point3.hpp"
 
-namespace mc {
+namespace blocks {
 
 glm::mat4 CreateTranslationMatrix(const glm::vec3& point);
 
@@ -39,4 +39,4 @@ glm::vec3 CreateDirection(const Point3<T>& rotation) {
         cos(rotation[1]) });
 }
 
-}   // namespace mc
+}   // namespace blocks

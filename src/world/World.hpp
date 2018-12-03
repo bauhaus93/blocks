@@ -21,7 +21,7 @@
 #include "Fog.hpp"
 #include "BlockManager.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class World {
  public:
@@ -38,15 +38,15 @@ class World {
     void        Draw();
 
  private:
-    graphics::ShaderProgram         shader;
-    graphics::TextureAtlas          atlas;
-    Camera                          camera;
-    Fog                             fog;
-    BlockManager                    blockManager;
-    architect::Architect            architect;
-    chunk::Grid                     grid;
+    ShaderProgram   shader;
+    TextureAtlas    atlas;
+    Camera          camera;
+    Fog             fog;
+    BlockManager    blockManager;
+    Architect       architect;
+    Grid            grid;
 
-    void                            LoadBlocks();
+    void            LoadBlocks();
 };
 
-}   // namespace mc::world::world
+}   // namespace blocks

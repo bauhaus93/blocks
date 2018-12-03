@@ -14,7 +14,7 @@
 #define LOG_LEVEL DEBUG
 #endif
 
-namespace mc::log {
+namespace blocks {
 
 void CreateGlobalLogger(std::ostream& output);
 Logger& GetGlobalLogger();
@@ -22,35 +22,35 @@ bool GlobalLoggerActive();
 void DestroyGlobalLogger();
 
 #if LOG_LEVEL == TRACE
-#define TRACE(args...) mc::log::GetGlobalLogger().Trace(args)
-#define DEBUG(args...) mc::log::GetGlobalLogger().Debug(args)
-#define INFO(args...) mc::log::GetGlobalLogger().Info(args)
-#define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
+#define TRACE(...) blocks::GetGlobalLogger().Trace(__VA_ARGS__)
+#define DEBUG(...) blocks::GetGlobalLogger().Debug(__VA_ARGS__)
+#define INFO(...) blocks::GetGlobalLogger().Info(__VA_ARGS__)
+#define WARN(...) blocks::GetGlobalLogger().Warn(__VA_ARGS__)
+#define ERROR(...) blocks::GetGlobalLogger().Error(__VA_ARGS__)
 #elif LOG_LEVEL == DEBUG
-#define TRACE(args...)
-#define DEBUG(args...) mc::log::GetGlobalLogger().Debug(args)
-#define INFO(args...) mc::log::GetGlobalLogger().Info(args)
-#define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
+#define TRACE(...) ((void)0)
+#define DEBUG(...) blocks::GetGlobalLogger().Debug(__VA_ARGS__)
+#define INFO(...) blocks::GetGlobalLogger().Info(__VA_ARGS__)
+#define WARN(...) blocks::GetGlobalLogger().Warn(__VA_ARGS__)
+#define ERROR(...) blocks::GetGlobalLogger().Error(__VA_ARGS__)
 #elif LOG_LEVEL == INFO
-#define TRACE(args...)
-#define DEBUG(args...)
-#define INFO(args...) mc::log::GetGlobalLogger().Info(args)
-#define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
+#define TRACE(...) ((void)0)
+#define DEBUG(...) ((void)0)
+#define INFO(...) blocks::GetGlobalLogger().Info(__VA_ARGS__)
+#define WARN(...) blocks::GetGlobalLogger().Warn(__VA_ARGS__)
+#define ERROR(...) blocks::GetGlobalLogger().Error(__VA_ARGS__)
 #elif LOG_LEVEL == WARN
-#define TRACE(args...)
-#define DEBUG(args...)
-#define INFO(args...)
-#define WARN(args...) mc::log::GetGlobalLogger().Warn(args)
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
+#define TRACE(...) ((void)0)
+#define DEBUG(...) ((void)0)
+#define INFO(...) ((void)0)
+#define WARN(...) blocks::GetGlobalLogger().Warn(__VA_ARGS__)
+#define ERROR(...) blocks::GetGlobalLogger().Error(__VA_ARGS__)
 #elif LOG_LEVEL == ERROR
-#define TRACE(args...)
-#define DEBUG(args...)
-#define INFO(args...)
-#define WARN(args...) 
-#define ERROR(args...) mc::log::GetGlobalLogger().Error(args)
+#define TRACE(...) ((void)0)
+#define DEBUG(...) ((void)0)
+#define INFO(...) ((void)0)
+#define WARN(...) ((void)0)
+#define ERROR(...) blocks::GetGlobalLogger().Error(__VA_ARGS__)
 #endif
 
-}   // namespace mc::log
+}   // namespace blocks

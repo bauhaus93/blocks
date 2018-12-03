@@ -9,7 +9,7 @@
 #include "world/BlockType.hpp"
 #include "SimplexNoise.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 
 enum class BiomeType {
@@ -34,4 +34,4 @@ class Biome {
 };
 
 
-}   // namespace mc::world::architect
+}   // namespace blocks

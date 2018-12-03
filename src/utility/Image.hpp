@@ -8,7 +8,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
 
-namespace mc {
+namespace blocks {
 
 class Image {
  public:
@@ -28,4 +28,4 @@ class Image {
 
 
 
-}   // namespace mc
+}   // namespace blocks

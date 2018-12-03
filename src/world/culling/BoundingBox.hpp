@@ -6,7 +6,7 @@
 #include "utility/PointTransformation.hpp"
 #include "Intersection.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class BoundingBox {
  public:
@@ -21,4 +21,4 @@ class BoundingBox {
 
 };
 
-}   // namedspace mc::world
+}   // namedspace blocks

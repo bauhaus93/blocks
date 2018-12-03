@@ -2,7 +2,7 @@
 
 #include "Mesh.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 static std::vector<Triangle> CreateTriangles(const std::vector<Quad>& quads);
 
@@ -243,4 +243,4 @@ static std::vector<Triangle> CreateTriangles(const std::vector<Quad>& quads) {
 }
 
 
-}       // namespace mc::mesh
+}       // namespace blocks

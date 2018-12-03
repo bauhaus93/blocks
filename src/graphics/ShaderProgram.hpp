@@ -14,7 +14,7 @@
 #include "ShaderError.hpp"
 #include "ShaderProgramError.hpp"
 
-namespace mc::graphics {
+namespace blocks {
 
 struct FogData {
     GLint density;
@@ -53,4 +53,4 @@ class ShaderProgram {
 
 };
 
-}   // namespace mc::graphics
+}   // namespace blocks

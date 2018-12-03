@@ -21,12 +21,12 @@
 #include "mesh/Vertex.hpp"
 #include "Face.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 class Facetree;
 
 typedef std::array<std::unique_ptr<Facetree>, 4> FacetreeArray;
-typedef std::vector<mesh::Quad>                  QuadVec;
+typedef std::vector<Quad>                  QuadVec;
 
 struct FaceInfo {
     BlockType type;
@@ -77,4 +77,4 @@ class Facetree {
 };
 
 
-}   // mc::world::chunk
+}   // chunk

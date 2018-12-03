@@ -10,7 +10,7 @@
 
 #include "utility/PointTransformation.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class Entity {
 
@@ -42,4 +42,4 @@ class Entity {
 
 
 
-}   // namespace mc::world
+}   // namespace blocks

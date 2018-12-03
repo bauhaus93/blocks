@@ -2,7 +2,7 @@
 
 #include "BoundingBox.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 BoundingBox::BoundingBox(Point3f min, Point3f max):
     center { CreateVec((min + max) / 2.0f) },
@@ -10,4 +10,4 @@ BoundingBox::BoundingBox(Point3f min, Point3f max):
 }
 
 
-}   // namedspace mc::world
+}   // namedspace blocks

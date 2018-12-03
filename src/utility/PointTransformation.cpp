@@ -2,7 +2,7 @@
 
 #include "PointTransformation.hpp"
 
-namespace mc {
+namespace blocks {
 
 
 glm::mat4 CreateTranslationMatrix(const glm::vec3& point) {
@@ -10,4 +10,4 @@ glm::mat4 CreateTranslationMatrix(const glm::vec3& point) {
 }
 
 
-}   // namespace mc
+}   // namespace blocks

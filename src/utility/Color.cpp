@@ -2,11 +2,11 @@
 
 #include "Color.hpp"
 
-namespace mc {
+namespace blocks {
 
 Color::Color(float r, float g, float b):
     rgb { { r, g, b} } {
 }
 
 
-}   // namespace mc
+}   // namespace blocks

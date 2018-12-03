@@ -3,9 +3,9 @@
 
 #include <cstdint>
 
-namespace mc::world {
+namespace blocks {
 
 constexpr float BLOCK_SIZE = 2.0f;
 constexpr int8_t CHUNK_SIZE = 64;
 
-};
+};  // namespace blocks

@@ -8,8 +8,8 @@
 
 #include "Face.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 typedef std::array<std::map<uint8_t, std::vector<Face>>, 3> LayerFaces;
 
-}   // namespace mc::world::chunk
+}   // namespace chunk

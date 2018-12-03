@@ -2,7 +2,7 @@
 
 #include "Bitmap.hpp"
 
-namespace mc {
+namespace blocks {
 
 struct BmpFileHeader {
     uint16_t    type;
@@ -59,4 +59,4 @@ Image ReadBitmap(const std::string& filePath) {
                    static_cast<uint8_t>(ih->bitCount) };
 }
 
-}   // namespace mc
+}   // namespace blocks

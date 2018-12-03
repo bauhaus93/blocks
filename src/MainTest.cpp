@@ -8,9 +8,9 @@
 
 int main(int argc, char** argv) {
     std::ofstream out("output.log");
-    mc::log::CreateGlobalLogger(out);
+    blocks::CreateGlobalLogger(out);
     ::testing::InitGoogleTest(&argc, argv);
     int retVal = RUN_ALL_TESTS();
-    mc::log::DestroyGlobalLogger();
+    blocks::DestroyGlobalLogger();
     return retVal;
 }

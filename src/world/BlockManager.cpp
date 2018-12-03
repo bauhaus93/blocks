@@ -2,14 +2,14 @@
 
 #include "BlockManager.hpp"
 
-namespace mc::world {
+namespace blocks {
 
-BlockManager::BlockManager(graphics::TextureAtlas& atlas) {
+BlockManager::BlockManager(TextureAtlas& atlas) {
     LoadFaces(atlas);
     LoadProtoblocks();
 }
 
-void  BlockManager::LoadFaces(graphics::TextureAtlas& atlas) {
+void  BlockManager::LoadFaces(TextureAtlas& atlas) {
     constexpr unsigned FACE_COUNT = 5;
     static const std::array<const char*, FACE_COUNT> faceNames = { {
         "mud", "grass", "grass-mud", "desert", "rock" } };
@@ -86,4 +86,4 @@ uint32_t BlockManager::GetBlockFace(BlockType type, Direction dir) const {
     return protoblocks.at(type).GetFace(dir);
 }
 
-}       // namespace mc::world
+}       // namespace blocks

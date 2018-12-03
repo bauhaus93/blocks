@@ -12,8 +12,8 @@
 #include "logger/GlobalLogger.hpp"
 #include "FileNotFoundError.hpp"
 
-namespace mc {
+namespace blocks {
 
 std::string ReadFile(const std::string& filePath);
 std::vector<uint8_t> ReadFileRaw(const std::string& filePath);
-}   // namespace mc
+}   // namespace blocks

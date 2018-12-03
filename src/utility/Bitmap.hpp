@@ -15,9 +15,9 @@
 #include "application/ApplicationError.hpp"
 #include "Image.hpp"
 
-namespace mc {
+namespace blocks {
 
 Image ReadBitmap(const std::string& filePath);
 
 
-}   // namespace mc
+}   // namespace blocks

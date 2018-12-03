@@ -2,7 +2,7 @@
 
 #include "ProtoBlock.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 ProtoBlock::ProtoBlock():
     atlasIndices { { 0, 0, 0, 0, 0, 0 } } {
@@ -19,4 +19,4 @@ uint32_t ProtoBlock::GetFace(Direction dir) const {
 }
 
 
-}   // namespace mc::world
+}   // namespace blocks

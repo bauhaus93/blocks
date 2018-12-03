@@ -11,7 +11,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point3.hpp"
 
-namespace mc {
+namespace blocks {
 
 class Volume {
  public:
@@ -23,4 +23,4 @@ class Volume {
 };
 
 
-}   // namespace mc
+}   // namespace blocks

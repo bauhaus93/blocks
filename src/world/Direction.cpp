@@ -2,7 +2,7 @@
 
 #include "Direction.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 uint8_t GetIndex(Direction dir) {
     switch (dir) {
@@ -74,4 +74,4 @@ std::ostream& operator<<(std::ostream& os, Direction dir) {
     return os;
 }
 
-}       // namespace mc::world
+}       // namespace blocks

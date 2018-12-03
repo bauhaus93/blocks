@@ -6,7 +6,7 @@
 #include <array>
 
 
-namespace mc {
+namespace blocks {
 
 class Color {
  public:
@@ -19,4 +19,4 @@ class Color {
 };
 
 
-}   // namespace mc
+}   // namespace blocks

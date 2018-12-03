@@ -2,7 +2,7 @@
 
 #include "Vertex.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 Vertex::Vertex(Point3f pos_, Point3f uv_, Point3f normal_):
     pos { pos_ },
@@ -64,4 +64,4 @@ std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
     return os;
 }
 
-}       // namespace mc::mesh
+}       // namespace blocks

@@ -6,7 +6,7 @@
 
 #include "application/ApplicationError.hpp"
 
-namespace mc {
+namespace blocks {
 
 class FileNotFoundError: public ApplicationError {
 
@@ -21,4 +21,4 @@ class FileNotFoundError: public ApplicationError {
 
 };
 
-}   // namespace mc
+}   // namespace blocks

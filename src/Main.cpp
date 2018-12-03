@@ -10,18 +10,18 @@
 
 int main(int argc, char** argv) {
     //std::ofstream out("out.log");
-    mc::log::CreateGlobalLogger(std::cout);
+    blocks::CreateGlobalLogger(std::cout);
 
     try {
-        mc::Application app { 1024, 768 };
+        blocks::Application app { 1024, 768 };
         app.Run();
-    } catch (const mc::ApplicationError& e) {
+    } catch (const blocks::ApplicationError& e) {
         ERROR(e.what());
     } catch (const std::exception& e) {
         ERROR("Unhandled exception: ", e.what());
     }
 
-    mc::log::DestroyGlobalLogger();
+    blocks::DestroyGlobalLogger();
 
     return 0;
 }

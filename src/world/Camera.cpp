@@ -2,9 +2,9 @@
 
 #include "Camera.hpp"
 
-namespace mc::world {
+namespace blocks {
 
-Camera::Camera(graphics::ShaderProgram& shader_):
+Camera::Camera(ShaderProgram& shader_):
     Entity(),
     fov { 75.0f },
     aspectRatio { 4.0f / 3.0f },
@@ -12,14 +12,16 @@ Camera::Camera(graphics::ShaderProgram& shader_):
     far { 200.0f },
     shader { shader_ },
     view { glm::lookAt(
-                    CreateVec(position),
-                    glm::vec3 { 0, 0, 0 },
-                    glm::vec3 { 0, 0, 1 }) },
+            CreateVec(position),
+            glm::vec3 { 0, 0, 0 },
+            glm::vec3 { 0, 0, 1 })
+         },
     projection { glm::perspective(
-                            glm::radians(fov),
-                            aspectRatio,
-                            near,
-                            far) } {
+                    glm::radians(fov),
+                    aspectRatio,
+                    near,
+                    far)
+               } {
 }
 
 void Camera::SetFOV(float fovDegree) {
@@ -130,4 +132,4 @@ void Camera::Rotate(const Point3f& offset) {
 
 
 
-}   // namespace mc::world
+}   // namespace blocks

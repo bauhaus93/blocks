@@ -17,14 +17,14 @@
 #include "GlobalPosition.hpp"
 #include "Biome.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 class Architect {
  public:
     explicit            Architect(const BlockManager& blockManager_);
                         Architect(const BlockManager& blockManager_, uint32_t seed_);
 
-    chunk::Chunk        CreateChunk(const Point3i& chunkPos) const;
+    Chunk        CreateChunk(const Point3i& chunkPos) const;
 
     BlockType           GetBlockType(Point3i chunkPos, Point3i8 localPos) const;
 
@@ -52,4 +52,4 @@ class Architect {
 };
 
 
-}   // namespace mc::world::architect
+}   // namespace blocks

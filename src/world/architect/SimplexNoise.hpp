@@ -14,7 +14,7 @@
 #include "logger/GlobalLogger.hpp"
 #include "utility/Point2.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 typedef std::vector<uint8_t> Vec8u;
 
@@ -55,4 +55,4 @@ class SimplexNoise {
 
 };
 
-}   // namespace mc::world::architect
+}   // namespace blocks

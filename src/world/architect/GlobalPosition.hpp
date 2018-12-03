@@ -6,9 +6,9 @@
 #include "utility/Point3.hpp"
 #include "world/Size.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 Point2i GetGlobalPosition(Point2i chunkPos, Point2i8 localPos);
 Point3i GetGlobalPosition(Point3i chunkPos, Point3i8 localPos);
 
-}   // namespace mc::world::architect
+}   // namespace blocks

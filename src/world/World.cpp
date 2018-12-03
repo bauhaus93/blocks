@@ -2,9 +2,9 @@
 
 #include "World.hpp"
 
-namespace mc::world {
+namespace blocks {
 
-static graphics::ShaderProgram LoadShader();
+static ShaderProgram LoadShader();
 
 World::World():
     shader { LoadShader() },
@@ -47,12 +47,12 @@ void World::Draw() {
     shader.Deactivate();
 }
 
-static graphics::ShaderProgram LoadShader() {
-    graphics::ShaderProgram program;
+static ShaderProgram LoadShader() {
+    ShaderProgram program;
     program.AddVertexShader("shader/VertexShader.glsl");
     program.AddFragmentShader("shader/FragmentShader.glsl");
     program.Link();
     return program;
 }
 
-}   // namespace mc::world
+}   // namespace blocks

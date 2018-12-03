@@ -2,7 +2,7 @@
 
 #include "utility/Volume.hpp"
 
-namespace mc {
+namespace blocks {
 
 Volume::Volume(Point3f min_, Point3f max_):
     min { min_ },
@@ -16,4 +16,4 @@ bool Volume::Contains(Point3f point) const {
 
 
 
-}   // namespace mc
+}   // namespace blocks

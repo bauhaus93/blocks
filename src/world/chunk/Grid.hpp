@@ -16,12 +16,12 @@
 #include "Chunk.hpp"
 #include "ChunkLoader.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 class Grid {
 
  public:
-    explicit        Grid(const architect::Architect& architect_);
+    explicit        Grid(const Architect& architect_);
 
     void            GivePositionUpdate(Point3f worldPos);
     void            SetDrawDistance(int32_t drawDistance_);
@@ -42,11 +42,11 @@ class Grid {
 
     int32_t                                 drawDistance;
     int32_t                                 refreshDistance;
-    const architect::Architect&             architect;
+    const Architect&             architect;
     Point3i                                 centerPos;
     std::map<Point3i, Chunk>                loadedChunks;
     ChunkLoader                             chunkLoader;
 
 };
 
-}   // namespace mc::world::chunk
+}   // namespace chunk

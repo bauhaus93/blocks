@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 Entity::Entity():
     position(0.0f),
@@ -43,4 +43,4 @@ void Entity::Rotate(const Point3f& offset) {
     UpdateModel();
 }
 
-}   // namespace mc::world
+}   // namespace blocks

@@ -2,7 +2,7 @@
 
 #include "Application.hpp"
 
-namespace mc {
+namespace blocks {
 
 static bool LoadGlad();
 
@@ -48,10 +48,10 @@ void Application::Run() {
 static bool LoadGlad() {
     INFO("Loading glad");
     if (!gladLoadGL()) {
-        throw graphics::OpenGLError("gladLoadGL", __FUNCTION__);
+        throw OpenGLError("gladLoadGL", __FUNCTION__);
     }
     DEBUG("Glad loaded");
     return true;
 }
 
-}   // namespace mc
+}   // namespace blocks

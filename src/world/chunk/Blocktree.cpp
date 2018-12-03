@@ -2,7 +2,7 @@
 
 #include "Blocktree.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 Blocktree::Blocktree():
     origin { 0, 0, 0 },
@@ -257,4 +257,4 @@ std::array<std::vector<BlockElement>, 8> Blocktree::SplitToChildren(const std::v
     return queue;
 }
 
-}   // namespace mc::world::chunk
+}   // namespace chunk

@@ -6,7 +6,7 @@
 
 #include "Point.hpp"
 
-namespace mc {
+namespace blocks {
 
 template<typename T>
 using Point3 = Point<T, 3>;
@@ -19,4 +19,4 @@ typedef Point3<float> Point3f;
 
 
 
-}       // namespace mc
+}       // namespace blocks

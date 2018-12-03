@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 
-namespace mc {
+namespace blocks {
 
 class ApplicationError: public std::runtime_error {
 
@@ -22,4 +22,4 @@ class ApplicationError: public std::runtime_error {
 
 };
 
-}   // namespace mc
+}   // namespace blocks

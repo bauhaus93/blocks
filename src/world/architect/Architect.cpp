@@ -2,7 +2,7 @@
 
 #include "Architect.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 Architect::Architect(const BlockManager& blockManager_):
     Architect(blockManager_, static_cast<uint32_t>(std::random_device{}())) {
@@ -51,8 +51,8 @@ Architect::Architect(const BlockManager& blockManager_, uint32_t seed_):
     LoadBiomes();
 }
 
-chunk::Chunk Architect::CreateChunk(const Point3i& chunkPos) const {
-    std::vector<chunk::BlockElement> blocks;
+Chunk Architect::CreateChunk(const Point3i& chunkPos) const {
+    std::vector<BlockElement> blocks;
 
     for (int8_t y = 0; y < CHUNK_SIZE; y++) {
         for (int8_t x = 0; x < CHUNK_SIZE; x++) {
@@ -71,7 +71,7 @@ chunk::Chunk Architect::CreateChunk(const Point3i& chunkPos) const {
         }
     }
 
-    chunk::Chunk chunk(chunkPos);
+    Chunk chunk(chunkPos);
     if (blocks.size() > 0) {
         chunk.InsertBlocks(blocks);
         chunk.CreateMesh(GetBlockManager());
@@ -188,4 +188,4 @@ int32_t Architect::GetGlobalHeight(Point2i chunkPos, Point2i8 localPos) const {
 }
 
 
-}   // namespace mc::world::architect
+}   // namespace blocks

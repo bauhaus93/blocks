@@ -14,7 +14,7 @@
 #include "world/Size.hpp"
 #include "LayerFaces.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 class Blocktree;
 
@@ -55,4 +55,4 @@ class Blocktree {
 };
 
 
-}   // namespace mc::world::chunk
+}   // namespace chunk

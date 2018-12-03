@@ -18,12 +18,12 @@
 #include "utility/PointTransformation.hpp"
 #include "Entity.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class Camera: public Entity {
 
  public:
-    explicit        Camera(graphics::ShaderProgram& shader_);
+    explicit        Camera(ShaderProgram& shader_);
 
     void            SetFOV(float fovDegree);
     void            SetAspectRatio(float ratio);
@@ -49,9 +49,9 @@ class Camera: public Entity {
     float                       near;
     float                       far;
 
-    graphics::ShaderProgram&    shader;
+    ShaderProgram&              shader;
     glm::mat4                   view;
     glm::mat4                   projection;
 };
 
-}   // namespace mc::world
+}   // namespace blocks

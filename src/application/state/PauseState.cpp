@@ -2,7 +2,7 @@
 
 #include "PauseState.hpp"
 
-namespace mc {
+namespace blocks {
 
 PauseState::PauseState(sf::Window& window_):
     GameState(window_, 100) {
@@ -35,4 +35,4 @@ void PauseState::HandleEvents() {
 }
 
 
-}       // namespace mc
+}       // namespace blocks

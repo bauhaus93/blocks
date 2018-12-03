@@ -2,7 +2,7 @@
 
 #include "NeighbourMask.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 NeighbourMask::NeighbourMask():
     mask { 0 } {
@@ -39,4 +39,4 @@ std::ostream& operator<<(std::ostream& os, const NeighbourMask& mask) {
     return os;
 }
 
-}       // namespace mc::world::chunk
+}       // namespace chunk

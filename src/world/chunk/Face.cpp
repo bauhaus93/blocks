@@ -2,7 +2,7 @@
 
 #include "Face.hpp"
 
-namespace mc::world::chunk {
+namespace blocks {
 
 Face::Face(BlockType type_, Direction dir_, Point2i8 origin_, int8_t size_):
     type { type_ },
@@ -18,4 +18,4 @@ std::ostream& operator<<(std::ostream& os, const Face& face) {
     return os;
 }
 
-}   // namespace mc::world::chunk
+}   // namespace blocks

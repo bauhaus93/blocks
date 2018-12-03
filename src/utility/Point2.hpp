@@ -4,7 +4,7 @@
 
 #include "Point.hpp"
 
-namespace mc {
+namespace blocks {
 
 template<typename T>
 using Point2 = Point<T, 2>;
@@ -15,4 +15,4 @@ typedef Point2<int32_t> Point2i;
 typedef Point2<uint32_t> Point2u;
 typedef Point2<float> Point2f;
 
-}       // namespace mc
+}       // namespace blocks

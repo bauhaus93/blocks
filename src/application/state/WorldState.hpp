@@ -12,7 +12,7 @@
 
 #include "GameState.hpp"
 
-namespace mc {
+namespace blocks {
 
 class WorldState: public GameState {
 
@@ -31,8 +31,8 @@ class WorldState: public GameState {
     void                HandleMovementKeys();
     void                DrawScene();
 
-    world::World        world;
+    World        world;
 };
 
 
-}       // namespace mc
+}       // namespace blocks

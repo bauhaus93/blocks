@@ -2,7 +2,7 @@
 
 #include "StateStack.hpp"
 
-namespace mc {
+namespace blocks {
 
 StateStack::StateStack(sf::Window& window_):
     window { window_ } {
@@ -49,4 +49,4 @@ void StateStack::Run() {
 
 
 
-}       // namespace mc
+}       // namespace blocks

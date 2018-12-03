@@ -8,7 +8,7 @@
 #include "utility/Volume.hpp"
 #include "Vertex.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 class Triangle {
  public:
@@ -25,4 +25,4 @@ class Triangle {
 };
 
 
-}       // namespace mc::mesh
+}       // namespace blocks

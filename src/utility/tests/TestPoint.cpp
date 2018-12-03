@@ -4,7 +4,7 @@
 
 #include "utility/Point3.hpp"
 
-namespace mc {
+namespace blocks {
 
 TEST(TestPoint, BraceConstructor) {
     Point3i p(1, 2, 3);
@@ -298,4 +298,4 @@ TEST(TestPoint, InBoundariesFirstSecondAboveUpper) {
     ASSERT_FALSE(p.InBoundaries(min, max));
 }
 
-}   // namespace mc
+}   // namespace blocks

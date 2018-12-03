@@ -18,7 +18,7 @@
 #include "Quad.hpp"
 #include "Triangle.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 struct VBOData {
     std::vector<glm::vec3>  vertices;
@@ -60,4 +60,4 @@ class Mesh {
     std::unique_ptr<VBOData>        bufferData;
 };
 
-}       // namespace mc::mesh
+}       // namespace blocks

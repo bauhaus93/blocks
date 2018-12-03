@@ -24,7 +24,7 @@
 #include "NeighbourMask.hpp"
 #include "LayerFaces.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 class Chunk {
 
@@ -44,7 +44,7 @@ class Chunk {
     bool                    IsEmpty() const { return blocktree.IsEmpty(); }
     void                    Draw(const Camera& camera) const;
     const Blocktree&        GetBlocktree() const { return blocktree; };
-    const mesh::Mesh&       GetMesh() const { assert(mesh != nullptr); return *mesh; }
+    const Mesh&       GetMesh() const { assert(mesh != nullptr); return *mesh; }
     bool                    IsBorderChecked(Direction border) const { return checkedBorders.Contains(border); }
 
  private:
@@ -55,7 +55,7 @@ class Chunk {
     NeighbourMask               checkedBorders;
 
     Blocktree                   blocktree;
-    std::unique_ptr<mesh::Mesh> mesh;
+    std::unique_ptr<Mesh> mesh;
 };
 
-}       // namespace mc::world::chunk
+}       // namespace chunk

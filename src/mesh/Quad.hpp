@@ -9,7 +9,7 @@
 #include "Vertex.hpp"
 #include "Triangle.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 class Quad {
  public:
@@ -26,5 +26,5 @@ class Quad {
 
 std::ostream& operator<<(std::ostream& os, const Quad& quad);
 
-}       // namespace mc::mesh
+}       // namespace blocks
 

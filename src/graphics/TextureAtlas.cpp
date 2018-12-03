@@ -2,7 +2,7 @@
 
 #include "TextureAtlas.hpp"
 
-namespace mc::graphics {
+namespace blocks {
 
 TextureAtlas::TextureAtlas(Point2u textureSize_, uint32_t layerCount_):
     textureSize { textureSize_ },
@@ -69,4 +69,4 @@ uint32_t TextureAtlas::AddTextureLayer(const Image& img) {
     return nextLayer++;
 }
 
-}   // namespace mc::graphics
+}   // namespace blocks

@@ -2,6 +2,7 @@ build/
 release/
 debug/
 data/
+.vscode/
 
 *.gch
 *.swp

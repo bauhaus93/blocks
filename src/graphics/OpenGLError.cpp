@@ -3,7 +3,7 @@
 #include "OpenGLError.hpp"
 
 
-namespace mc::graphics {
+namespace blocks {
 
 static std::string GetErrorString();
 
@@ -31,4 +31,4 @@ static std::string GetErrorString() {
     }
 }
 
-}   // namespace mc::graphics
+}   // namespace blocks

@@ -8,7 +8,7 @@
 
 #include "world/Direction.hpp"
 
-namespace mc::world::chunk {
+namespace blocks {
 
 class NeighbourMask {
  public:
@@ -27,4 +27,4 @@ class NeighbourMask {
 std::ostream& operator<<(std::ostream& os, const NeighbourMask& mask);
 
 
-}       // namespace mc::world::chunk
+}       // namespace blocks

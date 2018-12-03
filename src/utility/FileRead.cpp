@@ -1,6 +1,6 @@
 #include "FileRead.hpp"
 
-namespace mc {
+namespace blocks {
 
 std::string ReadFile(const std::string& filePath) {
     std::ifstream fs(filePath, std::ios::in);
@@ -33,4 +33,4 @@ std::vector<uint8_t> ReadFileRaw(const std::string& filePath) {
     return buffer;
 }
 
-}   // namespace mc
+}   // namespace blocks

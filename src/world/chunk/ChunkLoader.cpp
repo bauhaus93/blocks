@@ -2,14 +2,14 @@
 
 #include "ChunkLoader.hpp"
 
-namespace mc::world::chunk {
+namespace blocks {
 
 static Chunk CreateChunk(Point3i pos,
-                  const architect::Architect& architect);
+                  const Architect& architect);
 static void Sleep(unsigned ms);
 
 ChunkLoader::ChunkLoader(uint32_t maxThreads_,
-                         const architect::Architect& architect_):
+                         const Architect& architect_):
     stop { false },
     pendingMutex { },
     finishedMutex { },
@@ -138,8 +138,8 @@ void Sleep(unsigned ms) {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
-Chunk CreateChunk(Point3i pos, const architect::Architect& architect) {
+Chunk CreateChunk(Point3i pos, const Architect& architect) {
     return architect.CreateChunk(pos);
 }
 
-}   // namespace mc::world::chunk
+}   // namespace blocks

@@ -21,7 +21,7 @@ protected:
     virtual void SetUp();
 
     BlockManager                blockManager;
-    mc::world::chunk::Blocktree bt;
+    blocks::Blocktree bt;
 };
 
 */

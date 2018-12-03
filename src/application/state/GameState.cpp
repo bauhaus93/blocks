@@ -2,7 +2,7 @@
 
 #include "GameState.hpp"
 
-namespace mc {
+namespace blocks {
 
 GameState::GameState(sf::Window& window_, unsigned int delay_):
     window { window_ },
@@ -48,4 +48,4 @@ std::string GetStateName(State state) {
     }
 }
 
-}       // namespace mc
+}       // namespace blocks

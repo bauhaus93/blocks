@@ -14,7 +14,7 @@
 #include "WorldState.hpp"
 #include "PauseState.hpp"
 
-namespace mc {
+namespace blocks {
 
 
 class StateStack {
@@ -34,4 +34,4 @@ class StateStack {
     std::vector<std::unique_ptr<GameState>>     states;
 };
 
-}       // namespace mc
+}       // namespace blocks

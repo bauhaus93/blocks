@@ -2,7 +2,7 @@
 
 #include "ApplicationError.hpp"
 
-namespace mc {
+namespace blocks {
 
 ApplicationError::ApplicationError(const std::string& error,
                                    const std::string& function,
@@ -13,4 +13,4 @@ ApplicationError::ApplicationError(const std::string& error,
 
 
 
-}   // namespace mc
+}   // namespace blocks

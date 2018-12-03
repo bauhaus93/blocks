@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace mc::world {
+namespace blocks {
 
 enum class BlockType {
     NONE,
@@ -12,4 +12,4 @@ enum class BlockType {
     ROCK
 };
 
-}   // namespace mc::world::chunk
+}   // namespace blocks

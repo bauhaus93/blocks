@@ -10,7 +10,7 @@
 #include "world/BlockType.hpp"
 #include "world/Direction.hpp"
 
-namespace mc::world::chunk {
+namespace blocks {
 
 class Face {
  public:
@@ -28,4 +28,4 @@ class Face {
 
 std::ostream& operator<<(std::ostream& os, const Face& face);
 
-}   // namespace mc::world::chunk
+}   // namespace blocks

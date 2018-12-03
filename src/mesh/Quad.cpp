@@ -2,7 +2,7 @@
 
 #include "Quad.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 Quad::Quad():
     vertex { { Vertex { Point3f(0.0f), Point3f(0.0f), Point3f(0.0f) },
@@ -48,4 +48,4 @@ std::ostream& operator<<(std::ostream& os, const Quad& quad) {
     return os;
 }
 
-}       // namespace mc::mesh
+}       // namespace blocks

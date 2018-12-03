@@ -2,7 +2,7 @@
 
 #include "Biome.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 Biome::Biome():
     blockType { BlockType::MUD } {
@@ -12,4 +12,4 @@ void Biome::SetBlockType(BlockType type) {
     blockType = type;
 }
 
-}   // namespace mc::world::architect
+}   // namespace blocks

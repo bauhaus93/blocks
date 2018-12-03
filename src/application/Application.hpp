@@ -16,7 +16,7 @@
 #include "state/GameState.hpp"
 #include "state/StateStack.hpp"
 
-namespace mc {
+namespace blocks {
 
 class Application {
   public:
@@ -31,4 +31,4 @@ private:
     StateStack          stateStack;
 };
 
-}   // namespace mc
+}   // namespace blocks

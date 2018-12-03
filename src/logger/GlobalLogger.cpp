@@ -2,7 +2,7 @@
 
 #include "GlobalLogger.hpp"
 
-namespace mc::log {
+namespace blocks {
 
 std::unique_ptr<Logger> g_logger = nullptr;
 
@@ -31,4 +31,4 @@ void DestroyGlobalLogger() {
     }
 }
 
-}   // namespace mc::log
+}   // namespace blocks

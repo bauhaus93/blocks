@@ -2,12 +2,12 @@
 
 #include "Fog.hpp"
 
-namespace mc::world {
+namespace blocks {
 
-Fog::Fog(graphics::ShaderProgram& shader_):
+Fog::Fog(ShaderProgram& shader_):
     shader { shader_ },
     density { 0.0015 },
-    color { 0.8f, 0.8f, 0.8f } {
+    color { 0.7f, 0.7f, 0.7f } {
     UpdateShader();
 }
 
@@ -43,4 +43,4 @@ void Fog::UpdateShader() {
     shader.Deactivate();
 }
 
-}   // namespace mc::world
+}   // namespace blocks

@@ -11,7 +11,7 @@
 
 #include "logger/GlobalLogger.hpp"
 
-namespace mc {
+namespace blocks {
 
 enum class State {
     NONE,
@@ -49,4 +49,4 @@ class GameState {
     StateResult         result;
 };
 
-}       // namespace mc
+}       // namespace blocks

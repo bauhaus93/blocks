@@ -8,7 +8,7 @@
 
 #include "Point3.hpp"
 
-namespace mc {
+namespace blocks {
 
 template<typename T>
 using VecRef = std::vector<std::reference_wrapper<T>>;
@@ -19,4 +19,4 @@ using Map3D = std::map<Point3i, T>;
 template<typename T>
 using MapRef3D = std::map<Point3i, std::reference_wrapper<T>>;
 
-}   // namespace mc
+}   // namespace blocks

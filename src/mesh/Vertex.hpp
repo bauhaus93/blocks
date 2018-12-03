@@ -10,7 +10,7 @@
 #include "utility/Point3.hpp"
 #include "utility/Volume.hpp"
 
-namespace mc::mesh {
+namespace blocks {
 
 class Vertex {
  public:
@@ -34,4 +34,4 @@ class Vertex {
 
 std::ostream& operator<<(std::ostream& os, const Vertex& vertex);
 
-}       // namespace mc::mesh
+}       // namespace blocks

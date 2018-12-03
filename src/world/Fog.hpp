@@ -5,18 +5,18 @@
 #include "graphics/ShaderProgram.hpp"
 #include "utility/Color.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 class Fog {
  public:
-    explicit    Fog(graphics::ShaderProgram& shader_);
+    explicit    Fog(ShaderProgram& shader_);
 
     void        ModDensity(float factor);
     void        SetDensity(float value);
     void        SetColor(Color newColor);
 
  private:
-     graphics::ShaderProgram&       shader;
+     ShaderProgram&                 shader;
      float                          density;
      Color                          color;
 
@@ -24,4 +24,4 @@ class Fog {
 };
 
 
-}   // namespace mc::world
+}   // namespace blocks

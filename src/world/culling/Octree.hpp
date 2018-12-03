@@ -13,7 +13,7 @@
 #include "Frustum.hpp"
 #include "Intersection.hpp"
 
-namespace mc::world {
+namespace blocks {
 
 template<typename T>
 class Octree;
@@ -233,4 +233,4 @@ bool BelowMinSize(const Point3<T>& size, const Point3<T>& minSize) {
     return false;
 }
 
-}   // namespace mc::world
+}   // namespace blocks

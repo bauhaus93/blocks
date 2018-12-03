@@ -11,7 +11,7 @@
 
 #include "SimplexNoise.hpp"
 
-namespace mc::world::architect {
+namespace blocks {
 
 static const double F2 = 0.5 * (sqrt(3.0) - 1.0);
 static const double G2 = (3.0 - sqrt(3.0)) / 6.0;
@@ -162,4 +162,4 @@ double SimplexNoise::GetNoise(Point2i pos) const {
     return min + (max - min) * ((1.0 + (sum / weightSum)) / 2.0);
 }
 
-}   // namespace mc::world::architect
+}   // namespace blocks

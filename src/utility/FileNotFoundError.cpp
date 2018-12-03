@@ -2,7 +2,7 @@
 
 #include "FileNotFoundError.hpp"
 
-namespace mc {
+namespace blocks {
 
 FileNotFoundError::FileNotFoundError(const std::string& function,
                                      const std::string& filename):
@@ -12,4 +12,4 @@ FileNotFoundError::FileNotFoundError(const std::string& function,
 
 
 
-}   // namespace mc
+}   // namespace blocks

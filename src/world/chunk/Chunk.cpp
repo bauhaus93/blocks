@@ -2,7 +2,7 @@
 
 #include "Chunk.hpp"
 
-namespace mc::world::chunk {
+namespace blocks{
 
 Chunk::Chunk(const Point3i& chunkPos_):
     chunkPos { chunkPos_ },
@@ -18,7 +18,7 @@ void Chunk::InsertBlocks(const std::vector<BlockElement>& blocks) {
 }
 
 void Chunk::CreateMesh(const BlockManager& blockManager) {
-    std::vector<mesh::Quad> quads;
+    std::vector<Quad> quads;
     LayerFaces faces = blocktree.CreateFaces();
     for (uint8_t axis = 0; axis < 3; axis++) {
         for(auto& layer: faces[axis]) {
@@ -29,7 +29,7 @@ void Chunk::CreateMesh(const BlockManager& blockManager) {
             }
         }
     }
-    mesh = std::make_unique<mesh::Mesh>(quads);
+    mesh = std::make_unique<Mesh>(quads);
 }
 
 void Chunk::UpdateBorders(Chunk& neighbour, Direction border, const BlockManager& blockManager) {
@@ -63,16 +63,16 @@ void Chunk::UpdateBorders(Chunk& neighbour, Direction border, const BlockManager
     ft.InsertFaces(std::move(faces));
 
     if (mesh != nullptr) {
-        std::vector<mesh::Quad> quads;
+        std::vector<Quad> quads;
         ft.CreateQuadsByDirection(blockManager, axis, layer, quads, border);
         mesh->AddQuads(quads);
-        //mesh = std::make_unique<mesh::Mesh>(quads);
+        //mesh = std::make_unique<Mesh>(quads);
     }
     if (neighbour.mesh != nullptr) {
-        std::vector<mesh::Quad> quads;
+        std::vector<Quad> quads;
         ft.CreateQuadsByDirection(blockManager, axis, layerNb, quads, GetOpposite(border));
         neighbour.mesh->AddQuads(quads);
-        //neighbour.mesh = std::make_unique<mesh::Mesh>(quads);
+        //neighbour.mesh = std::make_unique<Mesh>(quads);
     }
 
     checkedBorders.Add(border);
@@ -86,4 +86,4 @@ void Chunk::Draw(const Camera& camera) const {
     }
 }
 
-}       // namespace mc::world::chunk
+}       // namespace chunk

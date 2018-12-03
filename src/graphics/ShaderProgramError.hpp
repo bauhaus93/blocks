@@ -9,7 +9,7 @@
 
 #include "OpenGLError.hpp"
 
-namespace mc::graphics {
+namespace blocks {
 
 class ShaderProgramError: public OpenGLError {
 
@@ -21,4 +21,4 @@ class ShaderProgramError: public OpenGLError {
         ShaderProgramError(const std::string& function, const std::string& description);
 };
 
-}   // namespace mc::graphics
+}   // namespace blocks

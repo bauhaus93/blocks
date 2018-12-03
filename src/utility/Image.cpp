@@ -2,7 +2,7 @@
 
 #include "Image.hpp"
 
-namespace mc {
+namespace blocks {
 
 Image::Image(std::vector<uint8_t> data_, Point2u size_, uint8_t depth_):
     data { data_ },
@@ -27,4 +27,4 @@ Image Image::CreateSubImage(Point2u origin, Point2u subSize) const {
 }
 
 
-}   // namespace mc
+}   // namespace blocks
